@@ -1,0 +1,199 @@
+
+/*******************************************************************************
+ * Font faces
+ ******************************************************************************/
+/* @font-face {
+   font-family: "WorkSans";
+   font-style: normal;
+   font-weight: 400;
+   src: url("/static/fonts/WorkSans-Regular.woff2");
+   }
+   @font-face {
+   font-family: "WorkSans";
+   font-style: italic;
+   font-weight: 400;
+   src: url("/static/fonts/WorkSans-Italic.woff2");
+   }
+   @font-face {
+   font-family: "WorkSans";
+   font-style: normal;
+   font-weight: 900;
+   src: url("/static/fonts/WorkSans-Black.woff2");
+   }
+ */
+
+@font-face {
+    font-family: fdficons;
+    src: url("/static/fonts/fdficons.woff");
+}
+/*******************************************************************************
+ * Colors
+ ******************************************************************************/
+:root {
+    --fdf-blå:      #5F8CB4;
+    --nat-blå:      #003255; /* Leder */
+    --hvid:         #FFFFFF;
+    --efterårsrød:  #D22832; /* Tumling */
+    --syren:        #9182C8; /* Numling */
+    --korngul:      #FFB91E; /* Pusling */
+    --græsgrøn:     #7DC855; /* Pilt */
+    --søblå:        #4678C8; /* Væbner */
+    --granit:       #7D878C; /* Seniorvæbner */
+    --flammefarvet: #FF733C; /* Senior */
+}
+
+/*******************************************************************************
+ * Core
+ ******************************************************************************/
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: "Work Sans", sans-serif;
+}
+body {
+    background-color: var(--hvid);
+    margin: 0px;
+}
+
+/*******************************************************************************
+ * Navigation
+ ******************************************************************************/
+header {
+    background-color: var(--fdf-blå);
+    color: var(--hvid);
+    /* display: flex; */
+    padding-left: 6px;
+
+}
+header > nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+header > nav > a > .header-title {
+    font-weight: 900;
+    font-size: 2em;
+}
+header > nav > a > .header-title-year {
+    margin-top: -10px;
+}
+header > nav > a {
+    font-weight: 900;
+    color: var(--hvid);
+    text-decoration: none;
+    line-height: 48px;
+}
+header > nav > a:first-of-type {
+    line-height: inherit;
+}
+header > nav > a:first-of-type:hover > .header-title-year {
+    /* line-height: inherit; */
+    /* animation: shake 0.2s infinite; */
+}
+header > nav > a:hover {
+    /* border-radius: 3px; */
+    /* background: var(--granit); */
+    text-decoration: underline;
+}
+
+header > nav > .dropdown {
+    display: inline-block;
+    position: relative;
+}
+header > nav > .dropdown > a {
+    display: block;
+    font-weight: 900;
+    color: var(--hvid);
+    text-decoration: none;
+    line-height: 48px;
+    cursor: default;
+}
+header > nav > .dropdown > .dropdown-content {
+    display: none;
+    /* display: block; */
+    position: absolute;
+    background-color: var(--fdf-blå);
+    z-index: 1;
+    top: 48px;
+    min-width: 170px;
+    margin: 0px;
+    line-height: 30px;
+    left: -20px;
+    padding: 0px 20px 10px 20px;
+
+}
+header > nav > .dropdown > .dropdown-content > a {
+    display: block;
+    font-weight: 900;
+    color: var(--hvid);
+    text-decoration: none;
+}
+header > nav > .dropdown > .dropdown-content > a:hover {
+    text-decoration: underline;
+}
+
+header > nav > .dropdown:hover > .dropdown-content {
+    display: block;
+}
+
+header > nav > .dropdown:hover > a {
+    /* color: var(--fdf-blå); */
+    /* background-color: var(--hvid); */
+    /* display: block */
+}
+
+/*******************************************************************************
+ * Error
+ ******************************************************************************/
+.error {
+    background-color: var(--korngul);
+    padding: 10px;
+    cursor: pointer;
+}
+.error .header {
+    font-weight: 600;
+}
+
+/*******************************************************************************
+ * Icons
+ ******************************************************************************/
+.fdficon {
+    font-family: fdficons !important;
+}
+
+/*******************************************************************************
+ * Animations
+ ******************************************************************************/
+@keyframes shake {
+    0%   { transform: rotate(0deg); }
+    25%  { transform: rotate(5deg); }
+    50%  { transform: rotate(0deg); }
+    75%  { transform: rotate(-5deg); }
+    100% { transform: rotate(0deg); }
+
+}
+
+
+/*******************************************************************************
+ * Table
+ ******************************************************************************/
+table > thead > tr {
+
+}
+table > tbody > tr {
+
+}
+table > tbody > tr:hover {
+    background-color: var(--fdf-blå);
+}
+
+
+/*******************************************************************************
+ * Days
+ ******************************************************************************/
+
+.days {
+    font-family: mono;
+}

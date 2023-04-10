@@ -1,0 +1,33 @@
+
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15.0
+    # command: ["-c", "synchronous_commit=off"]
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    deploy:
+      replicas: 1
+      # resources:
+      #   limits:
+      #     cpus: "0.50"
+      #     memory: "1G"
+      restart_policy:
+        condition: any
+    ports:
+      - target: 5432
+        published: ${POSTGRES_PORT}
+    volumes:
+      - type: bind
+        source: ${POSTGRES_MOUNT:?Volume on host}
+        target: /var/lib/postgresql/data
+  adminer:
+    image: adminer
+    environment:
+      ADMINER_DESIGN: "pepa-linha-dark"
+      ADMINER_DEFAULT_SERVER: ${POSTGRES_HOST}:${POSTGRES_PORT}
+    ports:
+      - target: 8080
+        published: 8080
