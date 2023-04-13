@@ -268,11 +268,11 @@ export class Iter<T> {
 
     public sort(key?: (x: T) => any, reverse = false): Iter<T>{
         let it = this.it;
-        key = key === undefined ? (x) => x : key
+        let extract = make_extract(key);
         return new Iter(function*() {
             let list = [];
             for (let item of it) {
-                list.push({value: item, key: key(item)});
+                list.push({value: item, key: extract(item)});
             }
 
             let EQUAL = 0; // a = b
@@ -326,20 +326,13 @@ export class Iter<T> {
 
     public unique(key?: (T) => any) {
         let it = this.it;
-        if (key === undefined) {
-            key = x => x;
-        } else if (typeof(key) === "string") {
-            // @ts-ignore
-            key = x => x[key]
-        } else {
-            key = key;
-        }
+        let extract = make_extract(key);
         return new Iter(function*() {
             let seen = new Set();
             for (let item of it) {
-                let k = key(item);
-                if (!seen.has(k)) {
-                    seen.add(k);
+                let key = extract(item);
+                if (!seen.has(key)) {
+                    seen.add(key);
                     yield item;
                 }
             }
@@ -529,9 +522,7 @@ export class Iter<T> {
 
     public groupRuns(key): Iter<Array<T>> {
         let it = this.it;
-        if (typeof(key) === "string" || typeof(key) === "number") {
-            key = x => x[key];
-        }
+        let extract = make_extract(key);
         let previous = undefined;
         return new Iter(function*() {
             function equal(a: any, b: any): boolean {
@@ -552,7 +543,10 @@ export class Iter<T> {
                 if (a instanceof Date) {
                     return a.getTime() === b.getTime();
                 }
-                if (typeof(key) === "string" || typeof(key) === "number") {
+                if (a === b) {
+                    return true;
+                }
+                if (typeof(a) === "string" || typeof(a) === "number" || typeof(a) === "boolean") {
                     return a === b;
                 }
                 throw new Error("Unable to compare items");
@@ -563,15 +557,15 @@ export class Iter<T> {
                 return;
             }
             let values = [first.value];
-            let current_k = key(first.value);
+            let current_key = extract(first.value);
             for (let item of it) {
-                let next_k = key(item);
-                if (equal(current_k, next_k)) {
+                let next_key = extract(item);
+                if (equal(current_key, next_key)) {
                     values.push(item);
                 } else {
                     yield values;
                     values = [item];
-                    current_k = next_k;
+                    current_key = next_key;
                 }
             }
             if (values.length > 0) {
@@ -632,19 +626,17 @@ export class Iter<T> {
     }
     public GroupBy(key: string | number | ((T) => any)) {
         let it = this.it;
-        if (typeof(key) === "string" || typeof(key) === "number") {
-            // @ts-ignore
-            key = x => x[key];
-        }
+        let extract = make_extract(key);
         let result = new Map();
         for (let item of it) {
-            let value = key(item);
+            let value = extract(item);
             if (result.has(value)) {
                 result.get(value).push(item);
             } else {
                 result.set(value, [item]);
             }
         }
+        return result;
     }
 
     public count(default_value?: any) {
@@ -738,6 +730,18 @@ export class Iter<T> {
     }
 }
 
+function make_extract<T> (key: string | number | ((T) => any)): any {
+    let extract;
+    if (key === undefined) {
+        extract = (x) => x;
+    } else if (typeof(key) === "string" || typeof(key) === "number") {
+        extract = x => x[key];
+    } else {
+        extract = key;
+    }
+    return extract;
+}
+
 console.log("a")
 // $it.Iter = Iter;
 
@@ -745,6 +749,10 @@ console.log("a")
 window.$it = $it;
 
 export function foo() {
+    let x = $it([{n: "a"}, {n: "a"}, {n: "b"}]).groupRuns((x) => x.n).List();
+
+    console.log(x);
+
     // let x: never = $it([1,2,3]).skipAt([2,3]);
     // let x: never = $it(["a", "b", "c"]).pad(2, "a")
 

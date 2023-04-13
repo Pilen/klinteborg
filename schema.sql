@@ -3,15 +3,22 @@ BEGIN;
 -- Deltager FDF Medlems IDs
 CREATE TABLE fdfids (
 	fdfid	integer	PRIMARY KEY,
-	navn	text	NOT NULL
+	navn	text	NOT NULL,
+    is_admin	boolean DEFAULT false
 );
 
 CREATE TABLE login_tokens (
-	fdfid			integer	REFERENCES fdfids,
-	login_token		text	NOT NULL UNIQUE,
-	session_token	text	NOT NULL UNIQUE
+	fdfid			integer		REFERENCES fdfids UNIQUE,
+	login_token		text		NOT NULL UNIQUE,
+	expires_at		timestamptz	NOT NULL
 );
 
+CREATE TABLE session_tokens (
+	fdfid			integer		REFERENCES fdfids,
+	session_token	text		NOT NULL,
+	expires_at		timestamptz, -- Null means expired
+    UNIQUE(fdfid, session_token)
+);
 
 CREATE TYPE Stab as ENUM (
 	'Resten',
@@ -48,6 +55,7 @@ CREATE TYPE Transport as ENUM (
 	'Egen',
 	'Samkørsel'
 );
+
 
 CREATE TABLE deltagere (
 	fdfid		integer		REFERENCES fdfids,

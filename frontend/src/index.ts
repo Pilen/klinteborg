@@ -11,13 +11,34 @@ import {
     PageDeltagereMærkelige,
     PageDeltagereSøg
 } from "./deltagere_page";
+import {formatDateTime} from "./utils";
 
 
 
 // m("span.fdficon", "")
 class Index {
     public view(vnode: m.Vnode) {
-        return m("div", "Vi skal snart på Klinteborg!", );
+        return m("div", "Vi skal snart på Klinteborg!",
+                 m("h1", "Abc def ghi"),
+                 m("h2", "Abc def ghi"),
+                 m("h3", "Abc def ghi"),
+                 m("h4", "Abc def ghi"),
+                 m("h5", "Abc def ghi"),
+                 m("h6", "Abc def ghi"),
+                 m("div", "Abc def ghi"),
+
+                 m("h1", "Abc def ghi"),
+                 m("div", "Abc def ghi"),
+                 m("h2", "Abc def ghi"),
+                 m("div", "Abc def ghi"),
+                 m("h3", "Abc def ghi"),
+                 m("div", "Abc def ghi"),
+                 m("h4", "Abc def ghi"),
+                 m("div", "Abc def ghi"),
+                 m("h5", "Abc def ghi"),
+                 m("div", "Abc def ghi"),
+                 m("h6", "Abc def ghi"),
+                );
     }
 }
 
@@ -28,11 +49,15 @@ class NotFound {
 }
 
 class Layout {
-    public view(vnode: m.Vnode) {
+    public view(vnode: m.Vnode<{title: string}>) {
         // let error = getError();
         // let error = null;
         // let errorNode = error ? m(".error") {onclick:
         // console.log(DELTAGERE_STATE.deltagere);
+        document.title = vnode.attrs.title;
+        if (DELTAGERE_STATE.deltagere.length == 0) {
+            return m(".loading", m("span", "Loading"));
+        }
         return m.fragment(
             {},
             [
@@ -73,36 +98,39 @@ class Layout {
                         m(m.route.Link, {href: "/sekretær/bordhold"}, "Bordhold"),
                         m(m.route.Link, {href: "/sekretær/værelser"}, "Værelser"),
                        )),
-
                     // m(m.route.Link, {href: "/udvalg"}, "Udvalg"),
                     // m(m.route.Link, {href: "/livgrupper"}, "Livgrupper"),
                     // m(m.route.Link, {href: "/opgaver"}, "Opgaver"),
                     // m(m.route.Link, {href: "/bordhold"}, "Bordhold"),
+                   ),
+                  m(".print",
+                    m(".header-title", "Klinteborg 2023"),
+                    m("div", vnode.attrs.title),
+                    m("div", formatDateTime(new Date())),
                    ),
                  ),
                 m(ErrorView),
                 m("main", vnode.children),
             ]);
     }
-    public static wrap(cls: any) {
+    public static wrap(cls: any, title: string) {
         return {
             render: function() {
-                return m(Layout, m(cls));
+                return m(Layout, {title: title}, m(cls));
             }
         };
     }
 }
 
 m.route(document.body, "/", {
-    "/": Layout.wrap(Index),
-    "/deltagere/indestab": Layout.wrap(PageDeltagereIndestab),
-    "/deltagere/piltestab": Layout.wrap(PageDeltagerePiltestab),
-    "/deltagere/væbnerstab": Layout.wrap(PageDeltagereVæbnerstab),
-    "/deltagere/resten": Layout.wrap(PageDeltagereResten),
-    "/deltagere/mærkelige": Layout.wrap(PageDeltagereMærkelige),
-    "/deltagere/søg": Layout.wrap(PageDeltagereSøg),
-    "/:404...": Layout.wrap(NotFound),
+    "/": Layout.wrap(Index, "Klinteborg"),
+    "/deltagere/indestab":   Layout.wrap(PageDeltagereIndestab, "Deltagere Indestab"),
+    "/deltagere/piltestab":  Layout.wrap(PageDeltagerePiltestab, "Deltagere Piltestab"),
+    "/deltagere/væbnerstab": Layout.wrap(PageDeltagereVæbnerstab, "Deltagere Væbnerstab"),
+    "/deltagere/resten":     Layout.wrap(PageDeltagereResten, "Deltagere Resten"),
+    "/deltagere/mærkelige":  Layout.wrap(PageDeltagereMærkelige, "Deltagere Mærkelige"),
+    "/deltagere/søg":        Layout.wrap(PageDeltagereSøg, "Deltagere Søg"),
+    "/:404...":              Layout.wrap(NotFound, "Siden mangler"),
 });
-
 
 DELTAGERE_STATE.download();
