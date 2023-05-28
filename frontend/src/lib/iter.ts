@@ -168,6 +168,21 @@ export class Iter<T> {
         });
     }
 
+    public cycle(): Iter<T> {
+        let it = this.it;
+        return new Iter(function*() {
+            let buffer = [];
+            for (let item of it) {
+                buffer.push(item);
+            }
+            while (true) {
+                for (let item of buffer) {
+                    yield item;
+                }
+            }
+        });
+    }
+
     public slice(start: number, stop?: number, step?: number) {
         if (step === undefined) {
             step = 1;

@@ -60,9 +60,27 @@ const KØN_ORDER = {
 
 class Days {
     public view(vnode: m.Vnode<{days: Array<Tilstede>}>) {
-        let days = $it(vnode.attrs.days).map((day) => {
+        const weekdays = [
+            "1. Lørdag",
+            "1. Søndag",
+            "1. Mandag",
+            "1. Tirsdag",
+            "1. Onsdag",
+            "1. Torsdag",
+            "1. Fredag",
+            "2. Lørdag",
+            "2. Søndag",
+            "2. Mandag",
+            "2. Tirsdag",
+            "2. Onsdag",
+            "2. Torsdag",
+            "2. Fredag",
+            "3. Lørdag",
+        ];
+
+        let days = $it(vnode.attrs.days).zip(weekdays).map(([day, weekday]) => {
             if (day === "Ja") {
-                return m("span.day-ja", "+");
+                return m("span.day-ja", {title: weekday}, "+");
             }
             if (day === "Nej") {
                 return m("span.day-nej", "_");
@@ -104,7 +122,7 @@ class ViewDeltagereTable {
     public view (vnode: m.Vnode<{stab: Stab, er_voksen: boolean, group: boolean}>) {
         let deltagere = (
             $it(DELTAGERE_STATE.deltagere)
-            .filter((deltager) => deltager.stab === vnode.attrs.stab && deltager.er_voksen === vnode.attrs.er_voksen)
+            .filter((deltager) => (vnode.attrs.stab == null || deltager.stab === vnode.attrs.stab) && deltager.er_voksen === vnode.attrs.er_voksen)
             .sort((deltager) => [
                 STAB_ORDER[deltager.stab],
                 deltager.er_voksen,
@@ -119,7 +137,7 @@ class ViewDeltagereTable {
             .map((patrulje) =>
                 m("tbody",
                   m(Tr,
-                    m("th", {colspan: 6}, patrulje[0].patrulje),
+                    vnode.attrs.group ? m("th", {colspan: 6}, patrulje[0].patrulje) : null,
                     // m("th"),
                     // m("th"),
                     // m("th"),
@@ -217,8 +235,8 @@ class Summary {
     }
     public view(vnode: m.Vnode<{stab: Stab}>) {
 
-        let deltagere = $it(DELTAGERE_STATE.deltagere).filter((deltager) => deltager.stab === vnode.attrs.stab).List()
-        let by_patrulje = $it(deltagere).groupBy("patrulje").map(([patrulje, d]) => this.summary(d, patrulje)).List();
+        let deltagere = $it(DELTAGERE_STATE.deltagere).filter((deltager) => vnode.attrs.stab == null || deltager.stab === vnode.attrs.stab).List()
+        let by_patrulje = $it(deltagere).groupBy("patrulje").sort(([patrulje, d]) => PATRULJE_ORDER[patrulje]).map(([patrulje, d]) => this.summary(d, patrulje)).List();
         return m("table",
                  m("thead",
                    m("tr",
@@ -226,7 +244,7 @@ class Summary {
                      m("th", "Uge 1"),
                      m("th", "Uge 2"),
                      m("th", "I alt"))),
-                 this.summary(deltagere, "Hele staben"),
+                 this.summary(deltagere, "Totalt"),
                  by_patrulje,
                 );
 
@@ -281,13 +299,24 @@ export class PageDeltagereResten {
                  m(ViewDeltagereTable, {stab: Stab["Resten"], er_voksen: false, group: true}),
                  m(H1, "Ledere"),
                  m(ViewDeltagereTable, {stab: Stab["Resten"], er_voksen: true, group: false}),
-                 m(".no-breakQQQ",
-                   m(H1, "Opsummering"),
-                   m(Summary, {stab: Stab["Resten"]})),
+                 m(H1, "Opsummering"),
+                 m(Summary, {stab: Stab["Resten"]}),
                 );
     }
 }
 
+export class PageDeltagereAlle {
+    public view (vnode: m.Vnode) {
+        return m("div",
+                 m(H1, "Børn"),
+                 m(ViewDeltagereTable, {stab: null, er_voksen: false, group: true}),
+                 m(H1, "Ledere"),
+                 m(ViewDeltagereTable, {stab: null, er_voksen: true, group: true}),
+                 m(H1, "Opsummering"),
+                 m(Summary, {stab: null}),
+                );
+    }
+}
 export class PageDeltagereMærkelige {
     public view (vnode: m.Vnode) {
         return m("div", "Der er nogen der er tilmeldt");

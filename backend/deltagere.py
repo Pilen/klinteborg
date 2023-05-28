@@ -133,20 +133,23 @@ class Foo(pydantic.BaseModel):
 
 
 
-def _one_of(*args: Any) -> Any:
+def _one_of(*args: Any, lax: bool = True) -> Any:
     result = None
     for arg in args:
         if arg:
-            assert result is None, args
+            if lax:
+                assert result is None or arg == result, args
+            else:
+                assert result is None, args
             result = arg
     return result
-
 
 def _make_deltager(row: dict[str, str]) -> Deltager:
     # deltager = Deltager()
     deltager = Deltager.__new__(Deltager) # Hack to avoid pydantic
     id_, navn_= row["Partner"].split(" ", 1)
     deltager.fdfid = int(id_)
+    print(deltager.fdfid)
     deltager.row = row
     deltager.problemer = []
     deltager.navn = navn_.strip()
@@ -172,14 +175,18 @@ def _make_deltager(row: dict[str, str]) -> Deltager:
             deltager.stab = Stab.RESTEN
     elif age_group == "Barn":
         assert opgave == ""
-        assert patrulje != "" # Is this correct? what about tantebørn?
+        # assert patrulje != "" # Is this correct? what about tantebørn?
+        if patrulje == "":
+            deltager.patrulje = Patrulje.UKENDT
+            deltager.problemer.append("Ukendt patrulje")
+        else:
+            deltager.patrulje = Patrulje(patrulje)
         deltager.er_voksen = False
-        deltager.patrulje = Patrulje(patrulje)
         deltager.stab = STAB_BY_PATRULJE[deltager.patrulje]
     else:
         assert False
 
-    when = _one_of(row["Hvornår deltager du (B)?"], row["Hvornår deltager du (V)?"])
+    when = _one_of(row["Hvornår deltager du (B)?"], row["Hvornår deltager du (V)?"], lax=True)
     if when.startswith("Begge"):
         deltager.uge1 = True
         deltager.uge2 = True
@@ -203,11 +210,15 @@ def when_are_you_there(deltager: Deltager) -> None:
     ankomst_type = _one_of(deltager["Ankomst til lejren (U2)"], deltager["Ankomst til lejren (U1/B)"])
     afrejse_type = _one_of(deltager["Hjemrejse fra lejren (U2/B)"], deltager["Hjemrejse fra lejren (U1)"])
 
-
     if ankomst_type.startswith("Egen"):
         deltager.ankomst_type = Transport.EGEN
-        deltager.ankomst_dato = datetime.datetime.strptime(deltager["Ankomstdato egen transport (ankomst på lejren)"], "%d-%m-%Y").date()
-        deltager.ankomst_tidspunkt = TIDSPUNKTER[deltager["Ca. tidspunkt egen transport (ankomst på lejren)"]]
+        if deltager["Ankomstdato egen transport (ankomst på lejren)"] == "":
+            deltager.problemer.append("Deltager mangler \"Ankomstdato egen transport (ankomst på lejren)\"")
+            deltager.ankomst_dato = datetime.date(3000, 1, 1)
+            deltager.ankomst_tidspunkt = None
+        else:
+            deltager.ankomst_dato = datetime.datetime.strptime(deltager["Ankomstdato egen transport (ankomst på lejren)"], "%d-%m-%Y").date()
+            deltager.ankomst_tidspunkt = TIDSPUNKTER[deltager["Ca. tidspunkt egen transport (ankomst på lejren)"]]
     elif ankomst_type.startswith("Fælles"):
         deltager.ankomst_type = Transport.FÆLLES
         deltager.ankomst_tidspunkt = None
@@ -323,6 +334,7 @@ def _load(path: Path) -> Iterator[dict[str, str]]:
 
 def _is_good(row: dict[str, str]) -> bool:
     return (row["Status"] != "Afmeldt" and
+            row["Status"] != "Annulleret" and
             row["Deltagernavn"] != "")
 
 
@@ -351,6 +363,7 @@ def import_excel(tx: TX) -> None:
                     """, deltager.navn, deltager.fdfid)
             else:
                 new_count += 1
+                print(deltager.navn)
                 tx.insert("fdfids", fdfid = deltager.fdfid, navn = deltager.navn)
             inserted_count += 1
             tx.insert(
