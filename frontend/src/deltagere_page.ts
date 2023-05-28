@@ -3,60 +3,9 @@ import {error} from "./error";
 import {$it, Iter, foo} from "./lib/iter";
 // import {Deltager} from "./deltagere_state";
 // import DELTAGERE_STATE from "./deltagere_state";
-import {DELTAGERE_STATE, Deltager, Stab, Tilstede} from "./deltagere_state";
+import {DELTAGERE_STATE, Deltager} from "./deltagere_state";
+import {Stab, STAB, Patrulje, PATRULJE, Tilstede} from "./definitions";
 import {H1, Tr} from "./utils";
-
-const KØN = {
-    "Mand": "M",
-    "Kvinde": "K",
-    "Andet": "A",
-};
-
-const STAB_ORDER = {
-    "Resten": 0,
-    "Indestab": 1,
-    "Piltestab": 2,
-    "Væbnerstab":3,
-}
-
-const PATRULJE_ORDER = {
-    "Numlinge": 0,
-    "1. Puslinge": 1,
-    "2. Puslinge": 2,
-    "1. Tumlinge": 3,
-    "2. Tumlinge": 4,
-    "1. Pilte": 5,
-    "2. Pilte": 6,
-    "1. Væbnere": 7,
-    "2. Væbnere": 8,
-    "1. Seniorvæbnere": 9,
-    "2. Seniorvæbnere": 10,
-    "?": 11,
-    "Ingen": 12,
-}
-
-const PATRULJE_ABBR = {
-    "Numlinge": "Num",
-    "1. Puslinge": "1. Pu",
-    "2. Puslinge": "2. Pu",
-    "1. Tumlinge": "1. Tu",
-    "2. Tumlinge": "2. Tu",
-    "1. Pilte": "1. Pi",
-    "2. Pilte": "2. Pi",
-    "1. Væbnere": "1. Væ",
-    "2. Væbnere": "2. Væ",
-    "1. Seniorvæbnere": "1. Sv",
-    "2. Seniorvæbnere": "2. Sv",
-    "?": "?",
-    "Ingen": "",
-}
-
-
-const KØN_ORDER = {
-    "Kvinde": 0,
-    "Andet": 1,
-    "Mand": 2,
-}
 
 class Days {
     public view(vnode: m.Vnode<{days: Array<Tilstede>}>) {
@@ -124,20 +73,20 @@ class ViewDeltagereTable {
             $it(DELTAGERE_STATE.deltagere)
             .filter((deltager) => (vnode.attrs.stab == null || deltager.stab === vnode.attrs.stab) && deltager.er_voksen === vnode.attrs.er_voksen)
             .sort((deltager) => [
-                STAB_ORDER[deltager.stab],
+                deltager.stab.order,
                 deltager.er_voksen,
-                PATRULJE_ORDER[deltager.patrulje],
+                deltager.patrulje.order,
                 !(deltager.uge1 && !deltager.uge2),
                 !(deltager.uge1 && deltager.uge2),
                 !(!deltager.uge1 && deltager.uge2),
-                KØN_ORDER[deltager.row["Køn"]],
+                deltager.køn.order,
                 deltager.navn
             ])
-            .groupRuns((deltager) => vnode.attrs.group && deltager.patrulje)
+            .groupRuns((deltager) => vnode.attrs.group && deltager.patrulje.name)
             .map((patrulje) =>
                 m("tbody",
                   m(Tr,
-                    vnode.attrs.group ? m("th", {colspan: 6}, patrulje[0].patrulje) : null,
+                    vnode.attrs.group ? m("th", {colspan: 6}, patrulje[0].patrulje.name) : null,
                     // m("th"),
                     // m("th"),
                     // m("th"),
@@ -148,8 +97,9 @@ class ViewDeltagereTable {
                       .map((deltager) =>
                           m("tr",
                             m("td", deltager.navn),
-                            m("td", KØN[deltager.row["Køn"]] || error(`Ukendt køn ${deltager.row["Køn"]}`)),
-                            m("td", PATRULJE_ABBR[deltager.patrulje]),
+                            // m("td", KØN[deltager.row["Køn"]] || error(`Ukendt køn ${deltager.row["Køn"]}`)),
+                            m("td", deltager.køn.abbreviation),
+                            m("td", deltager.patrulje.abbreviation),
                             m("td", m(Days, {days: deltager.dage})),
                             m("td", deltager.ankomst_tidspunkt),
                             m("td", deltager.afrejse_tidspunkt),
@@ -194,9 +144,9 @@ class Summary {
                     count["Børn"].total++;
                     if (deltager.uge1) {count["Børn"].uge1++;}
                     if (deltager.uge2) {count["Børn"].uge2++;}
-                    count[deltager.row["Køn"]].total++;
-                    if (deltager.uge1) {count[deltager.row["Køn"]].uge1++;}
-                    if (deltager.uge2) {count[deltager.row["Køn"]].uge2++;}
+                    count[deltager.køn.name].total++;
+                    if (deltager.uge1) {count[deltager.køn.name].uge1++;}
+                    if (deltager.uge2) {count[deltager.køn.name].uge2++;}
                 }
             })
             .Go();
@@ -235,8 +185,8 @@ class Summary {
     }
     public view(vnode: m.Vnode<{stab: Stab}>) {
 
-        let deltagere = $it(DELTAGERE_STATE.deltagere).filter((deltager) => vnode.attrs.stab == null || deltager.stab === vnode.attrs.stab).List()
-        let by_patrulje = $it(deltagere).groupBy("patrulje").sort(([patrulje, d]) => PATRULJE_ORDER[patrulje]).map(([patrulje, d]) => this.summary(d, patrulje)).List();
+        let deltagere = $it(DELTAGERE_STATE.deltagere).filter((deltager) => vnode.attrs.stab == null || deltager.stab === vnode.attrs.stab).List();
+        let by_patrulje = $it(deltagere).groupBy((deltager) => deltager.patrulje.name).sort(([patrulje, d]) => PATRULJE[patrulje].order).map(([patrulje, d]) => this.summary(d, patrulje)).List();
         return m("table",
                  m("thead",
                    m("tr",
@@ -257,11 +207,11 @@ export class PageDeltagereIndestab {
     public view (vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: Stab["Indestab"], er_voksen: false, group: true}),
+                 m(ViewDeltagereTable, {stab: STAB["Indestab"], er_voksen: false, group: true}),
                  m(H1, "Ledere"),
-                 m(ViewDeltagereTable, {stab: Stab["Indestab"], er_voksen: true, group: false}),
+                 m(ViewDeltagereTable, {stab: STAB["Indestab"], er_voksen: true, group: false}),
                  m(H1, "Opsummering"),
-                 m(Summary, {stab: Stab["Indestab"]}),
+                 m(Summary, {stab: STAB["Indestab"]}),
                 );
     }
 }
@@ -270,11 +220,11 @@ export class PageDeltagerePiltestab {
     public view (vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: Stab["Piltestab"], er_voksen: false, group: true}),
+                 m(ViewDeltagereTable, {stab: STAB["Piltestab"], er_voksen: false, group: true}),
                  m(H1, "Ledere"),
-                 m(ViewDeltagereTable, {stab: Stab["Piltestab"], er_voksen: true, group: false}),
+                 m(ViewDeltagereTable, {stab: STAB["Piltestab"], er_voksen: true, group: false}),
                  m(H1, "Opsummering"),
-                 m(Summary, {stab: Stab["Piltestab"]}),
+                 m(Summary, {stab: STAB["Piltestab"]}),
                 );
     }
 }
@@ -283,11 +233,11 @@ export class PageDeltagereVæbnerstab {
     public view (vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: Stab["Væbnerstab"], er_voksen: false, group: true}),
+                 m(ViewDeltagereTable, {stab: STAB["Væbnerstab"], er_voksen: false, group: true}),
                  m(H1, "Ledere"),
-                 m(ViewDeltagereTable, {stab: Stab["Væbnerstab"], er_voksen: true, group: false}),
+                 m(ViewDeltagereTable, {stab: STAB["Væbnerstab"], er_voksen: true, group: false}),
                  m(H1, "Opsummering"),
-                 m(Summary, {stab: Stab["Væbnerstab"]}),
+                 m(Summary, {stab: STAB["Væbnerstab"]}),
                 );
     }
 }
@@ -296,11 +246,11 @@ export class PageDeltagereResten {
     public view (vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: Stab["Resten"], er_voksen: false, group: true}),
+                 m(ViewDeltagereTable, {stab: STAB["Resten"], er_voksen: false, group: true}),
                  m(H1, "Ledere"),
-                 m(ViewDeltagereTable, {stab: Stab["Resten"], er_voksen: true, group: false}),
+                 m(ViewDeltagereTable, {stab: STAB["Resten"], er_voksen: true, group: false}),
                  m(H1, "Opsummering"),
-                 m(Summary, {stab: Stab["Resten"]}),
+                 m(Summary, {stab: STAB["Resten"]}),
                 );
     }
 }
