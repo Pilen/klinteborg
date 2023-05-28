@@ -1,6 +1,6 @@
 import m from "mithril";
 import {error} from "./error";
-import {Køn, KØN, Stab, STAB, Patrulje, PATRULJE, Tilstede, Transport} from "./definitions";
+import {Køn, Stab, Patrulje, Tilstede, Transport} from "./definitions";
 
 export class Deltager {
     fdfid: number;
@@ -44,10 +44,10 @@ export class DeltagereState {
             this.deltagere = result
             for (let deltager of this.deltagere) {
                 // @ts-ignore
-                deltager.stab = STAB[deltager.stab];
+                deltager.stab = Stab.get(deltager.stab);
                 // @ts-ignore
-                deltager.patrulje = PATRULJE[deltager.patrulje];
-                deltager.køn = KØN[deltager.row["Køn"]];
+                deltager.patrulje = Patrulje.get(deltager.patrulje);
+                deltager.køn = Køn.get(deltager.row["Køn"]);
                 deltager.ankomst_dato = new Date(deltager.ankomst_dato);
                 deltager.afrejse_dato = new Date(deltager.afrejse_dato);
             }

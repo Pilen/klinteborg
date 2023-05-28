@@ -4,7 +4,7 @@ import {$it, Iter, foo} from "./lib/iter";
 // import {Deltager} from "./deltagere_state";
 // import DELTAGERE_STATE from "./deltagere_state";
 import {DELTAGERE_STATE, Deltager} from "./deltagere_state";
-import {Stab, STAB, Patrulje, PATRULJE, Tilstede} from "./definitions";
+import {Stab, Patrulje, Tilstede} from "./definitions";
 import {H1, Tr} from "./utils";
 
 class Days {
@@ -117,11 +117,6 @@ class ViewDeltagereTable {
                      m("th", "Ankomst"),
                      m("th", "Afrejse"))),
                  deltagere);
-                 // m("tbody",
-                 //   deltagere,
-                 //  ));
-
-
     }
 }
 
@@ -186,7 +181,7 @@ class Summary {
     public view(vnode: m.Vnode<{stab: Stab}>) {
 
         let deltagere = $it(DELTAGERE_STATE.deltagere).filter((deltager) => vnode.attrs.stab == null || deltager.stab === vnode.attrs.stab).List();
-        let by_patrulje = $it(deltagere).groupBy((deltager) => deltager.patrulje.name).sort(([patrulje, d]) => PATRULJE[patrulje].order).map(([patrulje, d]) => this.summary(d, patrulje)).List();
+        let by_patrulje = $it(deltagere).groupBy((deltager) => deltager.patrulje.name).sort(([patrulje, d]) => Patrulje.get(patrulje).order).map(([patrulje, d]) => this.summary(d, patrulje)).List();
         return m("table",
                  m("thead",
                    m("tr",
@@ -207,11 +202,11 @@ export class PageDeltagereIndestab {
     public view (vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: STAB["Indestab"], er_voksen: false, group: true}),
+                 m(ViewDeltagereTable, {stab: Stab.get("Indestab"), er_voksen: false, group: true}),
                  m(H1, "Ledere"),
-                 m(ViewDeltagereTable, {stab: STAB["Indestab"], er_voksen: true, group: false}),
+                 m(ViewDeltagereTable, {stab: Stab.get("Indestab"), er_voksen: true, group: false}),
                  m(H1, "Opsummering"),
-                 m(Summary, {stab: STAB["Indestab"]}),
+                 m(Summary, {stab: Stab.get("Indestab")}),
                 );
     }
 }
@@ -220,11 +215,11 @@ export class PageDeltagerePiltestab {
     public view (vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: STAB["Piltestab"], er_voksen: false, group: true}),
+                 m(ViewDeltagereTable, {stab: Stab.get("Piltestab"), er_voksen: false, group: true}),
                  m(H1, "Ledere"),
-                 m(ViewDeltagereTable, {stab: STAB["Piltestab"], er_voksen: true, group: false}),
+                 m(ViewDeltagereTable, {stab: Stab.get("Piltestab"), er_voksen: true, group: false}),
                  m(H1, "Opsummering"),
-                 m(Summary, {stab: STAB["Piltestab"]}),
+                 m(Summary, {stab: Stab.get("Piltestab")}),
                 );
     }
 }
@@ -233,11 +228,11 @@ export class PageDeltagereVæbnerstab {
     public view (vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: STAB["Væbnerstab"], er_voksen: false, group: true}),
+                 m(ViewDeltagereTable, {stab: Stab.get("Væbnerstab"), er_voksen: false, group: true}),
                  m(H1, "Ledere"),
-                 m(ViewDeltagereTable, {stab: STAB["Væbnerstab"], er_voksen: true, group: false}),
+                 m(ViewDeltagereTable, {stab: Stab.get("Væbnerstab"), er_voksen: true, group: false}),
                  m(H1, "Opsummering"),
-                 m(Summary, {stab: STAB["Væbnerstab"]}),
+                 m(Summary, {stab: Stab.get("Væbnerstab")}),
                 );
     }
 }
@@ -246,11 +241,11 @@ export class PageDeltagereResten {
     public view (vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: STAB["Resten"], er_voksen: false, group: true}),
+                 m(ViewDeltagereTable, {stab: Stab.get("Resten"), er_voksen: false, group: true}),
                  m(H1, "Ledere"),
-                 m(ViewDeltagereTable, {stab: STAB["Resten"], er_voksen: true, group: false}),
+                 m(ViewDeltagereTable, {stab: Stab.get("Resten"), er_voksen: true, group: false}),
                  m(H1, "Opsummering"),
-                 m(Summary, {stab: STAB["Resten"]}),
+                 m(Summary, {stab: Stab.get("Resten")}),
                 );
     }
 }
