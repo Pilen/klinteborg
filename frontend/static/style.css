@@ -57,8 +57,9 @@ body {
     background-color: var(--hvid);
     margin: 0px;
 }
+
 main {
-margin: 10px 20px 10px 20px;
+    margin: 10px 20px 10px 20px;
 }
 h1, h2, h3, h4, h5, h6 {
     page-break-after: never;
@@ -139,6 +140,27 @@ h6 {
     font-weight: 900;
 }
 .loading > span {
+}
+
+
+a {
+    color: var(--søblå);
+}
+a:visited {
+    /* color: var(--syren); */
+}
+
+a.subdued-link {
+    color: inherit;
+    text-decoration: inherit;
+}
+a.subdued-link:hover {
+    text-decoration: underline;
+}
+a.subdued-link:hover:after {
+    content: "↗";
+    color: var(--granit);
+    position: absolute;
 }
 
 /*******************************************************************************

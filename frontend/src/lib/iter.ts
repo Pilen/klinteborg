@@ -757,7 +757,6 @@ function make_extract<T> (key: string | number | ((T) => any)): any {
     return extract;
 }
 
-console.log("a")
 // $it.Iter = Iter;
 
 // @ts-ignore

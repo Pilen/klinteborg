@@ -10,7 +10,9 @@ import {
     PageDeltagereResten,
     PageDeltagereAlle,
     PageDeltagereMærkelige,
-    PageDeltagereSøg
+    PageDeltagereTransport,
+    PageDeltagereSøg,
+    PageDeltager
 } from "./deltagere_page";
 import {formatDateTime} from "./utils";
 
@@ -76,7 +78,8 @@ class Layout {
                     m(m.route.Link, {href: "/deltagere/væbnerstab"}, "Væbnerstab"),
                     m(m.route.Link, {href: "/deltagere/resten"}, "Resten"),
                     m(m.route.Link, {href: "/deltagere/alle"}, "Alle"),
-                    m(m.route.Link, {href: "/deltagere/mærkelige"}, "Mærkelige"),
+                    // m(m.route.Link, {href: "/deltagere/mærkelige"}, "Mærkelige"),
+                    m(m.route.Link, {href: "/deltagere/transport"}, "Transport"),
                     m(m.route.Link, {href: "/deltagere/søg"}, "Søg"),
                    )),
                 m(".dropdown",
@@ -111,8 +114,8 @@ class Layout {
     }
     public static wrap(cls: any, title: string) {
         return {
-            render: function() {
-                return m(Layout, {title: title}, m(cls));
+            render: function(vnode: m.Vnode) {
+                return m(Layout, {title: title}, m(cls, {...vnode.attrs}));
             }
         };
     }
@@ -125,7 +128,9 @@ m.route(document.body, "/", {
     "/deltagere/væbnerstab": Layout.wrap(PageDeltagereVæbnerstab, "Deltagere Væbnerstab"),
     "/deltagere/resten":     Layout.wrap(PageDeltagereResten, "Deltagere Resten"),
     "/deltagere/alle":       Layout.wrap(PageDeltagereAlle, "Deltagere Alle"),
-    "/deltagere/mærkelige":  Layout.wrap(PageDeltagereMærkelige, "Deltagere Mærkelige"),
+    // "/deltagere/mærkelige":  Layout.wrap(PageDeltagereMærkelige, "Deltagere Mærkelige"),
+    "/deltagere/transport":  Layout.wrap(PageDeltagereTransport, "Deltagere Transport"),
+    "/deltager/:fdfid":      Layout.wrap(PageDeltager, "Deltager"),
     "/deltagere/søg":        Layout.wrap(PageDeltagereSøg, "Deltagere Søg"),
     "/:404...":              Layout.wrap(NotFound, "Siden mangler"),
 });

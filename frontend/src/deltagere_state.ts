@@ -15,6 +15,7 @@ export class Deltager {
     uge2: boolean;
     dage: Array<Tilstede>;
     dage_x: Array<Tilstede>;
+    upræcis_periode: boolean;
 
     ankomst_type: Transport;
     ankomst_dato: Date;
@@ -48,8 +49,8 @@ export class DeltagereState {
                 // @ts-ignore
                 deltager.patrulje = Patrulje.get(deltager.patrulje);
                 deltager.køn = Køn.get(deltager.row["Køn"]);
-                deltager.ankomst_dato = new Date(deltager.ankomst_dato);
-                deltager.afrejse_dato = new Date(deltager.afrejse_dato);
+                deltager.ankomst_dato = deltager.ankomst_dato ? new Date(deltager.ankomst_dato) : null;
+                deltager.afrejse_dato = deltager.afrejse_dato ? new Date(deltager.afrejse_dato) : null;
             }
         });
     }

@@ -69,11 +69,12 @@ CREATE TABLE deltagere (
 	uge2		boolean		NOT NULL,
 	dage		Tilstede[]	NOT NULL,
 	dage_x		Tilstede[],
+    upræcis_periode		boolean		NOT NULL,
 	ankomst_type		Transport	NOT NULL,
-	ankomst_dato		date		NOT NULL,
+	ankomst_dato		date,
 	ankomst_tidspunkt	int,
 	afrejse_type		Transport	NOT NULL,
-	afrejse_dato		date		NOT NULL,
+	afrejse_dato		date,
 	afrejse_tidspunkt	int
 );
 

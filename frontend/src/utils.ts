@@ -20,6 +20,11 @@ export function formatDate(d: Date): string {
     return `${year}/${month}/${day}`;
 }
 
+export function addDays(date, days) {
+    let result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
 
 export class Breakable {
     tag = "span";

@@ -21,6 +21,10 @@ export function error(status, message?) {
             message = "Internal Server Error";
         }
     }
+    if (current_error && current_error.status == status && current_error.message == message) {
+    } else {
+        m.redraw();
+    }
     current_error = {status: status, message: message};
 }
 
@@ -35,13 +39,13 @@ export function clearError() {
 export class ErrorView {
     public view() {
         if (current_error === null) {
-            return null
+            return null;
         }
         return m(".error",
                  {onclick: clearError},
                  // @ts-ignore
-                 m("span.header", `⚠ Fejl: ${error.status}`),
+                 m("span.header", `⚠ Fejl ${current_error.status}: `),
                  // @ts-ignore
-                 m("span.body", error.message));
+                 m("span.body", current_error.message));
     }
 }

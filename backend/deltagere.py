@@ -103,12 +103,13 @@ class Deltager:
     uge2: bool
     dage: list[Tilstede]
     dage_x: list[Tilstede]
+    upræcis_periode: bool
 
     ankomst_type: Transport
-    ankomst_dato: datetime.date
+    ankomst_dato: datetime.date | None
     ankomst_tidspunkt: int | None
     afrejse_type: Transport
-    afrejse_dato: datetime.date
+    afrejse_dato: datetime.date | None
     afrejse_tidspunkt: int | None
 
     @pydantic.validator("dage", "dage_x", pre=True)
@@ -206,80 +207,132 @@ def _make_deltager(row: dict[str, str]) -> Deltager:
 def when_are_you_there(deltager: Deltager) -> None:
     dato_start = config.start_date
     dato_midt = dato_start + datetime.timedelta(days=7)
-    dato_slut = dato_start + datetime.timedelta(days=15)
+    dato_slut = dato_start + datetime.timedelta(days=14)
     ankomst_type = _one_of(deltager["Ankomst til lejren (U2)"], deltager["Ankomst til lejren (U1/B)"])
     afrejse_type = _one_of(deltager["Hjemrejse fra lejren (U2/B)"], deltager["Hjemrejse fra lejren (U1)"])
+    deltager.upræcis_periode = False
 
     if ankomst_type.startswith("Egen"):
         deltager.ankomst_type = Transport.EGEN
         if deltager["Ankomstdato egen transport (ankomst på lejren)"] == "":
             deltager.problemer.append("Deltager mangler \"Ankomstdato egen transport (ankomst på lejren)\"")
-            deltager.ankomst_dato = datetime.date(3000, 1, 1)
-            deltager.ankomst_tidspunkt = None
+            deltager.upræcis_periode = True
+            deltager.ankomst_dato = None
         else:
             deltager.ankomst_dato = datetime.datetime.strptime(deltager["Ankomstdato egen transport (ankomst på lejren)"], "%d-%m-%Y").date()
+        if deltager["Ca. tidspunkt egen transport (ankomst på lejren)"] == "":
+            deltager.problemer.append("Deltager mangler \"Ca. tidspunkt egen transport (ankomst på lejren)\"")
+            deltager.upræcis_periode = True
+            deltager.ankomst_tidspunkt = None
+        else:
             deltager.ankomst_tidspunkt = TIDSPUNKTER[deltager["Ca. tidspunkt egen transport (ankomst på lejren)"]]
     elif ankomst_type.startswith("Fælles"):
         deltager.ankomst_type = Transport.FÆLLES
+        deltager.ankomst_dato = dato_start
         deltager.ankomst_tidspunkt = None
-        if deltager.uge1: # just uge1 or both
-            deltager.ankomst_dato = dato_start
-        elif deltager.uge2:
-            assert False
+        if deltager["Ankomstdato egen transport (ankomst på lejren)"] != "":
+            deltager.problemer.append("Deltager ankommer med fælles transport, men har angivet \"Ankomstdato egen transport (ankomst på lejren)\"")
+            deltager.upræcis_periode = True
+        if deltager["Ca. tidspunkt egen transport (ankomst på lejren)"] != "":
+            deltager.problemer.append("Deltager ankommer med fælles transport, men har angivet \"Ca. tidspunkt egen transport (ankomst på lejren)\"")
+            deltager.upræcis_periode = True
+        # assert deltager["Ankomstdato egen transport (ankomst på lejren)"] == ""
+        # assert deltager["Ca. tidspunkt egen transport (ankomst på lejren)"] == ""
+        assert deltager.uge1 # just uge1 or both
     elif ankomst_type.startswith("Samkørsel"):
         deltager.ankomst_type = Transport.SAMKØRSEL
+        deltager.ankomst_dato = dato_midt
         deltager.ankomst_tidspunkt = None
-        if deltager.uge1: # just uge1 or both
-            assert False
-        elif deltager.uge2:
-            deltager.ankomst_dato = dato_midt
+        if deltager["Ankomstdato egen transport (ankomst på lejren)"] != "":
+            deltager.problemer.append("Deltager ankommer med samkørsel, men har angivet \"Ankomstdato egen transport (ankomst på lejren)\"")
+            deltager.upræcis_periode = True
+        if deltager["Ca. tidspunkt egen transport (ankomst på lejren)"] != "":
+            deltager.problemer.append("Deltager ankommer med samkørsel, men har angivet \"Ca. tidspunkt egen transport (ankomst på lejren)\"")
+            deltager.upræcis_periode = True
+        # assert deltager["Ankomstdato egen transport (ankomst på lejren)"] == ""
+        # assert deltager["Ca. tidspunkt egen transport (ankomst på lejren)"] == ""
+        assert deltager.uge2 and not deltager.uge1
     else:
         assert False
 
     if afrejse_type.startswith("Egen"):
         deltager.afrejse_type = Transport.EGEN
-        deltager.afrejse_dato = datetime.datetime.strptime(deltager["Afrejsedato egen transport (afrejser lejren)"], "%d-%m-%Y").date()
-        deltager.afrejse_tidspunkt = TIDSPUNKTER[deltager["Ca. afrejse tidspunkt egen transport (afrejser lejren)"]]
+        if deltager["Afrejsedato egen transport (afrejser lejren)"] == "":
+            deltager.problemer.append("Deltager mangler \"Afrejsedato egen transport (afrejser lejren)\"")
+            deltager.upræcis_periode = True
+            deltager.afrejse_dato = None
+        else:
+            deltager.afrejse_dato = datetime.datetime.strptime(deltager["Afrejsedato egen transport (afrejser lejren)"], "%d-%m-%Y").date()
+        if deltager["Ca. afrejse tidspunkt egen transport (afrejser lejren)"] == "":
+            deltager.problemer.append("Deltager mangler \"Ca. afrejse tidspunkt egen transport (afrejser lejren)\"")
+            deltager.upræcis_periode = True
+            deltager.afrejse_tidspunkt = None
+        else:
+            deltager.afrejse_tidspunkt = TIDSPUNKTER[deltager["Ca. afrejse tidspunkt egen transport (afrejser lejren)"]]
     elif afrejse_type.startswith("Fælles"):
         deltager.afrejse_type = Transport.FÆLLES
+        deltager.afrejse_dato = dato_slut
         deltager.afrejse_tidspunkt = None
-        if deltager.uge2: # just uge2 or both
-            deltager.afrejse_dato = dato_slut
-        elif deltager.uge1:
-            assert False
+        if deltager["Afrejsedato egen transport (afrejser lejren)"] != "":
+            deltager.problemer.append("Deltager afrejser med fælles transport, men har angivet \"Afrejsedato egen transport (afrejser lejren)\"")
+            deltager.upræcis_periode = True
+        if deltager["Ca. afrejse tidspunkt egen transport (afrejser lejren)"] != "":
+            deltager.problemer.append("Deltager afrejser med fælles transport, men har angivet \"Ca. afrejse tidspunkt egen transport (afrejser lejren)\"")
+            deltager.upræcis_periode = True
+        # assert deltager["Afrejsedato egen transport (afrejser lejren)"] == ""
+        # assert deltager["Ca. afrejse tidspunkt egen transport (afrejser lejren)"] == ""
+        assert deltager.uge2 # just uge2 or both
     elif afrejse_type.startswith("Samkørsel"):
-        deltager.afrejse_type = Transport.FÆLLES
+        deltager.afrejse_type = Transport.SAMKØRSEL
+        deltager.afrejse_dato = dato_midt
         deltager.afrejse_tidspunkt = None
-        if deltager.uge2: # just uge2 or both
-            assert False
-        elif deltager.uge1:
-            deltager.afrejse_dato = dato_midt
+        if deltager["Afrejsedato egen transport (afrejser lejren)"] != "":
+            deltager.problemer.append("Deltager afrejser med samkørsel, men har angivet \"Afrejsedato egen transport (afrejser lejren)\"")
+            deltager.upræcis_periode = True
+        if deltager["Ca. afrejse tidspunkt egen transport (afrejser lejren)"] != "":
+            deltager.problemer.append("Deltager afrejser med samkørsel, men har angivet \"Ca. afrejse tidspunkt egen transport (afrejser lejren)\"")
+            deltager.upræcis_periode = True
+        # assert deltager["Afrejsedato egen transport (afrejser lejren)"] == ""
+        # assert deltager["Ca. afrejse tidspunkt egen transport (afrejser lejren)"] == ""
+        assert deltager.uge1 and not deltager.uge2
     else:
         assert False
 
-    if (deltager.ankomst_dato < dato_start):
-        deltager.problemer.append("Deltager en ulovlig dato (ankommer før lejren)")
-    elif(deltager.ankomst_dato > dato_slut):
-        deltager.problemer.append("Deltager en ulovlig dato (ankommer efter lejren)")
-    elif deltager.afrejse_dato < dato_start:
-        deltager.problemer.append("Deltager en ulovlig dato (afrejser før lejren)")
-    elif deltager.afrejse_dato > dato_slut:
-        deltager.problemer.append("Deltager en ulovlig dato (afrejser efter lejren)")
-    elif deltager.ankomst_dato == deltager.afrejse_dato:
-        deltager.problemer.append("Deltager en tager afsted samme dag som ankomst")
-    elif deltager.ankomst_dato > deltager.afrejse_dato:
-        deltager.problemer.append("Deltager ankommer efter afrejse")
+    if deltager.ankomst_dato is not None:
+        if deltager.ankomst_dato < dato_start:
+            deltager.problemer.append("Deltager en ugyldig dato (ankommer før lejren)")
+            deltager.upræcis_periode = True
+        if deltager.ankomst_dato > dato_slut:
+            deltager.problemer.append("Deltager en ugyldig dato (ankommer efter lejren)")
+            deltager.upræcis_periode = True
+    if deltager.afrejse_dato is not None:
+        if deltager.afrejse_dato < dato_start:
+            deltager.problemer.append("Deltager en ugyldig dato (afrejser før lejren)")
+            deltager.upræcis_periode = True
+        if deltager.afrejse_dato > dato_slut:
+            deltager.problemer.append("Deltager en ugyldig dato (afrejser efter lejren)")
+            deltager.upræcis_periode = True
+    if deltager.ankomst_dato is not None and deltager.afrejse_dato is not None:
+        if deltager.ankomst_dato == deltager.afrejse_dato:
+            deltager.problemer.append("Deltager en tager afsted samme dag som ankomst")
+            deltager.upræcis_periode = True
+        if deltager.ankomst_dato > deltager.afrejse_dato:
+            deltager.problemer.append("Deltager ankommer efter afrejse")
+            deltager.upræcis_periode = True
 
-    dage = []
-    for i in range(15):
-        day = dato_start + datetime.timedelta(days=i)
-        if day < deltager.ankomst_dato:
-            dage.append(Tilstede.NEJ)
-        elif day > deltager.afrejse_dato:
-            dage.append(Tilstede.NEJ)
-        else:
-            dage.append(Tilstede.JA)
-    deltager.dage = dage
+    if deltager.upræcis_periode:
+        deltager.dage = [Tilstede.MÅSKE] * 15
+    else:
+        dage = []
+        for i in range(15):
+            day = dato_start + datetime.timedelta(days=i)
+            if day < deltager.ankomst_dato:
+                dage.append(Tilstede.NEJ)
+            elif day > deltager.afrejse_dato:
+                dage.append(Tilstede.NEJ)
+            else:
+                dage.append(Tilstede.JA)
+        deltager.dage = dage
 
 def when_did_you_cross(deltager: Deltager) -> None:
     deltager.dage_x = [Tilstede.MÅSKE] * 15
@@ -366,6 +419,8 @@ def import_excel(tx: TX) -> None:
                 print(deltager.navn)
                 tx.insert("fdfids", fdfid = deltager.fdfid, navn = deltager.navn)
             inserted_count += 1
+            if deltager.ankomst_dato is None:
+                print(deltager.navn, "ankomst_dato is None")
             tx.insert(
                 "deltagere",
                 fdfid = deltager.fdfid ,
@@ -379,6 +434,7 @@ def import_excel(tx: TX) -> None:
                 uge2 = deltager.uge2,
                 dage = [d.value for d in deltager.dage],
                 dage_x = [d.value for d in deltager.dage_x],
+                upræcis_periode = deltager.upræcis_periode,
                 ankomst_type = deltager.ankomst_type.value,
                 ankomst_dato = deltager.ankomst_dato,
                 ankomst_tidspunkt = deltager.ankomst_tidspunkt,
