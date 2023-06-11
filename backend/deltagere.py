@@ -27,8 +27,10 @@ class Patrulje(enum.Enum):
     VÆBNERE_2 =       "2. Væbnere"
     SENIORVÆBNERE_1 = "1. Seniorvæbnere"
     SENIORVÆBNERE_2 = "2. Seniorvæbnere"
+    SENIOR =          "Senior"
     UKENDT =          "?"
     INGEN =           "Ingen"
+
 
 STAB_BY_PATRULJE = {
     Patrulje.NUMLINGE: Stab.RESTEN,
@@ -42,7 +44,9 @@ STAB_BY_PATRULJE = {
     Patrulje.VÆBNERE_2: Stab.VÆBNERSTAB,
     Patrulje.SENIORVÆBNERE_1: Stab.VÆBNERSTAB,
     Patrulje.SENIORVÆBNERE_2: Stab.VÆBNERSTAB,
+    Patrulje.SENIOR: Stab.RESTEN,
     Patrulje.UKENDT: Stab.RESTEN,
+    Patrulje.INGEN: Stab.RESTEN,
 }
 
 class Tilstede(enum.Enum):
@@ -170,10 +174,15 @@ def _make_deltager(row: dict[str, str]) -> Deltager:
             deltager.patrulje = Patrulje(patrulje)
             deltager.stab = STAB_BY_PATRULJE[deltager.patrulje]
         else:
-            assert patrulje == ""
-            deltager.er_voksen = True
-            deltager.patrulje = Patrulje.INGEN
-            deltager.stab = Stab.RESTEN
+            if patrulje == Patrulje.NUMLINGE.value:
+                deltager.er_voksen = True
+                deltager.patrulje = Patrulje(patrulje)
+                deltager.stab = STAB_BY_PATRULJE[deltager.patrulje]
+            else:
+                assert patrulje == "", patrulje
+                deltager.er_voksen = True
+                deltager.patrulje = Patrulje.INGEN
+                deltager.stab = Stab.RESTEN
     elif age_group == "Barn":
         assert opgave == ""
         # assert patrulje != "" # Is this correct? what about tantebørn?
@@ -386,9 +395,16 @@ def _load(path: Path) -> Iterator[dict[str, str]]:
         yield {h: c.value for c, h in zip(row, headers)}
 
 def _is_good(row: dict[str, str]) -> bool:
-    return (row["Status"] != "Afmeldt" and
-            row["Status"] != "Annulleret" and
+    if row["Status"] not in ["Bekræftet", "Kladde", "Afventer godkendelse", "Afmeldt", "Annulleret", "Afbud"]:
+        raise Exception(f"Ukendt status: {row['Status']}")
+    return ((row["Status"] == "Bekræftet" or
+             row["Status"] == "Kladde" or
+             row["Status"] == "Afventer godkendelse") and
             row["Deltagernavn"] != "")
+    # return (row["Status"] != "Afmeldt" and
+    #         row["Status"] != "Annulleret" and
+    #         row["Status"] != "Afbud" and
+    #         row["Deltagernavn"] != "")
 
 
 
