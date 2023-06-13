@@ -3,7 +3,7 @@ import {error} from "./error";
 import {$it, Iter, foo} from "./lib/iter";
 import {DELTAGERE_STATE, Deltager} from "./deltagere_state";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "./definitions";
-import {H1, H2, H5, Tr, formatDate} from "./utils";
+import {H1, H2, H5, Tr, formatDate, calculateAge} from "./utils";
 
 
 class Days {
@@ -436,6 +436,36 @@ export class PageDeltagereTransport {
     }
 }
 
+export class PageDeltagereFødselsdage {
+    public view(vnode: m.Vnode) {
+        let deltagere = $it(DELTAGERE_STATE.deltagere)
+            .filter((deltager) => deltager.fødselsdato)
+            .filter((deltager) => DATES.find((date) => deltager.fødselsdato.getMonth() === date.getMonth() && deltager.fødselsdato.getDate() === date.getDate()))
+            .sort((deltager) => [deltager.fødselsdato.getMonth(), deltager.fødselsdato.getDate(), -deltager.fødselsdato.getYear()])
+            .map((deltager) =>
+                m("tr",
+                  m("td", m(m.route.Link, {selector: "a.subdued-link", href: "/deltager/:fdfid", params: {fdfid: deltager.fdfid}}, deltager.navn)),
+                  m("td", deltager.køn.abbreviation),
+                  m("td", deltager.patrulje.abbreviation),
+                  m("td", deltager.er_voksen ? "Voksen" : "Barn"),
+                  m("td", formatDate(deltager.fødselsdato)),
+                  m("td", DAYS[DATES.indexOf(DATES.find((date) => deltager.fødselsdato.getMonth() === date.getMonth() && deltager.fødselsdato.getDate() === date.getDate()))]),
+                 ))
+            .List();
+        return m("table",
+                 m("thead",
+                   m("tr",
+                     m("th", "Navn"),
+                     m("th", "Køn"),
+                     m("th", "Patrulje"),
+                     m("th", "Voksen"),
+                     m("th", "Fødselsdato"),
+                     m("th", "Dag"))),
+                 m("tbody",
+                   deltagere,
+                  ));
+    }
+}
 
 export class PageDeltagereSøg {
     public view(vnode: m.Vnode) {
@@ -462,6 +492,11 @@ export class PageDeltager {
                      // m("tr", m("td", ""), m("td", deltager.row)),
                      // m("tr", m("td", ""), m("td", deltager.problemer)),
                      m("tr", m("td", "Navn"), m("td", deltager.navn)),
+                     m("tr", m("td", "Medlemsnummer"), m("td", deltager.gammelt_medlemsnummer)),
+                     m("tr", m("td", "Fødselsdato"), m("td", deltager.fødselsdato ? formatDate(deltager.fødselsdato) : "-")),
+                     m("tr", m("td", "Alder"), m("td", deltager.fødselsdato ? [calculateAge(deltager.fødselsdato), " år"] : "-")),
+                     m("tr", m("td", "Adresse"), m("td", deltager.adresse)),
+                     m("tr", m("td", "Telefon"), m("td", deltager.telefon)),
                      m("tr", m("td", "Er voksen"), m("td", deltager.er_voksen ? "Voksen" : "Barn")),
                      m("tr", m("td", "Køn"), m("td", deltager.køn.name)),
                      m("tr", m("td", "Stab"), m("td", deltager.stab.name)),
@@ -480,6 +515,10 @@ export class PageDeltager {
                      m("tr", m("td", "Dage"), m("td", m(Days, {days: deltager.dage}))),
                     )),
 
+                 m("table", m("thead", m("tr", m("th", "Kontaktperson"), m("th", "email"), m("th", "telefon"))),
+                   m("tbody",
+                     $it(deltager.pårørende).map((p) => m("tr", m("td", p.navn), m("td", p.email), m("td", $it(p.telefon).Join(" / ")))).List()
+                    )),
                  problemer.length > 0 ? m("table", m("tbody", m("tr", m("th", "Problemer")), problemer)) : null,
 
                  m("table",

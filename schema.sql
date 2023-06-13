@@ -3,8 +3,7 @@ BEGIN;
 -- Deltager FDF Medlems IDs
 CREATE TABLE fdfids (
 	fdfid	integer	PRIMARY KEY,
-	navn	text	NOT NULL,
-    is_admin	boolean DEFAULT false
+	navn	text	NOT NULL
 );
 
 CREATE TABLE login_tokens (
@@ -39,6 +38,7 @@ CREATE TYPE Patrulje as ENUM (
 	'2. Væbnere',
 	'1. Seniorvæbnere',
 	'2. Seniorvæbnere',
+    'Senior',
 	'?',
 	'Ingen'
 );
@@ -62,6 +62,11 @@ CREATE TABLE deltagere (
 	row			jsonb		NOT NULL,
 	problemer	text[]		NOT NULL,
 	navn		text		NOT NULL,
+	gammelt_medlemsnummer	int,
+	fødselsdato	date ,
+	adresse		text		NOT NULL,
+	telefon		text		NOT NULL,
+	pårørende	jsonb		NOT NULL,
 	er_voksen	boolean		NOT NULL,
 	stab		Stab		NOT NULL,
 	patrulje	Patrulje	NOT NULL,
@@ -69,7 +74,7 @@ CREATE TABLE deltagere (
 	uge2		boolean		NOT NULL,
 	dage		Tilstede[]	NOT NULL,
 	dage_x		Tilstede[],
-    upræcis_periode		boolean		NOT NULL,
+	upræcis_periode		boolean		NOT NULL,
 	ankomst_type		Transport	NOT NULL,
 	ankomst_dato		date,
 	ankomst_tidspunkt	int,

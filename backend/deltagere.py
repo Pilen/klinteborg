@@ -1,5 +1,6 @@
 import datetime
 import enum
+import re
 import xlrd # type: ignore
 # from dataclasses import field
 import pydantic
@@ -93,6 +94,11 @@ DAGE = [
     "Deltagelse Uge 2: / Fredag 2",
     "Deltagelse Uge 2: / Lørdag 3",
 ]
+@pydantic.dataclasses.dataclass()
+class Pårørende:
+    navn: str
+    email: str
+    telefon: list[str]
 
 @pydantic.dataclasses.dataclass()
 class Deltager:
@@ -100,6 +106,12 @@ class Deltager:
     row: dict[str, str]
     problemer: list[str]
     navn: str
+    gammelt_medlemsnummer: int | None
+    fødselsdato: datetime.date | None
+    adresse: str
+    telefon: str
+    pårørende: list[Pårørende]
+
     er_voksen: bool
     stab: Stab
     patrulje: Patrulje
@@ -394,23 +406,78 @@ def _load(path: Path) -> Iterator[dict[str, str]]:
     for row in rows:
         yield {h: c.value for c, h in zip(row, headers)}
 
+ALL_STATUS = set(["Bekræftet", "Kladde", "Afventer godkendelse", "Afmeldt", "Annulleret", "Afbud"])
+GOOD_STATUS = set(["Bekræftet", "Kladde", "Afventer godkendelse"])
 def _is_good(row: dict[str, str]) -> bool:
-    if row["Status"] not in ["Bekræftet", "Kladde", "Afventer godkendelse", "Afmeldt", "Annulleret", "Afbud"]:
+    if row["Status"] not in ALL_STATUS:
         raise Exception(f"Ukendt status: {row['Status']}")
-    return ((row["Status"] == "Bekræftet" or
-             row["Status"] == "Kladde" or
-             row["Status"] == "Afventer godkendelse") and
-            row["Deltagernavn"] != "")
+    return (row["Status"] in GOOD_STATUS and row["Deltagernavn"] != "")
     # return (row["Status"] != "Afmeldt" and
     #         row["Status"] != "Annulleret" and
     #         row["Status"] != "Afbud" and
     #         row["Deltagernavn"] != "")
 
 
+def load_stamdata(path):
+    rows = list(_load(path))
+    current = None
+    stamdata = {}
+    for row in rows:
+        is_bad = False
+        if row["Medlemsnummer"] == "" and row["Vis navn"].startswith("Tilmelding "):
+            continue
+        if row["Medlemsnummer"] != "" and row["Status"] not in GOOD_STATUS:
+            is_bad = True
+            # continue
+        if row["Medlemsnummer"] != "":
+            # https://stackoverflow.com/questions/10559767/how-to-convert-ms-excel-date-from-float-to-date-format-in-ruby
+            epoch = datetime.date(1899, 12, 30)
+            fødselsdato = epoch + datetime.timedelta(days=int(row["Partner/Fødselsdato"]))
+            print(repr(row["Partner/Komplet adresse"]))
+            match = re.fullmatch("C/O ([0-9]{4})\n(.*)", row["Partner/Komplet adresse"], re.MULTILINE|re.DOTALL)
+            print(match)
+            if match:
+                gammelt_medlemsnummer = int(match.group(1))
+                adresse = match.group(2)
+            else:
+                gammelt_medlemsnummer = None
+                adresse = row["Partner/Komplet adresse"]
+            current = {
+                "fdfid": int(row["Medlemsnummer"]),
+                "navn": row["Vis navn"],
+                "gammelt_medlemsnummer": gammelt_medlemsnummer,
+                "fødselsdato": fødselsdato,
+                # "børneattest": row["Partner/Børneattest/Status"],
+                "adresse": adresse,
+                "telefon": row["Partner/Mobil"],
+                "pårørende": [],
+            }
+            if not is_bad:
+                # We need to create the current, but not save it, else the relatives of a `is_bad` is added to the next deltager
+                assert current["fdfid"] not in stamdata, (current["fdfid"], current["navn"])
+                stamdata[current["fdfid"]] = current
+        if not isinstance(row["Partner/Pårørende (primære)/Vis navn"], str):
+            assert not isinstance(row["Partner/Pårørende (primære)/E-mail"], str) or row["Partner/Pårørende (primære)/E-mail"] == ""
+            assert not isinstance(row["Partner/Pårørende (primære)/Mobil"], str) or row["Partner/Pårørende (primære)/Mobil"] == ""
+            assert not isinstance(row["Partner/Pårørende (primære)/Telefon"], str) or row["Partner/Pårørende (primære)/Telefon"] == ""
+            continue
+        navn = re.sub("^([0-9]+ )", "", row["Partner/Pårørende (primære)/Vis navn"])
+        pårørende = {
+            "navn": navn,
+            "email": row["Partner/Pårørende (primære)/E-mail"],
+            "telefon": [x for x in [row["Partner/Pårørende (primære)/Mobil"], row["Partner/Pårørende (primære)/Telefon"]] if x],
+        }
+        if pårørende["navn"] == 0:
+            assert pårørende["email"] == "" and pårørende["telefon"] == ""
+            continue
+        current["pårørende"].append(pårørende)
+    return stamdata
+
 
 def import_excel(tx: TX) -> None:
     try:
         rows = list(_load(config.data_dir / "event.registration.xls"))
+        stamdata = load_stamdata(config.data_dir / "stamdata.xls")
         good_rows = [row for row in rows if _is_good(row)]
         deltagere = [_make_deltager(row) for row in good_rows]
         tx.execute("""DELETE FROM deltagere""")
@@ -435,14 +502,28 @@ def import_excel(tx: TX) -> None:
                 print(deltager.navn)
                 tx.insert("fdfids", fdfid = deltager.fdfid, navn = deltager.navn)
             inserted_count += 1
-            if deltager.ankomst_dato is None:
-                print(deltager.navn, "ankomst_dato is None")
+            if deltager.fdfid in stamdata:
+                stam = stamdata[deltager.fdfid]
+                if deltager.navn != stam["navn"]:
+                    deltager.problemer.append(f"Deltager har forskellige navne i tilmelding og stamdata \"{deltager.navn}\" \"{stam['navn']}\"")
+                if not deltager.er_voksen and len(stam["pårørende"]) < 1:
+                    deltager.problemer.append("Deltager har ingen pårørende")
+
+            else:
+                deltager.problemer.append(f"Der er ingen stamdata for denne person {deltager.navn}")
+                stam = None
+                # assert False, deltager.navn
             tx.insert(
                 "deltagere",
                 fdfid = deltager.fdfid ,
                 row = Jsonb(deltager.row),
                 problemer = deltager.problemer,
                 navn = deltager.navn,
+                gammelt_medlemsnummer = stam["gammelt_medlemsnummer"] if stam else None,
+                fødselsdato = stam["fødselsdato"] if stam else None,
+                adresse = stam["adresse"] if stam else "",
+                telefon = stam["telefon"] if stam else "",
+                pårørende = Jsonb(stam["pårørende"] if stam else []),
                 er_voksen = deltager.er_voksen,
                 stab = deltager.stab.value,
                 patrulje = deltager.patrulje.value,

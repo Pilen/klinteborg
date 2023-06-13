@@ -26,6 +26,12 @@ export function addDays(date, days) {
     return result;
 }
 
+export function calculateAge(date: Date): number {
+    let delta = Date.now() - date;
+    let d = new Date(delta)
+    return Math.abs(d.getUTCFullYear() - 1970)
+}
+
 export class Breakable {
     tag = "span";
     isBreaking: boolean;

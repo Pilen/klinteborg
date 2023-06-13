@@ -7,6 +7,11 @@ export class Deltager {
     row: Map<string, string>;
     problemer: Array<string>;
     navn: string;
+    gammelt_medlemsnummer: number;
+    fødselsdato: Date | null;
+    adresse: str;
+    telefon: str;
+    pårørende: List<Any>
     er_voksen: boolean;
     køn: Køn;
     stab: Stab;
@@ -49,6 +54,7 @@ export class DeltagereState {
                 // @ts-ignore
                 deltager.patrulje = Patrulje.get(deltager.patrulje);
                 deltager.køn = Køn.get(deltager.row["Køn"]);
+                deltager.fødselsdato = deltager.fødselsdato ? new Date(deltager.fødselsdato) : null;
                 deltager.ankomst_dato = deltager.ankomst_dato ? new Date(deltager.ankomst_dato) : null;
                 deltager.afrejse_dato = deltager.afrejse_dato ? new Date(deltager.afrejse_dato) : null;
             }

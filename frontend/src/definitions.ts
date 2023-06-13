@@ -88,10 +88,11 @@ Patrulje.define(new Patrulje(6,  "1. Pilte",         "1. Pi", Stab.get("Piltesta
 Patrulje.define(new Patrulje(7,  "2. Pilte",         "2. Pi", Stab.get("Piltestab")));
 Patrulje.define(new Patrulje(8,  "1. Væbnere",       "1. Væ", Stab.get("Væbnerstab")));
 Patrulje.define(new Patrulje(9,  "2. Væbnere",       "2. Væ", Stab.get("Væbnerstab")));
-Patrulje.define(new Patrulje(10,  "1. Seniorvæbnere", "1. Sv", Stab.get("Væbnerstab")));
+Patrulje.define(new Patrulje(10, "1. Seniorvæbnere", "1. Sv", Stab.get("Væbnerstab")));
 Patrulje.define(new Patrulje(11, "2. Seniorvæbnere", "2. Sv", Stab.get("Væbnerstab")));
-Patrulje.define(new Patrulje(12, "?",                "?",     Stab.get("Resten")));
-Patrulje.define(new Patrulje(13, "Ingen",            "-",     Stab.get("Resten")));
+Patrulje.define(new Patrulje(12, "Senior",           "Sen",   Stab.get("Resten")));
+Patrulje.define(new Patrulje(13, "?",                "?",     Stab.get("Resten")));
+Patrulje.define(new Patrulje(14, "Ingen",            "-",     Stab.get("Resten")));
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -143,6 +144,7 @@ export const DAYS = [
 ];
 
 export const START_DATE = new Date("2023/06/24");
+export const END_DATE = addDays(START_DATE, 14);
 export const DATES = [
     addDays(START_DATE, 0),  // 1. Lørdag
     addDays(START_DATE, 1),  // 1. Søndag

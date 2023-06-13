@@ -11,9 +11,11 @@ import {
     PageDeltagereAlle,
     PageDeltagereMærkelige,
     PageDeltagereTransport,
+    PageDeltagereFødselsdage,
     PageDeltagereSøg,
     PageDeltager
 } from "./deltagere_page";
+import {PageLivgrupperAdmin} from "./livgrupper";
 import {formatDateTime} from "./utils";
 
 
@@ -80,6 +82,7 @@ class Layout {
                     m(m.route.Link, {href: "/deltagere/alle"}, "Alle"),
                     // m(m.route.Link, {href: "/deltagere/mærkelige"}, "Mærkelige"),
                     m(m.route.Link, {href: "/deltagere/transport"}, "Transport"),
+                    m(m.route.Link, {href: "/deltagere/fødselsdage"}, "Fødselsdage"),
                     m(m.route.Link, {href: "/deltagere/søg"}, "Søg"),
                    )),
                 m(".dropdown",
@@ -130,8 +133,10 @@ m.route(document.body, "/", {
     "/deltagere/alle":       Layout.wrap(PageDeltagereAlle, "Deltagere Alle"),
     // "/deltagere/mærkelige":  Layout.wrap(PageDeltagereMærkelige, "Deltagere Mærkelige"),
     "/deltagere/transport":  Layout.wrap(PageDeltagereTransport, "Deltagere Transport"),
+    "/deltagere/fødselsdage": Layout.wrap(PageDeltagereFødselsdage, "Deltagere Fødselsdage"),
     "/deltager/:fdfid":      Layout.wrap(PageDeltager, "Deltager"),
     "/deltagere/søg":        Layout.wrap(PageDeltagereSøg, "Deltagere Søg"),
+    "/livgrupper/admin":     Layout.wrap(PageLivgrupperAdmin, "Livgrupper"),
     "/:404...":              Layout.wrap(NotFound, "Siden mangler"),
 });
 
