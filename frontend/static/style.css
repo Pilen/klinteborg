@@ -163,6 +163,11 @@ a.subdued-link:hover:after {
     position: absolute;
 }
 
+.disabled {
+    /* text-decoration: line-through !important; */
+    filter: blur(1.3px);
+}
+
 /*******************************************************************************
  * Navigation
  ******************************************************************************/
