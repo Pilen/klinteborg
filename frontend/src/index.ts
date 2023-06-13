@@ -9,12 +9,13 @@ import {
     PageDeltagereVæbnerstab,
     PageDeltagereResten,
     PageDeltagereAlle,
-    PageDeltagereMærkelige,
-    PageDeltagereTransport,
-    PageDeltagereFødselsdage,
-    PageDeltagereSøg,
-    PageDeltager
-} from "./deltagere_page";
+} from "./deltagere/basic";
+import {PageDeltagereProblematiske} from "./deltagere/problematiske";
+import {PageDeltagereTransport} from "./deltagere/transport";
+import {PageDeltagereFødselsdage} from "./deltagere/fødselsdage";
+import {PageDeltagereSøg} from "./deltagere/søg";
+import {PageDeltager} from "./deltagere/deltager";
+
 import {PageLivgrupperAdmin} from "./livgrupper";
 import {formatDateTime} from "./utils";
 
@@ -80,7 +81,7 @@ class Layout {
                     m(m.route.Link, {href: "/deltagere/væbnerstab"}, "Væbnerstab"),
                     m(m.route.Link, {href: "/deltagere/resten"}, "Resten"),
                     m(m.route.Link, {href: "/deltagere/alle"}, "Alle"),
-                    // m(m.route.Link, {href: "/deltagere/mærkelige"}, "Mærkelige"),
+                    m(m.route.Link, {href: "/deltagere/problematiske"}, "Problematiske"),
                     m(m.route.Link, {href: "/deltagere/transport"}, "Transport"),
                     m(m.route.Link, {href: "/deltagere/fødselsdage"}, "Fødselsdage"),
                     m(m.route.Link, {href: "/deltagere/søg"}, "Søg"),
@@ -131,8 +132,9 @@ m.route(document.body, "/", {
     "/deltagere/væbnerstab": Layout.wrap(PageDeltagereVæbnerstab, "Deltagere Væbnerstab"),
     "/deltagere/resten":     Layout.wrap(PageDeltagereResten, "Deltagere Resten"),
     "/deltagere/alle":       Layout.wrap(PageDeltagereAlle, "Deltagere Alle"),
-    // "/deltagere/mærkelige":  Layout.wrap(PageDeltagereMærkelige, "Deltagere Mærkelige"),
+    "/deltagere/problematiske": Layout.wrap(PageDeltagereProblematiske, "Deltagere Problematiske"),
     "/deltagere/transport":  Layout.wrap(PageDeltagereTransport, "Deltagere Transport"),
+
     "/deltagere/fødselsdage": Layout.wrap(PageDeltagereFødselsdage, "Deltagere Fødselsdage"),
     "/deltager/:fdfid":      Layout.wrap(PageDeltager, "Deltager"),
     "/deltagere/søg":        Layout.wrap(PageDeltagereSøg, "Deltagere Søg"),
