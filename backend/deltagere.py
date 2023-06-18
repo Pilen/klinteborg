@@ -73,7 +73,7 @@ TIDSPUNKTER = {
     "kl. 17": 17,
     "kl. 18": 18,
     "kl. 19": 19,
-    "senere": 10,
+    "senere": 20,
 }
 
 DAGE = [
