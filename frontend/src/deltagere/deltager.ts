@@ -3,7 +3,7 @@ import {error} from "../error";
 import {$it, Iter, foo} from "../lib/iter";
 import {DELTAGERE_STATE, Deltager} from "../deltagere_state";
 import {Stab, Patrulje, Tilstede, DAYS, DATES, TILMELDING_HEADERS} from "../definitions";
-import {H1, H2, H5, Tr, formatDate, calculateAge} from "../utils";
+import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "../utils";
 import {Days} from "./core";
 
 
@@ -21,6 +21,8 @@ export class PageDeltager {
                  m("table",
                    m("tbody",
                      m("tr", m("th", "Detaljer")),
+                     m("tr", m("td", "Tilmeldt"), m("td", formatDateTime(deltager.tilmeldt_dato))),
+                     m("tr", m("td", "Sidst ændret"), m("td", formatDateTime(deltager.sidst_ændret_dato))),
                      m("tr", m("td", "FDF id"), m("td", deltager.fdfid)),
                      // m("tr", m("td", ""), m("td", deltager.row)),
                      // m("tr", m("td", ""), m("td", deltager.problemer)),

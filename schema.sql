@@ -60,10 +60,12 @@ CREATE TYPE Transport as ENUM (
 CREATE TABLE deltagere (
 	fdfid		integer		REFERENCES fdfids,
 	row			jsonb		NOT NULL,
+    tilmeldt_dato		timestamptz	NOT NULL,
+    sidst_ændret_dato	timestamptz	NOT NULL,
 	problemer	text[]		NOT NULL,
 	navn		text		NOT NULL,
 	gammelt_medlemsnummer	int,
-	fødselsdato	date ,
+	fødselsdato	date		NOT NULL,
 	adresse		text		NOT NULL,
 	telefon		text		NOT NULL,
 	pårørende	jsonb		NOT NULL,
@@ -83,6 +85,43 @@ CREATE TABLE deltagere (
 	afrejse_tidspunkt	int
 );
 
+
+
+-- CREATE TABLE Permissions {
+-- 	permission	text	PRIMARY KEY,
+-- 	beskrivelse	text NOT NULL,
+-- );
+
+-- CREATE TABLE User_permissions (
+-- 	fdfid		integer	REFERENCES fdfids,
+--     permission	text	REFERENCES Permissions,
+--     reason		Permission_reason	NOT NULL,
+-- )
+
+
+-- CREATE TYPE Permission_reason (
+-- 	'Auto',
+--     'Manual',
+-- );
+-- CREATE TYPE Gruppe_type (
+-- 	'Udvalg',
+-- 	'Job',
+-- 	'Gruppe',
+-- );
+
+-- CREATE TABLE grupper (
+-- 	gruppe	text		PRIMARY KEY,
+-- 	type	Gruppe_type	NOT NULL,
+-- 	beskrivelse	text	NOT NULL,
+-- 	minimum_antal	integer,
+-- 	maximum_antal	integer
+-- );
+
+-- CREATE TABLE gruppe_medlemer (
+-- 	gruppe	text	REFERENCES grupper,
+--     fdfid	int		REFERENCES fdfids,
+--     primær  boolean	NOT NULL DEFAULT false
+-- );
 
 
 COMMIT;

@@ -97,9 +97,12 @@ h6 {
 }
 
 .no-break {
-    page-break-inside: never;
+    page-break-inside: never !important;
 }
-
+.break {
+    page-break-before: always;
+    break-before: page;
+}
 
 .breakable {
     cursor: pointer;

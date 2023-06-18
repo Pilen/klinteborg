@@ -3,7 +3,7 @@ import {error} from "../error";
 import {$it, Iter, foo} from "../lib/iter";
 import {DELTAGERE_STATE, Deltager} from "../deltagere_state";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "../definitions";
-import {H1, H2, H5, Tr, formatDate, calculateAge} from "../utils";
+import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "../utils";
 import {Days} from "./core";
 
 
@@ -18,9 +18,9 @@ export class PageDeltagereProblematiske {
             ])
             .map((deltager) =>
                 [m("tr",
-                   m("th", m(m.route.Link, {selector: "a.subdued-link", href: "/deltager/:fdfid", params: {fdfid: deltager.fdfid}}, deltager.navn)),
-                   m("th", deltager.er_voksen ? "Voksen" : "Barn"),
-                   m("th", deltager.patrulje.name),
+                   m("td", m("b", m(m.route.Link, {selector: "a.subdued-link", href: "/deltager/:fdfid", params: {fdfid: deltager.fdfid}}, deltager.navn))),
+                   m("td", deltager.er_voksen ? "Voksen" : "Barn"),
+                   m("td", deltager.patrulje.name),
                    // // m("td", deltager.køn.abbreviation),
                    // m("td", deltager.er_voksen ? "Voksen" : "Barn"),
                    // m("td", deltager.patrulje.name),
@@ -59,6 +59,39 @@ export class PageDeltagereProblematiske {
                       // m("th", "Afrejse", m("br"), "dato"),
                       // m("th", "Afrejse", m("br"), "tidspunkt")
                      )),
-                  m("tbody", problematic))];
+                  m("tbody", problematic)),
+                m(H1, "Tilmeldte / Ændringer"),
+                m(Ændringer)];
+    }
+}
+
+
+export class Ændringer {
+    public view(vnode: m.Vnode) {
+        let deltagere = $it(DELTAGERE_STATE.deltagere)
+            .map((deltager) => {
+                if (formatDateTime(deltager.tilmeldt_dato) === formatDateTime(deltager.sidst_ændret_dato)) {
+                    return [["Tilmeldt", deltager.tilmeldt_dato, deltager]];
+                } else {
+                    return [["Tilmeldt", deltager.tilmeldt_dato, deltager],
+                            ["Ændret", deltager.sidst_ændret_dato, deltager]];
+                }
+            })
+            .flatten()
+            .sort(([event, date, deltager]) => [-date, event, deltager.navn])
+        // .groupRuns(([event, date, deltager]) => formatDate(date))
+            .map((x) => [x])
+            .map((run) =>
+                $it(run).map(([event, date, deltager]) =>
+                    m("tr",
+                      m("td", event),
+                      m("td", formatDateTime(date)),
+                      m("td", m(m.route.Link, {selector: "a.subdued-link", href: "/deltager/:fdfid", params: {fdfid: deltager.fdfid}}, deltager.navn)),
+                     )).List())
+            .List();
+        return m("table",
+                 m("tbody",
+                   deltagere));
+
     }
 }

@@ -104,6 +104,8 @@ class Pårørende:
 class Deltager:
     fdfid: int
     row: dict[str, str]
+    tilmeldt_dato: datetime.datetime
+    sidst_ændret_dato: datetime.datetime
     problemer: list[str]
     navn: str
     gammelt_medlemsnummer: int | None
@@ -201,6 +203,8 @@ def _make_deltager(row: dict[str, str]) -> Deltager:
         if patrulje == "":
             deltager.patrulje = Patrulje.UKENDT
             deltager.problemer.append("Ukendt patrulje")
+        elif patrulje.startswith("Ved ikke endnu"):
+            deltager.patrulje = Patrulje.UKENDT
         else:
             deltager.patrulje = Patrulje(patrulje)
         deltager.er_voksen = False
@@ -404,7 +408,9 @@ def _load(path: Path) -> Iterator[dict[str, str]]:
     rows = ws.get_rows()
     headers = [c.value for c in next(rows)]
     for row in rows:
-        yield {h: c.value for c, h in zip(row, headers)}
+        # TODO: handle timezone!
+        yield {h: c.value if c.ctype != xlrd.XL_CELL_DATE else xlrd.xldate.xldate_as_datetime(c.value, wb.datemode)
+               for c, h in zip(row, headers)}
 
 ALL_STATUS = set(["Bekræftet", "Kladde", "Afventer godkendelse", "Afmeldt", "Annulleret", "Afbud"])
 GOOD_STATUS = set(["Bekræftet", "Kladde", "Afventer godkendelse"])
@@ -419,6 +425,21 @@ def _is_good(row: dict[str, str]) -> bool:
 
 
 def load_stamdata(path):
+    """
+    Medlemsnummer
+    Status
+    Tilmeldingsdato
+    Sidst ændret den
+    Vis navn
+    Partner/Fødselsdato
+    Partner/Komplet adresse
+    Partner/E-mail
+    Partner/Mobil
+    Partner/Pårørende (primære)/Vis navn
+    Partner/Pårørende (primære)/E-mail
+    Partner/Pårørende (primære)/Telefon
+    Partner/Pårørende (primære)/Mobil
+    """
     rows = list(_load(path))
     current = None
     stamdata = {}
@@ -431,11 +452,17 @@ def load_stamdata(path):
             # continue
         if row["Medlemsnummer"] != "":
             # https://stackoverflow.com/questions/10559767/how-to-convert-ms-excel-date-from-float-to-date-format-in-ruby
-            epoch = datetime.date(1899, 12, 30)
-            fødselsdato = epoch + datetime.timedelta(days=int(row["Partner/Fødselsdato"]))
-            print(repr(row["Partner/Komplet adresse"]))
+            # epoch = datetime.date(1899, 12, 30)
+            # fødselsdato = epoch + datetime.timedelta(days=int(row["Partner/Fødselsdato"]))
+            fødselsdato = row["Partner/Fødselsdato"]
+            tilmeldt_dato = row["Tilmeldingsdato"]
+            sidst_ændret_dato = row["Sidst ændret den"]
+            print(type(tilmeldt_dato), repr(tilmeldt_dato))
+            print(type(sidst_ændret_dato), repr(sidst_ændret_dato))
+            assert isinstance(fødselsdato, datetime.datetime)
+            assert isinstance(tilmeldt_dato, datetime.datetime)
+            assert isinstance(sidst_ændret_dato, datetime.datetime)
             match = re.fullmatch("C/O ([0-9]{4})\n(.*)", row["Partner/Komplet adresse"], re.MULTILINE|re.DOTALL)
-            print(match)
             if match:
                 gammelt_medlemsnummer = int(match.group(1))
                 adresse = match.group(2)
@@ -444,6 +471,8 @@ def load_stamdata(path):
                 adresse = row["Partner/Komplet adresse"]
             current = {
                 "fdfid": int(row["Medlemsnummer"]),
+                "tilmeldt_dato": tilmeldt_dato,
+                "sidst_ændret_dato": sidst_ændret_dato,
                 "navn": row["Vis navn"],
                 "gammelt_medlemsnummer": gammelt_medlemsnummer,
                 "fødselsdato": fødselsdato,
@@ -456,7 +485,7 @@ def load_stamdata(path):
                 # We need to create the current, but not save it, else the relatives of a `is_bad` is added to the next deltager
                 assert current["fdfid"] not in stamdata, (current["fdfid"], current["navn"])
                 stamdata[current["fdfid"]] = current
-        if not isinstance(row["Partner/Pårørende (primære)/Vis navn"], str):
+        if not isinstance(row["Partner/Pårørende (primære)/Vis navn"], str) or row["Partner/Pårørende (primære)/Vis navn"] == "":
             assert not isinstance(row["Partner/Pårørende (primære)/E-mail"], str) or row["Partner/Pårørende (primære)/E-mail"] == ""
             assert not isinstance(row["Partner/Pårørende (primære)/Mobil"], str) or row["Partner/Pårørende (primære)/Mobil"] == ""
             assert not isinstance(row["Partner/Pårørende (primære)/Telefon"], str) or row["Partner/Pårørende (primære)/Telefon"] == ""
@@ -517,13 +546,15 @@ def import_excel(tx: TX) -> None:
                 "deltagere",
                 fdfid = deltager.fdfid ,
                 row = Jsonb(deltager.row),
+                tilmeldt_dato = stam["tilmeldt_dato"],
+                sidst_ændret_dato = stam["sidst_ændret_dato"],
                 problemer = deltager.problemer,
                 navn = deltager.navn,
                 gammelt_medlemsnummer = stam["gammelt_medlemsnummer"] if stam else None,
-                fødselsdato = stam["fødselsdato"] if stam else None,
-                adresse = stam["adresse"] if stam else "",
-                telefon = stam["telefon"] if stam else "",
-                pårørende = Jsonb(stam["pårørende"] if stam else []),
+                fødselsdato = stam["fødselsdato"],
+                adresse = stam["adresse"],
+                telefon = stam["telefon"],
+                pårørende = Jsonb(stam["pårørende"]),
                 er_voksen = deltager.er_voksen,
                 stab = deltager.stab.value,
                 patrulje = deltager.patrulje.value,

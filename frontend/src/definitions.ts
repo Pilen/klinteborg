@@ -1,4 +1,4 @@
-import {addDays} from "./utils";
+import {addDays, calculateModa} from "./utils";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Køn
@@ -221,3 +221,6 @@ export const DATES = [
     addDays(START_DATE, 13), // 2. Fredag
     addDays(START_DATE, 14), // 3. Lørdag
 ];
+
+export const START_DATE_MODA = calculateModa(START_DATE);
+export const END_DATE_MODA = calculateModa(START_DATE);

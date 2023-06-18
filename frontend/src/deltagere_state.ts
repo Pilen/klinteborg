@@ -5,6 +5,8 @@ import {Køn, Stab, Patrulje, Tilstede, Transport} from "./definitions";
 export class Deltager {
     fdfid: number;
     row: Map<string, string>;
+    tilmeldt_dato: Date;
+    sidst_ændret_dato: Date;
     problemer: Array<string>;
     navn: string;
     gammelt_medlemsnummer: number;
@@ -54,6 +56,8 @@ export class DeltagereState {
                 // @ts-ignore
                 deltager.patrulje = Patrulje.get(deltager.patrulje);
                 deltager.køn = Køn.get(deltager.row["Køn"]);
+                deltager.tilmeldt_dato = new Date(deltager.tilmeldt_dato);
+                deltager.sidst_ændret_dato = new Date(deltager.sidst_ændret_dato);
                 deltager.fødselsdato = deltager.fødselsdato ? new Date(deltager.fødselsdato) : null;
                 deltager.ankomst_dato = deltager.ankomst_dato ? new Date(deltager.ankomst_dato) : null;
                 deltager.afrejse_dato = deltager.afrejse_dato ? new Date(deltager.afrejse_dato) : null;

@@ -10,14 +10,14 @@ export function formatDateTime(d: Date): string {
     let minutes_int = d.getMinutes();
     let minutes_string = "00" + minutes_int;
     let minutes = minutes_string.substr(minutes_string.length-2);
-    return `${year}/${month}/${day} ${hours}:${minutes}`;
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
 export function formatDate(d: Date): string {
     let year = d.getFullYear();
     let month = d.getMonth() + 1; // Why would they make month zero based?!
     let day = d.getDate();
-    return `${year}/${month}/${day}`;
+    return `${year}-${month}-${day}`;
 }
 
 export function addDays(date, days) {
@@ -32,11 +32,15 @@ export function calculateAge(date: Date): number {
     return Math.abs(d.getUTCFullYear() - 1970)
 }
 
+export function calculateModa(date: Date): number {
+    return (date.getMonth() + 1) * 100 + date.getDate();
+}
+
 export class Breakable {
     tag = "span";
     isBreaking: boolean;
     constructor(vnode: m.Vnode) {
-        this.isBreaking = false;
+        this.isBreaking = !!vnode.attrs.break;
     }
     public view(vnode: m.Vnode) {
         return m(this.tag,

@@ -13,6 +13,7 @@ import {
 import {PageDeltagereProblematiske} from "./deltagere/problematiske";
 import {PageDeltagereTransport} from "./deltagere/transport";
 import {PageDeltagereFødselsdage} from "./deltagere/fødselsdage";
+import {PageDeltagereLejrlæge} from "./deltagere/lejrlæge";
 import {PageDeltagereSøg} from "./deltagere/søg";
 import {PageDeltager} from "./deltagere/deltager";
 
@@ -84,6 +85,7 @@ class Layout {
                     m(m.route.Link, {href: "/deltagere/problematiske"}, "Problematiske"),
                     m(m.route.Link, {href: "/deltagere/transport"}, "Transport"),
                     m(m.route.Link, {href: "/deltagere/fødselsdage"}, "Fødselsdage"),
+                    m(m.route.Link, {href: "/deltagere/lejrlæge"}, "Lejrlæge"),
                     m(m.route.Link, {href: "/deltagere/søg", "class": "disabled"}, "Søg"),
                    )),
                 m(".dropdown",
@@ -134,8 +136,8 @@ m.route(document.body, "/", {
     "/deltagere/alle":       Layout.wrap(PageDeltagereAlle, "Deltagere Alle"),
     "/deltagere/problematiske": Layout.wrap(PageDeltagereProblematiske, "Deltagere Problematiske"),
     "/deltagere/transport":  Layout.wrap(PageDeltagereTransport, "Deltagere Transport"),
-
     "/deltagere/fødselsdage": Layout.wrap(PageDeltagereFødselsdage, "Deltagere Fødselsdage"),
+    "/deltagere/lejrlæge":   Layout.wrap(PageDeltagereLejrlæge, "Lejrlæge listen"),
     "/deltager/:fdfid":      Layout.wrap(PageDeltager, "Deltager"),
     "/deltagere/søg":        Layout.wrap(PageDeltagereSøg, "Deltagere Søg"),
     "/livgrupper/admin":     Layout.wrap(PageLivgrupperAdmin, "Livgrupper"),
