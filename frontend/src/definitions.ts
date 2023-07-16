@@ -79,17 +79,18 @@ export class Patrulje {
     }
 
 }
+// "\xa0" is a non-breaking space
 Patrulje.define(new Patrulje(1,  "Numlinge",         "Num",   Stab.get("Resten")));
-Patrulje.define(new Patrulje(2,  "1. Puslinge",      "1. Pu", Stab.get("Indestab")));
-Patrulje.define(new Patrulje(3,  "2. Puslinge",      "2. Pu", Stab.get("Indestab")));
-Patrulje.define(new Patrulje(4,  "1. Tumlinge",      "1. Tu", Stab.get("Indestab")));
-Patrulje.define(new Patrulje(5,  "2. Tumlinge",      "2. Tu", Stab.get("Indestab")));
-Patrulje.define(new Patrulje(6,  "1. Pilte",         "1. Pi", Stab.get("Piltestab")));
-Patrulje.define(new Patrulje(7,  "2. Pilte",         "2. Pi", Stab.get("Piltestab")));
-Patrulje.define(new Patrulje(8,  "1. Væbnere",       "1. Væ", Stab.get("Væbnerstab")));
-Patrulje.define(new Patrulje(9,  "2. Væbnere",       "2. Væ", Stab.get("Væbnerstab")));
-Patrulje.define(new Patrulje(10, "1. Seniorvæbnere", "1. Sv", Stab.get("Væbnerstab")));
-Patrulje.define(new Patrulje(11, "2. Seniorvæbnere", "2. Sv", Stab.get("Væbnerstab")));
+Patrulje.define(new Patrulje(2,  "1. Puslinge",      "1.\xa0Pu", Stab.get("Indestab")));
+Patrulje.define(new Patrulje(3,  "2. Puslinge",      "2.\xa0Pu", Stab.get("Indestab")));
+Patrulje.define(new Patrulje(4,  "1. Tumlinge",      "1.\xa0Tu", Stab.get("Indestab")));
+Patrulje.define(new Patrulje(5,  "2. Tumlinge",      "2.\xa0Tu", Stab.get("Indestab")));
+Patrulje.define(new Patrulje(6,  "1. Pilte",         "1.\xa0Pi", Stab.get("Piltestab")));
+Patrulje.define(new Patrulje(7,  "2. Pilte",         "2.\xa0Pi", Stab.get("Piltestab")));
+Patrulje.define(new Patrulje(8,  "1. Væbnere",       "1.\xa0Væ", Stab.get("Væbnerstab")));
+Patrulje.define(new Patrulje(9,  "2. Væbnere",       "2.\xa0Væ", Stab.get("Væbnerstab")));
+Patrulje.define(new Patrulje(10, "1. Seniorvæbnere", "1.\xa0Sv", Stab.get("Væbnerstab")));
+Patrulje.define(new Patrulje(11, "2. Seniorvæbnere", "2.\xa0Sv", Stab.get("Væbnerstab")));
 Patrulje.define(new Patrulje(12, "Senior",           "Sen",   Stab.get("Resten")));
 Patrulje.define(new Patrulje(13, "?",                "?",     Stab.get("Resten")));
 Patrulje.define(new Patrulje(14, "Ingen",            "-",     Stab.get("Resten")));

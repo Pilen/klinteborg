@@ -18,6 +18,8 @@ export class Deltager {
     køn: Køn;
     stab: Stab;
     patrulje: Patrulje;
+    bordhold_uge1: number | null;
+    bordhold_uge2: number | null;
     uge1: boolean;
     uge2: boolean;
     dage: Array<Tilstede>;

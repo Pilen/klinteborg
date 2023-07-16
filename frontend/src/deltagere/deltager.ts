@@ -36,6 +36,8 @@ export class PageDeltager {
                      m("tr", m("td", "Køn"), m("td", deltager.køn.name)),
                      m("tr", m("td", "Stab"), m("td", deltager.stab.name)),
                      m("tr", m("td", "Patrulje"), m("td", deltager.patrulje.name)),
+                     m("tr", m("td", "Bordhold uge 1"), m("td", deltager.bordhold_uge1)),
+                     m("tr", m("td", "Bordhold uge 2"), m("td", deltager.bordhold_uge2)),
                      m("tr", m("td", "Uge 1"), m("td", deltager.uge1 ? "Ja" : "Nej")),
                      m("tr", m("td", "Uge 2"), m("td", deltager.uge2 ? "Ja" : "Nej")),
                      // m("tr", m("td", ""), m("td", deltager.dage)),

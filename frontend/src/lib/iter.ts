@@ -589,6 +589,22 @@ export class Iter<T> {
         });
     }
 
+    public mapRuns(key, handle_individual, handle_group): Iter<Any> {
+        let it = this.it;
+        let extract = make_extract(key);
+        let previous = undefined;
+
+        let grouped = this.groupRuns(key);
+        let mapped_groups = grouped.map((run) => {
+            let current_key = extract(run[0]);
+            let mapped_individuals = $it(run).map((individual) => handle_individual(individual, current_key)).List();
+            let mapped_group = handle_group(mapped_individuals, current_key);
+            return mapped_group;
+        });
+        return mapped_groups;
+    }
+
+
 
 
 

@@ -117,6 +117,8 @@ class Deltager:
     er_voksen: bool
     stab: Stab
     patrulje: Patrulje
+    bordhold_uge1: int | None
+    bordhold_uge2: int | None
     uge1: bool
     uge2: bool
     dage: list[Tilstede]
@@ -172,6 +174,8 @@ def _make_deltager(row: dict[str, str]) -> Deltager:
     deltager.row = row
     deltager.problemer = []
     deltager.navn = navn_.strip()
+    deltager.bordhold_uge1 = None
+    deltager.bordhold_uge2 = None
 
     opgave = row["Opgave på lejren"]
     patrulje = row["Patrulje"]
@@ -306,7 +310,9 @@ def when_are_you_there(deltager: Deltager) -> None:
             deltager.upræcis_periode = True
         # assert deltager["Afrejsedato egen transport (afrejser lejren)"] == ""
         # assert deltager["Ca. afrejse tidspunkt egen transport (afrejser lejren)"] == ""
-        assert deltager.uge2 # just uge2 or both
+        # assert deltager.uge2, deltager.navn # just uge2 or both
+        if not deltager.uge2:
+            deltager.problemer.append("Deltager tager med fælles transport hjem, men er der ikke i uge 2")
     elif afrejse_type.startswith("Samkørsel"):
         deltager.afrejse_type = Transport.SAMKØRSEL
         deltager.afrejse_dato = dato_midt
@@ -319,7 +325,10 @@ def when_are_you_there(deltager: Deltager) -> None:
             deltager.upræcis_periode = True
         # assert deltager["Afrejsedato egen transport (afrejser lejren)"] == ""
         # assert deltager["Ca. afrejse tidspunkt egen transport (afrejser lejren)"] == ""
-        assert deltager.uge1 and not deltager.uge2
+        # assert deltager.uge1 and not deltager.uge2, (deltager.uge1, deltager.uge2, deltager.navn)
+        if not deltager.uge1 or deltager.uge2:
+            deltager.problemer.append("Deltager afrejser med samkørsel, er her i uge 1, men ikke i uge 2")
+
     else:
         assert False
 
@@ -412,7 +421,7 @@ def _load(path: Path) -> Iterator[dict[str, str]]:
         yield {h: c.value if c.ctype != xlrd.XL_CELL_DATE else xlrd.xldate.xldate_as_datetime(c.value, wb.datemode)
                for c, h in zip(row, headers)}
 
-ALL_STATUS = set(["Bekræftet", "Kladde", "Afventer godkendelse", "Afmeldt", "Annulleret", "Afbud"])
+ALL_STATUS = set(["Bekræftet", "Kladde", "Afventer godkendelse", "Afmeldt", "Annulleret", "Afbud",   "Ikke fremmødt"])
 GOOD_STATUS = set(["Bekræftet", "Kladde", "Afventer godkendelse"])
 def _is_good(row: dict[str, str]) -> bool:
     if row["Status"] not in ALL_STATUS:
@@ -422,6 +431,146 @@ def _is_good(row: dict[str, str]) -> bool:
     #         row["Status"] != "Annulleret" and
     #         row["Status"] != "Afbud" and
     #         row["Deltagernavn"] != "")
+
+
+def load_bordhold_wiki(path, deltagere):
+    print(len(deltagere))
+    text = path.read_text()
+    lines = iter(text.split("\n"))
+    uge1 = []
+    uge2 = []
+    bordhold = []
+    uge = uge1
+    # uge.append(bordhold)
+    for line in lines:
+        if line == "=== Uge 1 ===":
+            break
+    i = 1
+    for line in lines:
+        if (line.startswith("{|") or
+            line == "|+" or
+            line == "|-" or
+            line == "|}" or
+            line == "|" or
+            line == "|'''Numlinge'''" or
+            line == "|'''Numlingeledere'''" or
+            line == ""):
+            continue
+        if line == "=== Stabsdage ===":
+            break
+        if line == "=== Uge 2 ===":
+            uge = uge2
+            bordhold = []
+            # uge.append(bordhold)
+            i = 1
+            continue
+        if line.startswith("!Bordhold "):
+            assert line == f"!Bordhold {i}", (repr(line), repr(f"!Bordhold {i}"))
+            bordhold = []
+            uge.append(bordhold)
+            i += 1
+            continue
+        if line.startswith("| class="):
+            match = re.fullmatch('\\| class="bg_([^"]+)" *\\|(.*)', line)
+            assert match, line
+            patrulje = match.group(1)
+            navn = match.group(2)
+            if navn == "":
+                continue
+            bordhold.append((patrulje, navn))
+            continue
+        if line.startswith("|"):
+            match = re.fullmatch("\\|(.+)", line)
+            assert match, line
+            navn = match.group(1)
+            if "/" in navn :
+                for n in navn.split("/"):
+                    bordhold.append((None, n.strip()))
+            else:
+                bordhold.append((None, navn))
+            continue
+    import collections
+    navne = collections.defaultdict(list)
+    full_name = {}
+    for deltager in deltagere:
+        match = re.match("([^- ]+)", deltager.navn)
+        assert match
+        fornavn = match.group(1)
+        patrulje = None if deltager.er_voksen else deltager.patrulje
+        navne[(patrulje, fornavn)].append(deltager)
+        full_name[deltager.navn] = deltager
+    print("\n".join(full_name.keys()))
+    patrulje_map = {
+        "1pus": Patrulje.PUSLINGE_1,
+        "2pus": Patrulje.PUSLINGE_2,
+        "1tum": Patrulje.TUMLINGE_1,
+        "2tum": Patrulje.TUMLINGE_2,
+        "1pilt": Patrulje.PILTE_1,
+        "2pilt": Patrulje.PILTE_2,
+        "1vaeb": Patrulje.VÆBNERE_1,
+        "2vaeb": Patrulje.VÆBNERE_2,
+        "1senvaeb": Patrulje.SENIORVÆBNERE_1,
+        "2senvaeb": Patrulje.SENIORVÆBNERE_2,
+        "numling": Patrulje.NUMLINGE,
+        "numleder": None,
+        None: None
+    }
+    special = {
+        (None, "CC"): "Carl Christian David Dam",
+        (None, "Helene P"): "Helene Pehrsson",
+        (None, "Helene S"): "Helene Skyggebjerg Kjær",
+        (None, "Jens A"): "Jens Arffmann",
+        (None, "Kasper P"): "Kasper Hvidberg Pedersen",
+        (None, "Kasper R"): "Kasper Kongstad Riel",
+        (None, "Maja K"): "Maja Baaner Klitgaard",
+        (None, "Maja R"): "Maja Bar Rasmussen",
+        (None, "Oliver B"): "Oliver Degn Bjerrum",
+        (None, "Oliver D"): "Oliver Rafn Dan",
+        (None, "Oliver J"): "Oliver Stenberg Jakobsen",
+        (None, "Sebastian A"): "Sebastian Aadal Jørgensen",
+        (None, "Sebastian B"): "Sebastian Rieskov Bang",
+        (None, "Sebastian L"): "Sebastian Lyngø Jakobsen",
+        (None, "Søren P"): "Søren Egede Pilgård",
+        (None, "Thomas L"): "Thomas Paul Lund",
+        (None, "Simon"): "Simon Rieskov Bang",
+        (None, "Sine"): "Sine Freltoft Simonsen",
+        # ("1senvaeb", "Luca"): "Saga Luca Hauge",
+        ("1senvaeb", "Luca"): "Luca (Saga) Hauge",
+        ("2vaeb", "Freya (Ida)"): "Freya Ida Egstrup",
+        ("1senvaeb", "Maja V"): "Maja Brønnum Vestergaard",
+        ("1senvaeb", "Maya R"): "Maya Warren Radford",
+        ("1pilt", "Lina R"): "Lina Sorvad Rydik",
+        ("1pilt", "Lina F"): "Lina Kofod-Frederiksen",
+        ("1vaeb", "Mikkel"): "Mikkel Lassen", # ???? han er 1.senvæb
+        ("2pilt", "Theodor (lør-søn)"): "Theodor Hald Boje",
+        ("2pus", "Merle (lør-søn)"): "Merle Hald Boje",
+        ("numleder", "Mette"): "Mette Salmark",
+        ("numleder", "Maria"): "Maria Kennedy",
+        ("numleder", "Simon"): "Simon Damkjær Andersen",
+        ("numleder", "Thomas"): "Thomas Hoffmann",
+        ("numleder", "Malene"): "Malene Grysbæk",
+    }
+    for (uge, iu) in ((uge1, 1), (uge2, 2)):
+        for num, bordhold in enumerate(uge, 1):
+            for b_patrulje, b_navn in bordhold:
+                patrulje = patrulje_map[b_patrulje]
+                if (b_patrulje, b_navn) in special:
+                    navn = special[(b_patrulje, b_navn)]
+                    deltager = full_name[navn]
+                else:
+                    found = navne.get((patrulje, b_navn), [])
+                    if len(found) != 1:
+                        print("BAD:", repr(b_navn), repr(b_patrulje), [f.navn for f in found])
+                        continue
+                    deltager = found[0]
+                if iu == 1:
+                    deltager.bordhold_uge1 = num
+                elif iu == 2:
+                    deltager.bordhold_uge2 = num
+                else:
+                    assert False
+                # setattr(deltager, f"bordhold_uge{iu}", num)
+
 
 
 def load_stamdata(path):
@@ -509,6 +658,7 @@ def import_excel(tx: TX) -> None:
         stamdata = load_stamdata(config.data_dir / "stamdata.xls")
         good_rows = [row for row in rows if _is_good(row)]
         deltagere = [_make_deltager(row) for row in good_rows]
+        load_bordhold_wiki(config.data_dir / "bordhold.txt", deltagere)
         tx.execute("""DELETE FROM deltagere""")
         rows = tx.fetch_all("""
         SELECT fdfid,
@@ -542,6 +692,7 @@ def import_excel(tx: TX) -> None:
                 deltager.problemer.append(f"Der er ingen stamdata for denne person {deltager.navn}")
                 stam = None
                 # assert False, deltager.navn
+            print(deltager.navn, deltager.bordhold_uge1, deltager.bordhold_uge2)
             tx.insert(
                 "deltagere",
                 fdfid = deltager.fdfid ,
@@ -558,6 +709,8 @@ def import_excel(tx: TX) -> None:
                 er_voksen = deltager.er_voksen,
                 stab = deltager.stab.value,
                 patrulje = deltager.patrulje.value,
+                bordhold_uge1 = deltager.bordhold_uge1,
+                bordhold_uge2 = deltager.bordhold_uge2,
                 uge1 = deltager.uge1,
                 uge2 = deltager.uge2,
                 dage = [d.value for d in deltager.dage],

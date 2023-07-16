@@ -96,12 +96,21 @@ h6 {
     font-size: 1.1em;
 }
 
+.columns {
+    column-count: 2;
+}
 .no-break {
-    page-break-inside: never !important;
+    /* page-break-inside: never !important; */
+    page-break-inside: avoid !important;
+    break-inside: avoid;
 }
 .break {
     page-break-before: always;
     break-before: page;
+}
+.qqq {
+    background-color: red !important;
+    color: blue;
 }
 
 .breakable {

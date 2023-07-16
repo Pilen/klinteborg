@@ -13,9 +13,16 @@ import {
 import {PageDeltagereProblematiske} from "./deltagere/problematiske";
 import {PageDeltagereTransport} from "./deltagere/transport";
 import {PageDeltagereFødselsdage} from "./deltagere/fødselsdage";
+import {PageDeltagereKøkken} from "./deltagere/køkken";
 import {PageDeltagereLejrlæge} from "./deltagere/lejrlæge";
 import {PageDeltagereSøg} from "./deltagere/søg";
 import {PageDeltager} from "./deltagere/deltager";
+
+import {PageDeltagereAfkrydsning} from "./deltagere/afkrydsning";
+import {PageDeltagereTelefoner} from "./deltagere/telefoner";
+import {PageDeltagereSangbog} from "./deltagere/sangbog";
+import {PageDeltagerePost} from "./deltagere/post";
+import {PageDeltagereVæbnerkop} from "./deltagere/væbnerkop";
 
 import {PageLivgrupperAdmin} from "./livgrupper";
 import {formatDateTime} from "./utils";
@@ -85,6 +92,7 @@ class Layout {
                     m(m.route.Link, {href: "/deltagere/problematiske"}, "Problematiske"),
                     m(m.route.Link, {href: "/deltagere/transport"}, "Transport"),
                     m(m.route.Link, {href: "/deltagere/fødselsdage"}, "Fødselsdage"),
+                    m(m.route.Link, {href: "/deltagere/køkken"}, "Køkken"),
                     m(m.route.Link, {href: "/deltagere/lejrlæge"}, "Lejrlæge"),
                     m(m.route.Link, {href: "/deltagere/søg", "class": "disabled"}, "Søg"),
                    )),
@@ -137,7 +145,13 @@ m.route(document.body, "/", {
     "/deltagere/problematiske": Layout.wrap(PageDeltagereProblematiske, "Deltagere Problematiske"),
     "/deltagere/transport":  Layout.wrap(PageDeltagereTransport, "Deltagere Transport"),
     "/deltagere/fødselsdage": Layout.wrap(PageDeltagereFødselsdage, "Deltagere Fødselsdage"),
-    "/deltagere/lejrlæge":   Layout.wrap(PageDeltagereLejrlæge, "Lejrlæge listen"),
+    "/deltagere/køkken":   Layout.wrap(PageDeltagereKøkken, "Køkken"),
+    "/deltagere/lejrlæge":   Layout.wrap(PageDeltagereLejrlæge, "Lejrlægelisten"),
+    "/deltagere/afkrydsning": Layout.wrap(PageDeltagereAfkrydsning, "Afkrydsning"),
+    "/deltagere/telefoner":  Layout.wrap(PageDeltagereTelefoner, "Telefoner"),
+    "/deltagere/sangbog":  Layout.wrap(PageDeltagereSangbog, "Sangbog"),
+    "/deltagere/væbnerkop":  Layout.wrap(PageDeltagereVæbnerkop, "Væbnerkop"),
+    "/deltagere/post":  Layout.wrap(PageDeltagerePost, "Post"),
     "/deltager/:fdfid":      Layout.wrap(PageDeltager, "Deltager"),
     "/deltagere/søg":        Layout.wrap(PageDeltagereSøg, "Deltagere Søg"),
     "/livgrupper/admin":     Layout.wrap(PageLivgrupperAdmin, "Livgrupper"),
