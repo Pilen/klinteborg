@@ -4,6 +4,7 @@ from pydantic import BaseSettings
 
 
 class Config(BaseSettings):
+    url: str
     start_date: datetime.date
     postgres_host: str
     postgres_port: str
@@ -13,5 +14,10 @@ class Config(BaseSettings):
 
     static_dir: Path
     data_dir: Path
+
+    login_expires_at: datetime.datetime
+    session_expires_at: datetime.datetime
+
+
 
 config = Config() # type: ignore
