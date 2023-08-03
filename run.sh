@@ -35,6 +35,10 @@ while [[ $# -gt 0 ]]; do
         *)
             ARGS+=("$1")
             shift
+            while [[ $# -gt 0 ]]; do
+                ARGS+=("$1")
+                shift
+            done
             ;;
     esac
 done
@@ -103,6 +107,11 @@ case $COMMAND in
     dev-node)
         ENTER_DOCKER node
         bash
+        ;;
+
+    cli)
+        ENTER_DOCKER klinteborg
+        ./venv/bin/python3 -m backend.tasks.cli "${ARGS[@]}"
         ;;
 
     backend)

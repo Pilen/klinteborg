@@ -1,23 +1,40 @@
 BEGIN;
 
--- Deltager FDF Medlems IDs
+
+--------------------------------------------------------------------------------
+-- Base
+--------------------------------------------------------------------------------
+
+-- The FDF medlems IDs of everyone the system should know about.
 CREATE TABLE fdfids (
 	fdfid	integer	PRIMARY KEY,
 	navn	text	NOT NULL
 );
 
+
+--------------------------------------------------------------------------------
+-- Login
+--------------------------------------------------------------------------------
+-- The tokens are used for login.
 CREATE TABLE login_tokens (
 	fdfid			integer		REFERENCES fdfids UNIQUE,
 	login_token		text		NOT NULL UNIQUE,
 	expires_at		timestamptz	NOT NULL
 );
 
+-- We keep the old tokens around after expiry / logout, this is to prevent a new token from having the same value as a previous one, thus keeping you logged in.
+-- They can / should be cleared out periodically
 CREATE TABLE session_tokens (
 	fdfid			integer		REFERENCES fdfids,
 	session_token	text		NOT NULL,
 	expires_at		timestamptz, -- Null means expired
-    UNIQUE(fdfid, session_token)
+	UNIQUE(fdfid, session_token)
 );
+
+
+--------------------------------------------------------------------------------
+--
+--------------------------------------------------------------------------------
 
 CREATE TYPE Stab as ENUM (
 	'Resten',
@@ -38,7 +55,7 @@ CREATE TYPE Patrulje as ENUM (
 	'2. Væbnere',
 	'1. Seniorvæbnere',
 	'2. Seniorvæbnere',
-    'Senior',
+	'Senior',
 	'?',
 	'Ingen'
 );
@@ -125,5 +142,24 @@ CREATE TABLE deltagere (
 --     primær  boolean	NOT NULL DEFAULT false
 -- );
 
+
+
+
+
+
+
+CREATE TABLE tasks (
+	task_type		text			PRIMARY KEY,
+	scheduled_to	timestamptz,
+	started_at		timestamptz,
+);
+CREATE TABLE task_log (
+	task_type		text		PRIMARY KEY,
+	scheduled_to	timestamptz	NOT NULL,
+	started_at		timestamptz	NOT NULL,
+	finished_at		timestamptz	NOT NULL,
+	success			boolean		NOT NULL,
+	message			text		NOT NULL,
+)
 
 COMMIT;
