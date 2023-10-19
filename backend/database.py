@@ -127,6 +127,7 @@ class Tx:
         if query.count("?") != len(args):
             raise DatabaseError("Wrong number of SQL arguments for query: {query}")
         query = query.replace("?", "%s")
+        args = [arg.text if isinstance(arg, RawSQL) else arg for arg in args]
         self.cursor.execute(query, args)
         return self.cursor.fetchone()
 
@@ -134,6 +135,7 @@ class Tx:
         if query.count("?") != len(args):
             raise DatabaseError("Wrong number of SQL arguments for query: {query}")
         query = query.replace("?", "%s")
+        args = [arg.text if isinstance(arg, RawSQL) else arg for arg in args]
         self.cursor.execute(query, args)
         value = self.cursor.fetchone()
         if value is None:
@@ -144,6 +146,7 @@ class Tx:
         if query.count("?") != len(args):
             raise DatabaseError("Wrong number of SQL arguments for query: {query}")
         query = query.replace("?", "%s")
+        args = [arg.text if isinstance(arg, RawSQL) else arg for arg in args]
         self.cursor.execute(query, args)
         return self.cursor.fetchall()
 
@@ -151,6 +154,7 @@ class Tx:
         if query.count("?") != len(args):
             raise DatabaseError("Wrong number of SQL arguments for query: {query}")
         query = query.replace("?", "%s")
+        args = [arg.text if isinstance(arg, RawSQL) else arg for arg in args]
         self.cursor.execute(query, args)
 
     def affected(self) -> int:
