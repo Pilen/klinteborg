@@ -13,6 +13,7 @@ class Config(BaseSettings):
     postgres_database: str
 
     static_dir: Path
+    fragment_dir: Path
     data_dir: Path
 
     login_expires_at: datetime.datetime

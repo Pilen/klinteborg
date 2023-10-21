@@ -1,0 +1,19 @@
+<body>
+  <header>
+    <nav>
+      <a>
+        <div class="header-title" style="text-align: center;">Klinteborg</div>
+      </a>
+    </nav>
+  </header>
+  <div style="text-align: center;">
+    <H1>Login forkert</H1>
+    <p>Linket du brugte virker ikke. Enten har du allerede brugt linket før, det er udløbet, eller også er det tastet / kopiret forkert.</p>
+    <p>Hvert link kan kun bruges én gang</p>
+    <p>Indtast dit FDF-medlemsnummer, så sender vi dig et nyt link</p>
+    <form method="post" action="/api/user/login">
+      <input type="text" name="fdfid" id="fdfid" autocomplete="off" required autofocus placeholder="Medlemsnummer"/>
+      <input type="submit" value="Login"/>
+    </form>
+  </div>
+</body>

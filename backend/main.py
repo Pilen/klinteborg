@@ -38,6 +38,11 @@ def register_api(module_name: str, prefix: str | None = None, tags: list[str] | 
     app.include_router(router, prefix = prefix, tags = tags) # type: ignore
 
 register_api(".api.deltagere")
+register_api(".api.user")
+register_api(".login")
+register_api(".api.admin")
+app.get("/login/")(importlib.import_module(".login", "backend").login)
+# app.include_router(importlib.import_module(".api.user", "backend").login_router, prefix="/", tags="q")
 
 
 @app.get("/api/database/pool/check")

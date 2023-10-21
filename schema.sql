@@ -15,11 +15,20 @@ CREATE TABLE fdfids (
 --------------------------------------------------------------------------------
 -- Login
 --------------------------------------------------------------------------------
+
+-- A simple table of all the users that may login
+-- Rember to clear both login_permissions and session_tokens to log someone out.
+CREATE TABLE login_permissions (
+	fdfid	integer REFERENCES fdfids UNIQUE
+);
+
 -- The tokens are used for login.
 CREATE TABLE login_tokens (
 	fdfid			integer		REFERENCES fdfids UNIQUE,
 	login_token		text		NOT NULL UNIQUE,
-	expires_at		timestamptz	NOT NULL
+	used			boolean		NOT NULL,
+	expires_at		timestamptz	NOT NULL,
+	created_at		timestamptz NOT NULL
 );
 
 -- We keep the old tokens around after expiry / logout, this is to prevent a new token from having the same value as a previous one, thus keeping you logged in.
@@ -28,6 +37,7 @@ CREATE TABLE session_tokens (
 	fdfid			integer		REFERENCES fdfids,
 	session_token	text		NOT NULL,
 	expires_at		timestamptz, -- Null means expired
+	created_at		timestamptz,
 	UNIQUE(fdfid, session_token)
 );
 

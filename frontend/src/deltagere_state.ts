@@ -46,7 +46,7 @@ export class DeltagereState {
     public download() {
         return m.request({
             method: "GET",
-            url: "/api/deltagere/list",
+            url: "/api/deltagere/all",
             withCredentials: true,
         }).catch((e) => {
             error(e)
