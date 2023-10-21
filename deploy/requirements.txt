@@ -3,6 +3,7 @@ uvicorn[standard]
 xlrd
 psycopg[binary] == 3.1.8
 psycopg[pool] == 3.1.8
+python-multipart
 
 selenium == 4.10.0
 mypy == 1.2.0
