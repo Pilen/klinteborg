@@ -110,7 +110,7 @@ class Layout {
                   m("a", "Sekretær"),
                   m(".dropdown-content",
                     m(m.route.Link, {href: "/sekretær/ret-program", "class": "disabled"}, "Ret program"),
-                    m(m.route.Link, {href: "/sekretær/grupper", "class": "disabled"}, "Udvalg / Jobs"),
+                    m(m.route.Link, {href: "/sekretær/grupper"}, "Udvalg / Jobs"),
                     m(m.route.Link, {href: "/sekretær/tjanser", "class": "disabled"}, "Tjanser"),
                     m(m.route.Link, {href: "/sekretær/bordhold", "class": "disabled"}, "Bordhold"),
                     m(m.route.Link, {href: "/sekretær/værelser", "class": "disabled"}, "Værelser"),

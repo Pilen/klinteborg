@@ -33,12 +33,34 @@ class GruppeService {
         return this._grupper;
     }
 
+    public addPerson(gruppe: string, fdfid: number) {
+        return m.request({
+            method: "POST",
+            url: "/api/grupper/add-person",
+            withCredentials: true,
+            body: {gruppe: gruppe, fdfid: fdfid},
+        }).then((result) => {
+            this.downloadGrupper();
+        });
+    }
+
+    public removePerson(gruppe: string, fdfid: number) {
+        return m.request({
+            method: "POST",
+            url: "/api/grupper/remove-person",
+            withCredentials: true,
+            body: {gruppe: gruppe, fdfid: fdfid},
+        }).then((result) => {
+            this.downloadGrupper();
+        });
+    }
+
     public setTovholder(gruppe: string, fdfid: number, isTovholder: boolean) {
         return m.request({
             method: "POST",
             url: "/api/grupper/set-tovholder",
             withCredentials: true,
-            body: {gruppe: gruppe.gruppe, fdfid: fdfid, is_tovholder: isTovholder},
+            body: {gruppe: gruppe, fdfid: fdfid, is_tovholder: isTovholder},
         }).then((result) => {
             this.downloadGrupper();
         });

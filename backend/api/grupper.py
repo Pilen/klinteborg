@@ -11,7 +11,7 @@ def add_person(
         tx: TX,
         fdfid: Annotated[int, Body()],
         gruppe: Annotated[str, Body()]):
-    tx.insert("gruppe_medlemmer", fdfid, gruppe)
+    tx.insert("gruppe_medlemmer", fdfid=fdfid, gruppe=gruppe)
 
 
 @router.post("/remove-person")

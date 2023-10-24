@@ -26,6 +26,7 @@
     font-family: fdficons;
     src: url("/static/fonts/fdficons.woff");
 }
+
 /*******************************************************************************
  * Colors
  ******************************************************************************/
@@ -40,6 +41,15 @@
     --søblå:        #4678C8; /* Væbner */
     --granit:       #7D878C; /* Seniorvæbner */
     --flammefarvet: #FF733C; /* Senior */
+}
+.red {
+    color: var(--efterårsrød);
+}
+.yellow {
+    color: var(--korngul);
+}
+.green {
+    color: var(--græsgrøn);
 }
 
 /*******************************************************************************
