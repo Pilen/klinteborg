@@ -43,17 +43,34 @@ CREATE TABLE session_tokens (
 
 
 --------------------------------------------------------------------------------
+-- Permissions
+--------------------------------------------------------------------------------
+CREATE TABLE Permissions (
+	permission	text	PRIMARY KEY,
+	beskrivelse	text	NOT NULL
+);
+
+CREATE TABLE user_permissions (
+	fdfid		integer			REFERENCES fdfids,
+	permission	text			REFERENCES Permissions,
+	automatic	boolean			NOT NULL, -- Has this permission been granted automatically by the system
+	UNIQUE(fdfid, permission, automatic)
+);
+
+
+
+--------------------------------------------------------------------------------
 --
 --------------------------------------------------------------------------------
 
-CREATE TYPE Stab as ENUM (
+CREATE TYPE Stab AS ENUM (
 	'Resten',
 	'Indestab',
 	'Piltestab',
 	'Væbnerstab'
 );
 
-CREATE TYPE Patrulje as ENUM (
+CREATE TYPE Patrulje AS ENUM (
 	'Numlinge',
 	'1. Puslinge',
 	'2. Puslinge',
@@ -70,14 +87,14 @@ CREATE TYPE Patrulje as ENUM (
 	'Ingen'
 );
 
-CREATE TYPE Tilstede as ENUM (
+CREATE TYPE Tilstede AS ENUM (
 	'Ja',
 	'Nej',
 	'Måske',
 	'Delvist'
 );
 
-CREATE TYPE Transport as ENUM (
+CREATE TYPE Transport AS ENUM (
 	'Fælles',
 	'Egen',
 	'Samkørsel'
@@ -115,61 +132,50 @@ CREATE TABLE deltagere (
 );
 
 
+--------------------------------------------------------------------------------
+--
+--------------------------------------------------------------------------------
 
--- CREATE TABLE Permissions {
--- 	permission	text	PRIMARY KEY,
--- 	beskrivelse	text NOT NULL,
--- );
-
--- CREATE TABLE User_permissions (
--- 	fdfid		integer	REFERENCES fdfids,
---     permission	text	REFERENCES Permissions,
---     reason		Permission_reason	NOT NULL,
--- )
-
-
--- CREATE TYPE Permission_reason (
--- 	'Auto',
---     'Manual',
--- );
--- CREATE TYPE Gruppe_type (
--- 	'Udvalg',
--- 	'Job',
--- 	'Gruppe',
--- );
-
--- CREATE TABLE grupper (
--- 	gruppe	text		PRIMARY KEY,
--- 	type	Gruppe_type	NOT NULL,
--- 	beskrivelse	text	NOT NULL,
--- 	minimum_antal	integer,
--- 	maximum_antal	integer
--- );
-
--- CREATE TABLE gruppe_medlemer (
--- 	gruppe	text	REFERENCES grupper,
---     fdfid	int		REFERENCES fdfids,
---     primær  boolean	NOT NULL DEFAULT false
--- );
-
-
-
-
-
-
-
-CREATE TABLE tasks (
-	task_type		text			PRIMARY KEY,
-	scheduled_to	timestamptz,
-	started_at		timestamptz,
+CREATE TYPE Gruppe_type AS ENUM (
+	'Funktion', -- Your primary function during the camp, you typically only have one
+	'Job', -- An additional role you have
+	'Udvalg',
+	'Stabsopgave', -- Any udvalg / job specific to the stab
+	'Event' -- A grouping specific to some event during the camp
 );
-CREATE TABLE task_log (
-	task_type		text		PRIMARY KEY,
-	scheduled_to	timestamptz	NOT NULL,
-	started_at		timestamptz	NOT NULL,
-	finished_at		timestamptz	NOT NULL,
-	success			boolean		NOT NULL,
-	message			text		NOT NULL,
-)
+
+CREATE TABLE grupper (
+	gruppe	text		PRIMARY KEY,
+	type	Gruppe_type	NOT NULL,
+	beskrivelse	text	NOT NULL,
+	minimum_antal	integer, -- null means no limit
+	maximum_antal	integer  -- null means no limit
+);
+
+CREATE TABLE gruppe_medlemmer (
+	gruppe		text	REFERENCES grupper,
+	fdfid		int		REFERENCES fdfids,
+	tovholder	boolean	NOT NULL DEFAULT false
+);
+
+
+
+
+
+
+
+-- CREATE TABLE tasks (
+-- 	task_type		text			PRIMARY KEY,
+-- 	scheduled_to	timestamptz,
+-- 	started_at		timestamptz,
+-- );
+-- CREATE TABLE task_log (
+-- 	task_type		text		PRIMARY KEY,
+-- 	scheduled_to	timestamptz	NOT NULL,
+-- 	started_at		timestamptz	NOT NULL,
+-- 	finished_at		timestamptz	NOT NULL,
+-- 	success			boolean		NOT NULL,
+-- 	message			text		NOT NULL,
+-- )
 
 COMMIT;

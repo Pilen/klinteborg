@@ -25,6 +25,9 @@ import {PageDeltagerePost} from "./deltagere/post";
 import {PageDeltagereVæbnerkop} from "./deltagere/væbnerkop";
 
 import {PageLivgrupperAdmin} from "./livgrupper";
+
+import {PageGrupper} from "./sekretær/grupper";
+
 import {formatDateTime} from "./utils";
 
 
@@ -106,7 +109,7 @@ class Layout {
                   m("a", "Sekretær"),
                   m(".dropdown-content",
                     m(m.route.Link, {href: "/sekretær/ret-program", "class": "disabled"}, "Ret program"),
-                    m(m.route.Link, {href: "/sekretær/udvalg", "class": "disabled"}, "Udvalg / Jobs"),
+                    m(m.route.Link, {href: "/sekretær/grupper", "class": "disabled"}, "Udvalg / Jobs"),
                     m(m.route.Link, {href: "/sekretær/tjanser", "class": "disabled"}, "Tjanser"),
                     m(m.route.Link, {href: "/sekretær/bordhold", "class": "disabled"}, "Bordhold"),
                     m(m.route.Link, {href: "/sekretær/værelser", "class": "disabled"}, "Værelser"),
@@ -155,6 +158,8 @@ m.route(document.body, "/", {
     "/deltager/:fdfid":      Layout.wrap(PageDeltager, "Deltager"),
     "/deltagere/søg":        Layout.wrap(PageDeltagereSøg, "Deltagere Søg"),
     "/livgrupper/admin":     Layout.wrap(PageLivgrupperAdmin, "Livgrupper"),
+
+    "/sekretær/grupper":     Layout.wrap(PageGrupper, "Udvalg / Jobs"),
     "/:404...":              Layout.wrap(NotFound, "Siden mangler"),
 });
 
