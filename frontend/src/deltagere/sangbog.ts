@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "../error";
 import {$it, Iter, foo} from "../lib/iter";
-import {DELTAGERE_STATE, Deltager} from "../deltagere_state";
+import {DELTAGER_SERVICE, Deltager} from "../services/deltager_service";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "../definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "../utils";
 import {Days} from "./core";
@@ -22,7 +22,7 @@ export class PageDeltagereSangbog {
 
 
         function f(key) {
-        let content = $it(DELTAGERE_STATE.deltagere)
+        let content = $it(DELTAGER_SERVICE.deltagere())
             .filter((deltager) => deltager.row["Sangbog"])
             .filter(key)
             // .sort((deltager) => [deltager.row["Sangbog"], deltager.er_voksen, deltager.dage, deltager.navn, deltager.patrulje.order])

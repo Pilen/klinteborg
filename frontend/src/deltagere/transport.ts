@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "../error";
 import {$it, Iter, foo} from "../lib/iter";
-import {DELTAGERE_STATE, Deltager} from "../deltagere_state";
+import {DELTAGER_SERVICE, Deltager} from "../services/deltager_service";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "../definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "../utils";
 import {Days} from "./core";
@@ -11,7 +11,7 @@ export class PageDeltagereTransport {
     total: number = 0;
     table(predicate) {
         let n = 0;
-        let deltagere = $it(DELTAGERE_STATE.deltagere)
+        let deltagere = $it(DELTAGER_SERVICE.deltagere())
             .filter((deltager) => !deltager.upræcis_periode)
             .filter(predicate)
             .sideEffect((deltager) => n++)
@@ -54,8 +54,8 @@ export class PageDeltagereTransport {
                 );
     }
     egen() {
-        let arrivals = $it(DELTAGERE_STATE.deltagere).filter((deltager) => !deltager.upræcis_periode && deltager.ankomst_type == "Egen").GroupBy((deltager) => deltager.ankomst_dato ? formatDate(deltager.ankomst_dato) : null);
-        let departures = $it(DELTAGERE_STATE.deltagere).filter((deltager) => !deltager.upræcis_periode && deltager.afrejse_type == "Egen").GroupBy((deltager) => deltager.ankomst_dato ? formatDate(deltager.afrejse_dato) : null);
+        let arrivals = $it(DELTAGER_SERVICE.deltagere()).filter((deltager) => !deltager.upræcis_periode && deltager.ankomst_type == "Egen").GroupBy((deltager) => deltager.ankomst_dato ? formatDate(deltager.ankomst_dato) : null);
+        let departures = $it(DELTAGER_SERVICE.deltagere()).filter((deltager) => !deltager.upræcis_periode && deltager.afrejse_type == "Egen").GroupBy((deltager) => deltager.ankomst_dato ? formatDate(deltager.afrejse_dato) : null);
         let result = $it(DAYS)
             .zip(DATES)
             .map(([day, date]) => {
@@ -112,7 +112,7 @@ export class PageDeltagereTransport {
     }
 
     private problematic() {
-        let problematic = $it(DELTAGERE_STATE.deltagere)
+        let problematic = $it(DELTAGER_SERVICE.deltagere())
             .filter((deltager: Deltager) => deltager.upræcis_periode)
             .sort((deltager: Deltager) => [
                 deltager.er_voksen,
@@ -182,7 +182,7 @@ export class PageDeltagereTransport {
             m(H1, "Egen"),
             this.egen(),
         ];
-        if (this.total != DELTAGERE_STATE.deltagere.length * 2) {
+        if (this.total != DELTAGER_SERVICE.deltagere().length * 2) {
             error("Intern", "Listen er ikke komplet! Ankomster + Afrejser != deltagere * 2");
         }
         return m("div", result);

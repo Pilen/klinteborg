@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "../error";
 import {$it, Iter, foo} from "../lib/iter";
-import {DELTAGERE_STATE, Deltager} from "../deltagere_state";
+import {DELTAGER_SERVICE, Deltager} from "../services/deltager_service";
 import {Stab, Patrulje, Tilstede, DAYS, DATES, START_DATE, END_DATE} from "../definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge, calculateModa} from "../utils";
 import {Days} from "./core";
@@ -9,7 +9,7 @@ import {Days} from "./core";
 
 export class PageDeltagereFødselsdage {
     public view(vnode: m.Vnode) {
-        let deltagere = $it(DELTAGERE_STATE.deltagere)
+        let deltagere = $it(DELTAGER_SERVICE.deltagere())
             .filter((deltager) => deltager.fødselsdato)
             .filter((deltager) => DATES.find((date) => deltager.fødselsdato.getMonth() === date.getMonth() && deltager.fødselsdato.getDate() === date.getDate()))
             .sort((deltager) => [deltager.fødselsdato.getMonth(), deltager.fødselsdato.getDate(), -deltager.fødselsdato.getYear()])

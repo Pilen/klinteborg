@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "../error";
 import {$it, Iter, foo} from "../lib/iter";
-import {DELTAGERE_STATE, Deltager} from "../deltagere_state";
+import {DELTAGER_SERVICE, Deltager} from "../services/deltager_service";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "../definitions";
 import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "../utils";
 import {Days} from "./core";
@@ -9,7 +9,7 @@ import {Days} from "./core";
 
 export class PageDeltagereProblematiske {
     public view(vnode: m.Vnode) {
-        let problematic = $it(DELTAGERE_STATE.deltagere)
+        let problematic = $it(DELTAGER_SERVICE.deltagere())
             .filter((deltager) => deltager.problemer.length > 0)
             .sort((deltager: Deltager) => [
                 deltager.er_voksen,
@@ -68,7 +68,7 @@ export class PageDeltagereProblematiske {
 
 export class Ændringer {
     public view(vnode: m.Vnode) {
-        let deltagere = $it(DELTAGERE_STATE.deltagere)
+        let deltagere = $it(DELTAGER_SERVICE.deltagere())
             .map((deltager) => {
                 if (formatDateTime(deltager.tilmeldt_dato) === formatDateTime(deltager.sidst_ændret_dato)) {
                     return [["Tilmeldt", deltager.tilmeldt_dato, deltager]];

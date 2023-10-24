@@ -2,7 +2,7 @@
 
 // class Uge {
 //     public view(vnode: m.Vnode) {
-//         let deltagere = $it(DELTAGERE_STATE.deltagere)
+//         let deltagere = $it(DELTAGER_SERVICE.deltagere())
 //             .filter((deltager) => deltager[vnode.attrs.bordhold_attr])
 //             .sort((deltager) => deltager[vnode.attrs.bordhold_attr])
 //             .map((deltager) =>

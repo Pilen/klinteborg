@@ -1,14 +1,14 @@
 import m from "mithril";
 import {error} from "../error";
 import {$it, Iter, foo} from "../lib/iter";
-import {DELTAGERE_STATE, Deltager} from "../deltagere_state";
+import {DELTAGER_SERVICE, Deltager} from "../services/deltager_service";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "../definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "../utils";
 import {Days} from "./core";
 
 export class PageDeltagerePost {
     public view(vnode: m.Vnode<{er_voksen: boolean}>) {
-        let deltagere = $it(DELTAGERE_STATE.deltagere)
+        let deltagere = $it(DELTAGER_SERVICE.deltagere())
             .filter((deltager) => deltager.bordhold_uge2)
             .sort((deltager) => [deltager.navn])
             .groupRuns((deltager) => deltager.navn.substring(0, 1))

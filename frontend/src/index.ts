@@ -2,7 +2,7 @@ import m from "mithril";
 import {
     ErrorView
 } from "./error";
-import {DELTAGERE_STATE} from "./deltagere_state";
+import {DELTAGER_SERVICE} from "./services/deltager_service";
 import {
     PageDeltagereIndestab,
     PageDeltagerePiltestab,
@@ -65,7 +65,7 @@ class NotFound {
 class Layout {
     public view(vnode: m.Vnode<{title: string}>) {
         document.title = vnode.attrs.title;
-        if (DELTAGERE_STATE.deltagere.length == 0) {
+        if (!DELTAGER_SERVICE.isReady()) {
             return m(".loading", m("span", "Loading"));
         }
         return m.fragment({}, [
@@ -158,4 +158,4 @@ m.route(document.body, "/", {
     "/:404...":              Layout.wrap(NotFound, "Siden mangler"),
 });
 
-DELTAGERE_STATE.download();
+DELTAGER_SERVICE.downloadDeltagere();

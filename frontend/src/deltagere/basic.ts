@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "../error";
 import {$it, Iter, foo} from "../lib/iter";
-import {DELTAGERE_STATE, Deltager} from "../deltagere_state";
+import {DELTAGER_SERVICE, Deltager} from "../services/deltager_service";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "../definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "../utils";
 import {Days} from "./core";
@@ -9,7 +9,7 @@ import {Days} from "./core";
 class ViewDeltagereTable {
     public view(vnode: m.Vnode<{stab: Stab, er_voksen: boolean, group: boolean}>) {
         let deltagere = (
-            $it(DELTAGERE_STATE.deltagere)
+            $it(DELTAGER_SERVICE.deltagere())
                 .filter((deltager) => (vnode.attrs.stab == null || deltager.stab === vnode.attrs.stab) && deltager.er_voksen === vnode.attrs.er_voksen)
                 .sort((deltager) => [
                     deltager.stab.order,
@@ -121,7 +121,7 @@ class Summary {
 
     }
     public view(vnode: m.Vnode<{stab: Stab}>) {
-        let deltagere = $it(DELTAGERE_STATE.deltagere).filter((deltager) => vnode.attrs.stab == null || deltager.stab === vnode.attrs.stab).List();
+        let deltagere = $it(DELTAGER_SERVICE.deltagere()).filter((deltager) => vnode.attrs.stab == null || deltager.stab === vnode.attrs.stab).List();
         let by_patrulje = $it(deltagere).groupBy((deltager) => deltager.patrulje.name).sort(([patrulje, d]) => Patrulje.get(patrulje).order).map(([patrulje, d]) => this.summary(d, patrulje)).List();
         return m("table",
                  m("thead",

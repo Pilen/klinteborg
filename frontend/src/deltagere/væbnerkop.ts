@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "../error";
 import {$it, Iter, foo} from "../lib/iter";
-import {DELTAGERE_STATE, Deltager} from "../deltagere_state";
+import {DELTAGER_SERVICE, Deltager} from "../services/deltager_service";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "../definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "../utils";
 import {Days} from "./core";
@@ -9,7 +9,7 @@ import {Days} from "./core";
 
 export class PageDeltagereVæbnerkop {
     public view(vnode: m.Vnode) {
-        let content = $it(DELTAGERE_STATE.deltagere)
+        let content = $it(DELTAGER_SERVICE.deltagere())
             .filter((deltager) => deltager.stab.name === "Væbnerstab" && !deltager.er_voksen)
             .sort((deltager) => [deltager.patrulje.order, deltager.navn])
             .map((deltager) =>
