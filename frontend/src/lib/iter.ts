@@ -209,6 +209,7 @@ export class Iter<T> {
                     return;
                 }
                 yield item;
+                i++;
             }
         });
     }
@@ -761,7 +762,7 @@ export class Iter<T> {
     }
 }
 
-function make_extract<T> (key: string | number | ((T) => any)): any {
+export function make_extract<T> (key: string | number | ((T) => any)): any {
     let extract;
     if (key === undefined) {
         extract = (x) => x;
