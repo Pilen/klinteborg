@@ -298,6 +298,36 @@ header > nav > .dropdown:hover > a {
 }
 
 /*******************************************************************************
+ * Modal
+ ******************************************************************************/
+.modal-base {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* background: rgba(0, 0, 0, 0.8); */
+    /* background: #003255; */
+    /* background: #003255ee; */
+    /* background: #ffffffee; */
+    background: #7D878Cee;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    padding-top: 30px;
+}
+
+.modal {
+    background: white;
+    min-width: 800px;
+    min-height: 400px;
+    padding: 20px 10px 20px 10px;
+    border-radius: 10px;
+    /* box-shadow: 10px 10px 20px var(--granit); */
+    box-shadow: 10px 10px 20px var(--nat-blå);
+}
+
+/*******************************************************************************
  * Animations
  ******************************************************************************/
 @keyframes shake {

@@ -2,6 +2,7 @@ import m from "mithril";
 import {
     ErrorView
 } from "./error";
+import {ModalBase} from "./modal";
 import {DELTAGER_SERVICE} from "./services/deltager_service";
 import {
     PageDeltagereIndestab,
@@ -127,6 +128,7 @@ class Layout {
              ),
             m(ErrorView),
             m("main", vnode.children),
+            m(ModalBase),
         ]);
     }
     public static wrap(cls: any, title: string) {
