@@ -36,13 +36,13 @@ export function calculateModa(date: Date): number {
     return (date.getMonth() + 1) * 100 + date.getDate();
 }
 
-export class Breakable {
+export class Breakable implements m.Component<{break: boolean}> {
     tag = "span";
     isBreaking: boolean;
-    constructor(vnode: m.Vnode) {
+    constructor(vnode: m.Vnode<{break: boolean}>) {
         this.isBreaking = !!vnode.attrs.break;
     }
-    public view(vnode: m.Vnode) {
+    public view(vnode: m.Vnode<{break: boolean}>) {
         return m(this.tag,
                  {class: this.isBreaking ? "breakable breakable-break" : "breakable breakable-no-break",
                   title: "⤶: Sideskift i print",

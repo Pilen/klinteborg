@@ -137,7 +137,7 @@ case $COMMAND in
         ;;
     frontend-typecheck | frontend-typescript)
         ENTER_DOCKER node
-        ./frontend/node_modules/typescript/bin/tsc --noEmit --esModuleInterop frontend/src/index.ts
+        ./frontend/node_modules/typescript/bin/tsc --noEmit --esModuleInterop --target es6 frontend/src/index.ts
         ;;
     frontend-typecheck-watch | frontend-typescript-watch)
         ENTER_DOCKER node

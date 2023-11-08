@@ -42,7 +42,7 @@ export class PageGrupper {
         //            m("tbody",
         //              table_rows)));
 
-        let content = $it(GRUPPE_SERVICE.grupper())
+        let content = $it(GRUPPE_SERVICE.grupper() ?? [])
             .mapRuns("type",
                      (gruppe) => {
                          let antal = "";
@@ -103,8 +103,7 @@ export class PageGrupper {
                                   grupper,
                                  )})
             .List();
-        return m("div",
-                 m("table",
+        return m("table",
                  // m("thead",
                  //   m("tr",
                  //     m("th", "Udvalg / Job"),
@@ -112,6 +111,6 @@ export class PageGrupper {
                  //     m("th", "Antal"),
                  //     m("th", "Navne"),
                  //    )),
-                   content));
+                 content);
     }
 }

@@ -282,7 +282,7 @@ export class Iter<T> {
         });
     }
 
-    public sort(key?: (x: T) => any, reverse = false): Iter<T>{
+    public sort(key?: string | number | ((x: T) => any), reverse = false): Iter<T>{
         let it = this.it;
         let extract = make_extract(key);
         return new Iter(function*() {
@@ -340,7 +340,7 @@ export class Iter<T> {
         });
     }
 
-    public unique(key?: (T) => any) {
+    public unique(key?: string | number | ((T) => any)) {
         let it = this.it;
         let extract = make_extract(key);
         return new Iter(function*() {
@@ -590,7 +590,7 @@ export class Iter<T> {
         });
     }
 
-    public mapRuns(key, handle_individual, handle_group): Iter<Any> {
+    public mapRuns(key, handle_individual, handle_group): Iter<any> {
         let it = this.it;
         let extract = make_extract(key);
         let previous = undefined;

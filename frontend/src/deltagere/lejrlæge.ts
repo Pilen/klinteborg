@@ -7,7 +7,7 @@ import {H1, H2, H5, Tr, formatDate, calculateAge} from "../utils";
 import {Days} from "./core";
 
 export class PageDeltagereLejrlæge {
-    table(er_voksen: bool) {
+    table(er_voksen: boolean) {
         let deltagere = $it(DELTAGER_SERVICE.deltagere())
             .filter((deltager) => deltager.er_voksen === er_voksen)
             .sort((deltager) => [deltager.navn])

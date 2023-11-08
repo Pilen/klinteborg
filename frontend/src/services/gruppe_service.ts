@@ -13,6 +13,10 @@ class Gruppe{
 class GruppeService {
     _grupper: Array<Gruppe> | undefined;
 
+    public isReady() {
+        return this._grupper !== undefined;
+    }
+
     public downloadGrupper() {
         return m.request({
             method: "GET",
@@ -28,7 +32,7 @@ class GruppeService {
     public grupper() {
         if (this._grupper === undefined) {
             this.downloadGrupper();
-            return [];
+            return undefined;
         }
         return this._grupper;
     }
@@ -39,6 +43,8 @@ class GruppeService {
             url: "/api/grupper/add-person",
             withCredentials: true,
             body: {gruppe: gruppe, fdfid: fdfid},
+        }).catch((e) => {
+            error(e)
         }).then((result) => {
             this.downloadGrupper();
         });
@@ -50,6 +56,8 @@ class GruppeService {
             url: "/api/grupper/remove-person",
             withCredentials: true,
             body: {gruppe: gruppe, fdfid: fdfid},
+        }).catch((e) => {
+            error(e)
         }).then((result) => {
             this.downloadGrupper();
         });
@@ -61,6 +69,8 @@ class GruppeService {
             url: "/api/grupper/set-tovholder",
             withCredentials: true,
             body: {gruppe: gruppe, fdfid: fdfid, is_tovholder: isTovholder},
+        }).catch((e) => {
+            error(e)
         }).then((result) => {
             this.downloadGrupper();
         });
