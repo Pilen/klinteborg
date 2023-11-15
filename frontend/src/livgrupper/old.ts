@@ -1,9 +1,9 @@
 import m from "mithril";
-import {error} from "./error";
-import {$it, Iter, foo} from "./lib/iter";
-import {DELTAGER_SERVICE, Deltager} from "./services/deltager_service";
-import {Stab, Patrulje, Tilstede, DAYS, DATES, START_DATE} from "./definitions";
-import {H1, H2, H5, Tr, formatDate, addDays} from "./utils";
+import {error} from "../error";
+import {$it, Iter, foo} from "../lib/iter";
+import {DELTAGER_SERVICE, Deltager} from "../services/deltager_service";
+import {Stab, Patrulje, Tilstede, DAYS, DATES, START_DATE} from "../definitions";
+import {H1, H2, H5, Tr, formatDate, addDays} from "../utils";
 
 function handle(deltager, i) {
     let day = addDays(START_DATE, i);
@@ -52,7 +52,7 @@ function split(t) {
     return [t.substring(0, 2), "], [", t.substring(2, 4), " "]
 }
 
-export class PageLivgrupperAdmin {
+export class PageLivgrupperAdminOld {
     public view(vnode: m.Vnode) {
         let longest = 0;
         let ledere = $it(DELTAGER_SERVICE.deltagere())

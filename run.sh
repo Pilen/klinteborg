@@ -110,6 +110,7 @@ case $COMMAND in
         ;;
 
     cli)
+        DOCKER_FLAGS=(--volume "${DATA_MOUNT}:${DATA_DIR}")
         ENTER_DOCKER klinteborg
         ./venv/bin/python3 -m backend.tasks.cli "${ARGS[@]}"
         ;;

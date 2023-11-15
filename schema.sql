@@ -2,6 +2,17 @@ BEGIN;
 
 
 --------------------------------------------------------------------------------
+-- Settings
+--------------------------------------------------------------------------------
+CREATE TABLE settings (
+	setting			text	PRIMARY KEY,
+	value			jsonb	NOT NULL,
+	default_value	jsonb	NOT NULL,
+	type			text	NOT NULL,
+	description		text	NOT NULL
+);
+
+--------------------------------------------------------------------------------
 -- Base
 --------------------------------------------------------------------------------
 
@@ -141,7 +152,8 @@ CREATE TYPE Gruppe_type AS ENUM (
 	'Job', -- An additional role you have
 	'Udvalg',
 	'Stabsopgave', -- Any udvalg / job specific to the stab
-	'Event' -- A grouping specific to some event during the camp
+	'Event', -- A grouping specific to some event during the camp
+	'Auto' -- Groups that people are put into automatically.
 );
 
 CREATE TABLE grupper (
@@ -155,7 +167,8 @@ CREATE TABLE grupper (
 CREATE TABLE gruppe_medlemmer (
 	gruppe		text	REFERENCES grupper,
 	fdfid		int		REFERENCES fdfids,
-	tovholder	boolean	NOT NULL DEFAULT false
+	tovholder	boolean	NOT NULL DEFAULT false,
+	UNIQUE(gruppe, fdfid)
 );
 
 
@@ -177,5 +190,30 @@ CREATE TABLE gruppe_medlemmer (
 -- 	success			boolean		NOT NULL,
 -- 	message			text		NOT NULL,
 -- )
+
+
+
+--------------------------------------------------------------------------------
+-- Livgrupper
+--------------------------------------------------------------------------------
+
+CREATE TABLE grupper_med_minus (
+	gruppe	text	REFERENCES grupper,
+	UNIQUE(gruppe)
+);
+
+CREATE TABLE arbejdsbyrde_besvarelser (
+	id			SERIAL	PRIMARY KEY,
+	grupper		json	NOT NULL,
+	vægtning	int
+);
+
+CREATE TABLE arbejdsbyrde_custom_scores (
+	gruppe	text				REFERENCES grupper,
+	score	double precision	NOT NULL,
+	UNIQUE(gruppe)
+);
+
+
 
 COMMIT;

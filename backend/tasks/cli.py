@@ -2,9 +2,11 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from backend.database import TX, DB
+from backend.database import TX, DB, Json, Jsonb
 # from backend.api.user import make_login
-
+from backend.tasks import load_arbejdsbyrde_besvarelser
+import backend.deltagere
+from backend.config import config
 
 
 def invite_command(tx: TX, args: argparse.Namespace) -> None:
@@ -25,7 +27,27 @@ def load_json_command(tx: TX, args: argparse.Namespace) -> None:
     for table, rows in data.items():
         print(f"Inserting into {table}")
         for row in rows:
+            for k, v in row.items():
+                if isinstance(v, dict):
+                    row[k] = Json(v["$json"])
             tx.insert_row(table, row)
+
+
+def import_deltagere_command(tx: TX, args: argparse.Namespace) -> None:
+    print(config.data_dir)
+    backend.deltagere.import_excel(tx)
+
+
+def load_arbejdsbyrde_besvarelser_command(tx: TX, args: argparse.Namespace) -> None:
+    posts, weighting = load_arbejdsbyrde_besvarelser.load(args.file)
+    print(len(posts))
+    print(len(weighting))
+    result = load_arbejdsbyrde_besvarelser.transform(posts, weighting)
+    for item in result:
+        tx.insert("arbejdsbyrde_besvarelser",
+                  grupper = Json(item["grupper"]),
+                  vægtning = item["vægtning"])
+
 
 def main() -> None:
     # print(sys.argv)
@@ -34,15 +56,23 @@ def main() -> None:
         description="Command Line Interface for Klinteborg")
     subparsers = parser.add_subparsers(required=True, dest="command")
 
-    parser_invite = subparsers.add_parser("invite", help="Invite a user")
-    parser_invite.set_defaults(command_func=invite_command)
-    parser_invite.add_argument("--fdfid", required=False, type=int, help="The fdfid of the user to invite")
-    parser_invite.add_argument("--email", type=str, help="The email of the user to invite, if not specified the users email is used")
-    parser_invite.add_argument("--print", action="store_true", help="Print the login link")
+    subparser = subparsers.add_parser("invite", help="Invite a user")
+    subparser.set_defaults(command_func=invite_command)
+    subparser.add_argument("--fdfid", required=False, type=int, help="The fdfid of the user to invite")
+    subparser.add_argument("--email", type=str, help="The email of the user to invite, if not specified the users email is used")
+    subparser.add_argument("--print", action="store_true", help="Print the login link")
 
-    parser_load_json = subparsers.add_parser("load-json", help="Load json into the database")
-    parser_load_json.set_defaults(command_func=load_json_command)
-    parser_load_json.add_argument("--file", required=True, type=Path, help="Path to the json file")
+    subparser = subparsers.add_parser("load-json", help="Load json into the database")
+    subparser.set_defaults(command_func=load_json_command)
+    subparser.add_argument("--file", required=True, type=Path, help="Path to the json file")
+
+    subparser = subparsers.add_parser("import-deltagere", help="Import all the deltager data from excel file")
+    subparser.set_defaults(command_func=import_deltagere_command)
+    # subparser.add_argument("--file", required=True, type=Path, help="Path to the json file")
+
+    subparser = subparsers.add_parser("load-arbejdsbyrde-besvarelser", help="Load arbejdsbyrde besvarelser from csv file")
+    subparser.set_defaults(command_func=load_arbejdsbyrde_besvarelser_command)
+    subparser.add_argument("--file", required=True, type=Path, help="Path to the csv file")
 
     args = parser.parse_args()
     with DB() as db:

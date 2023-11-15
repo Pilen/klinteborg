@@ -42,13 +42,13 @@
     --granit:       #7D878C; /* Seniorvæbner */
     --flammefarvet: #FF733C; /* Senior */
 }
-.red {
+.red-text {
     color: var(--efterårsrød);
 }
-.yellow {
+.yellow-text {
     color: var(--korngul);
 }
-.green {
+.green-text {
     color: var(--græsgrøn);
 }
 
@@ -72,8 +72,10 @@ main {
     margin: 10px 20px 10px 20px;
 }
 h1, h2, h3, h4, h5, h6 {
-    page-break-after: never;
-    page-break-inside: never;
+    /* page-break-after: never; */
+    /* page-break-inside: never; */
+    page-break-after: avoid;
+    page-break-inside: avoid;
     margin-block-start: 8px;
     margin-block-end: 3px;
     font-weight: 900;
@@ -167,6 +169,7 @@ h6 {
 
 a {
     color: var(--søblå);
+    cursor: pointer;
 }
 a:visited {
     /* color: var(--syren); */
@@ -199,6 +202,44 @@ a.button:hover {
 .disabled {
     /* text-decoration: line-through !important; */
     filter: blur(1.3px);
+}
+
+button {
+    padding: 0.5em 1em;
+    /* font-size: 1.1em; */
+    border-radius: 5px;
+    border: 0px transparent;
+    /* border: 1px solid var(--græsgrøn); */
+    /* background-color: var(--græsgrøn); */
+    /* background-color: var(--syren); */
+    background-color: var(--fdf-blå);
+    cursor: pointer;
+    /* outline: 1px solid white; */
+    /* outline-offset: -2px; */
+    font-weight: 900;
+    color: var(--hvid);
+}
+
+button:hover {
+    filter: brightness(1.2);
+    box-shadow: 2px 2px 5px var(--nat-blå);
+}
+
+button:active {
+    filter: brightness(0.8);
+    /* outline: 3px solid white; */
+    /* outline-offset: -4px; */
+    box-shadow: 0px 0px 2px var(--nat-blå);
+
+}
+button.green {
+    background-color: var(--græsgrøn);
+}
+button.yellow {
+    background-color: var(--korngul);
+}
+button.red {
+    background-color: var(--efterårsrød);
 }
 
 /*******************************************************************************
@@ -306,6 +347,16 @@ header > nav > .dropdown:hover > a {
 .fdficon {
     font-family: fdficons !important;
 }
+.fdficon.red {
+    color: var(--efterårsrød);
+}
+.fdficon.yellow {
+    color: var(--korngul);
+}
+.fdficon.green {
+    color: var(--græsgrøn);
+}
+
 
 /*******************************************************************************
  * Modal
@@ -335,6 +386,8 @@ header > nav > .dropdown:hover > a {
     border-radius: 10px;
     /* box-shadow: 10px 10px 20px var(--granit); */
     box-shadow: 10px 10px 20px var(--nat-blå);
+
+    overflow: scroll;
 }
 
 /*******************************************************************************
@@ -459,6 +512,56 @@ table > tbody > tr:hover {
 .search-suggestion-active {
     /* background-color: var(--fdf-blå); */
     background-color: #5F8CB430;
+}
+
+/*******************************************************************************
+ * Checkbox
+ ******************************************************************************/
+/* https://moderncss.dev/pure-css-custom-checkbox-style/ */
+input[type="checkbox"] {
+    appearance: none;
+    margin: 0;
+
+    font: inherit;
+    color: currentColor;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid currentColor;
+    border-radius: 0.15em;
+    /* transform: translateY(-0.075em); */
+
+    display: grid;
+    place-content: center;
+}
+input[type="checkbox"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    transform: scale(0);
+    /* transition: 120ms transform ease-in-out; */
+    transition: 120ms transform linear;
+    transition: 120ms transform ease-out;
+    box-shadow: inset 1em 1em var(--fdf-blå);
+
+    transform-origin: bottom left;
+    clip-path: polygon(14% 44%, 0% 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+input[type="checkbox"]:checked::before {
+    transform: scale(1);
+}
+
+input[type="checkbox"]:focus {
+    /* otline: max(2px, 0.15em) solid currentColor; */
+    outline: max(2px, 0.15em) solid var(--fdf-blå);
+    outline-offset: max(2px, 0.15em);
+}
+
+input[type="checkbox"]:disabled {
+    color: var(--granit);
+    cursor: not-allowed;
+}
+input[type="checkbox"]:disabled::before {
+    box-shadow: inset 1em 1em var(--granit);
 }
 
 /*******************************************************************************

@@ -3,6 +3,9 @@ export function $it<T>(it: Iter<T> | Iterable<T>): Iter<T> {
     if (it instanceof Iter) {
         return it
     }
+    if (it === undefined) {
+        throw new Error("$it called on `undefined`");
+    }
     return new Iter(function*() {
         for (let item of it) {
             yield item;
@@ -726,6 +729,18 @@ export class Iter<T> {
             list.push(item);
         }
         return list;
+    }
+    public One() {
+        let list = this.List();
+        if (list.length === 1) {
+            return list[0];
+        }
+        if (list.length === 0) {
+            throw new Error("No items in iter");
+        }
+        if (list.length > 0) {
+            throw new Error("Multiple items in iter");
+        }
     }
 
     public Obj() {

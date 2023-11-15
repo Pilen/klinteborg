@@ -40,6 +40,8 @@ def register_api(module_name: str, prefix: str | None = None, tags: list[str] | 
 register_api(".api.deltagere")
 register_api(".api.user")
 register_api(".api.grupper")
+register_api(".api.minus")
+register_api(".api.settings")
 register_api(".login")
 register_api(".api.admin")
 app.get("/login/")(importlib.import_module(".login", "backend").login)

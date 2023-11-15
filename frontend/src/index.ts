@@ -25,9 +25,13 @@ import {PageDeltagereSangbog} from "./deltagere/sangbog";
 import {PageDeltagerePost} from "./deltagere/post";
 import {PageDeltagereVæbnerkop} from "./deltagere/væbnerkop";
 
-import {PageLivgrupperAdmin} from "./livgrupper";
+import {PageLivgrupperAdminOld} from "./livgrupper/old";
+import {PageMinus} from "./livgrupper/minus";
+import {PageArbejdsbyrde} from "./livgrupper/arbejdsbyrde";
 
 import {PageGrupper} from "./sekretær/grupper";
+
+import {PageAdmin} from "./admin";
 
 import {formatDateTime} from "./utils";
 
@@ -104,7 +108,8 @@ class Layout {
                   m("a", "Livgrupper"),
                   m(".dropdown-content",
                     m(m.route.Link, {href: "/livgrupper/tilmeld", "class": "disabled"}, "Tilmeld"),
-                    m(m.route.Link, {href: "/livgrupper/administrer", "class": "disabled"}, "Administrer"),
+                    m(m.route.Link, {href: "/livgrupper/minus"}, "Minussystem"),
+                    m(m.route.Link, {href: "/livgrupper/arbejdsbyrde"}, "Arbejdsbyrde"),
                    )),
                 m(".dropdown",
                   m("a", "Sekretær"),
@@ -159,10 +164,17 @@ m.route(document.body, "/", {
     "/deltagere/post":  Layout.wrap(PageDeltagerePost, "Post"),
     "/deltager/:fdfid":      Layout.wrap(PageDeltager, "Deltager"),
     "/deltagere/søg":        Layout.wrap(PageDeltagereSøg, "Deltagere Søg"),
-    "/livgrupper/admin":     Layout.wrap(PageLivgrupperAdmin, "Livgrupper"),
+
+
+    "/livgrupper/admin-old":     Layout.wrap(PageLivgrupperAdminOld, "Livgrupper"),
+    "/livgrupper/minus":     Layout.wrap(PageMinus, "Minussystem"),
+    "/livgrupper/arbejdsbyrde":     Layout.wrap(PageArbejdsbyrde, "Arbejdsbyrde"),
 
     "/sekretær/grupper":     Layout.wrap(PageGrupper, "Udvalg / Jobs"),
+
+    "/admin":                Layout.wrap(PageAdmin, "Admin"),
     "/:404...":              Layout.wrap(NotFound, "Siden mangler"),
 });
 
 DELTAGER_SERVICE.downloadDeltagere();
+window.m = m;

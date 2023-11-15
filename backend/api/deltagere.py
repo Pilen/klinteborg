@@ -6,12 +6,6 @@ import backend.deltagere
 
 router = APIRouter()
 
-
-@router.get("/import_excel")
-# def import_excel(tx: Annotated[TX, Depends(make_tx)]) -> Any:
-def import_excel(tx: TX) -> Any:
-    backend.deltagere.import_excel(tx)
-
 @router.get("/all")
 def all(tx: TX) -> backend.deltagere.Deltager:
     rows = tx.fetch_all("SELECT * from deltagere")

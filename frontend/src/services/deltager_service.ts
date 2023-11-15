@@ -11,9 +11,9 @@ export class Deltager {
     navn: string;
     gammelt_medlemsnummer: number;
     fødselsdato: Date | null;
-    adresse: str;
-    telefon: str;
-    pårørende: List<Any>
+    adresse: string;
+    telefon: string;
+    pårørende: Array<any>
     er_voksen: boolean;
     køn: Køn;
     stab: Stab;
@@ -38,6 +38,10 @@ export class Deltager {
 class DeltagerService {
     _deltagere: Array<Deltager> | undefined;
     _deltager_by_fdfid: Map<number, Deltager> | undefined;
+
+    public isReady() {
+        return this._deltagere !== undefined;
+    }
 
     public downloadDeltagere() {
         return m.request({
@@ -79,12 +83,6 @@ class DeltagerService {
         }
         return this._deltager_by_fdfid.get(fdfid);
     }
-
-    public isReady() {
-        return this._deltagere !== undefined;
-    }
-
-
 }
 
 export const DELTAGER_SERVICE = new DeltagerService();
