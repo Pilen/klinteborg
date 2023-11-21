@@ -1,5 +1,5 @@
 import m from "mithril";
-import {error} from "./error";
+import {error} from "src/error";
 
 let loadingApis = new Set();
 

@@ -134,7 +134,7 @@ case $COMMAND in
     frontend-watch)
         ENTER_DOCKER node
         cd frontend
-        ./node_modules/esbuild/bin/esbuild --bundle --sourcemap --outfile=static/bin/app.js --watch src/index.ts
+        ./node_modules/esbuild/bin/esbuild --tsconfig=../deploy/tsconfig.json --bundle --sourcemap --outfile=static/bin/app.js --watch src/index.ts
         ;;
     frontend-typecheck | frontend-typescript)
         ENTER_DOCKER node
