@@ -30,7 +30,7 @@ export class Api {
         let options = {
             method: this._method,
             url: thir._url,
-            withCredentials: true
+            withCredentials: true,
             params: params,
             body: body,
             config: (xhr) => {this._xhr = xhr;},
@@ -83,7 +83,7 @@ export class ApiStream extends Api{
         let options = {
             method: this._method,
             url: thir._url,
-            withCredentials: true
+            withCredentials: true,
             params: params,
             body: body,
             config: (xhr) => {this._xhr = xhr;},
