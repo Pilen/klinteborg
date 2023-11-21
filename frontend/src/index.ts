@@ -1,4 +1,5 @@
 import m from "mithril";
+import Stream from "mithril/stream";
 import {
     ErrorView
 } from "./error";
@@ -33,6 +34,7 @@ import {PageGrupper} from "./sekretær/grupper";
 
 import {PageAdmin} from "./admin";
 
+import {UiLoadingApi} from "./api";
 import {formatDateTime} from "./utils";
 
 
@@ -134,6 +136,7 @@ class Layout {
             m(ErrorView),
             m("main", vnode.children),
             m(ModalBase),
+            m(UiLoadingApi),
         ]);
     }
     public static wrap(cls: any, title: string) {
@@ -178,3 +181,4 @@ m.route(document.body, "/", {
 
 DELTAGER_SERVICE.downloadDeltagere();
 window.m = m;
+window.Stream = Stream;
