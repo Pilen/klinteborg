@@ -32,7 +32,9 @@ import {PageArbejdsbyrde} from "./livgrupper/arbejdsbyrde";
 
 import {PageGrupper} from "./sekretær/grupper";
 
-import {PageAdmin} from "./admin";
+import {PageFrontpage} from "./frontpage/frontpage";
+
+import {PageAdmin} from "./admin/admin";
 
 import {UiLoadingApi} from "./api";
 import {formatDateTime} from "./utils";
@@ -40,31 +42,7 @@ import {formatDateTime} from "./utils";
 
 
 // m("span.fdficon", "")
-class Index {
-    public view(vnode: m.Vnode) {
-        return m("div", "Vi skal snart på Klinteborg!",
-                 m("h1", "Abc def ghi"),
-                 m("h2", "Abc def ghi"),
-                 m("h3", "Abc def ghi"),
-                 m("h4", "Abc def ghi"),
-                 m("h5", "Abc def ghi"),
-                 m("h6", "Abc def ghi"),
-                 m("div", "Abc def ghi"),
 
-                 m("h1", "Abc def ghi"),
-                 m("div", "Abc def ghi"),
-                 m("h2", "Abc def ghi"),
-                 m("div", "Abc def ghi"),
-                 m("h3", "Abc def ghi"),
-                 m("div", "Abc def ghi"),
-                 m("h4", "Abc def ghi"),
-                 m("div", "Abc def ghi"),
-                 m("h5", "Abc def ghi"),
-                 m("div", "Abc def ghi"),
-                 m("h6", "Abc def ghi"),
-                );
-    }
-}
 
 class NotFound {
     public view(vnode: m.Vnode) {
@@ -149,7 +127,7 @@ class Layout {
 }
 
 m.route(document.body, "/", {
-    "/": Layout.wrap(Index, "Klinteborg"),
+    "/": Layout.wrap(PageFrontpage, "Klinteborg"),
     "/deltagere/indestab":   Layout.wrap(PageDeltagereIndestab, "Deltagere Indestab"),
     "/deltagere/piltestab":  Layout.wrap(PageDeltagerePiltestab, "Deltagere Piltestab"),
     "/deltagere/væbnerstab": Layout.wrap(PageDeltagereVæbnerstab, "Deltagere Væbnerstab"),
