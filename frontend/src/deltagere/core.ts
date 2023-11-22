@@ -1,9 +1,9 @@
 import m from "mithril";
-import {error} from "../error";
-import {$it, Iter, foo} from "../lib/iter";
-import {DELTAGER_SERVICE, Deltager} from "../services/deltager_service";
-import {Stab, Patrulje, Tilstede, DAYS, DATES} from "../definitions";
-import {H1, H2, H5, Tr, formatDate, calculateAge} from "../utils";
+import {error} from "src/error";
+import {$it, Iter, foo} from "src/lib/iter";
+import {DELTAGER_SERVICE, Deltager} from "src/services/deltager_service";
+import {Stab, Patrulje, Tilstede, DAYS, DATES} from "src/definitions";
+import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
 
 
 export class Days {

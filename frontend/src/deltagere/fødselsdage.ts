@@ -1,10 +1,10 @@
 import m from "mithril";
-import {error} from "../error";
-import {$it, Iter, foo} from "../lib/iter";
-import {DELTAGER_SERVICE, Deltager} from "../services/deltager_service";
-import {Stab, Patrulje, Tilstede, DAYS, DATES, START_DATE, END_DATE} from "../definitions";
-import {H1, H2, H5, Tr, formatDate, calculateAge, calculateModa} from "../utils";
-import {Days} from "./core";
+import {error} from "src/error";
+import {$it, Iter, foo} from "src/lib/iter";
+import {DELTAGER_SERVICE, Deltager} from "src/services/deltager_service";
+import {Stab, Patrulje, Tilstede, DAYS, DATES, START_DATE, END_DATE} from "src/definitions";
+import {H1, H2, H5, Tr, formatDate, calculateAge, calculateModa} from "src/utils";
+import {Days} from "src/deltagere/core";
 
 
 export class PageDeltagereFødselsdage {

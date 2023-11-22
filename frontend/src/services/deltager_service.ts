@@ -1,6 +1,6 @@
 import m from "mithril";
-import {error} from "../error";
-import {Køn, Stab, Patrulje, Tilstede, Transport} from "../definitions";
+import {error} from "src/error";
+import {Køn, Stab, Patrulje, Tilstede, Transport} from "src/definitions";
 
 export class Deltager {
     fdfid: number;

@@ -1,43 +1,41 @@
 import m from "mithril";
 import Stream from "mithril/stream";
-import {
-    ErrorView
-} from "./error";
-import {ModalBase} from "./modal";
-import {DELTAGER_SERVICE} from "./services/deltager_service";
+import {ErrorView} from "src/error";
+import {ModalBase} from "src/modal";
+import {DELTAGER_SERVICE} from "src/services/deltager_service";
 import {
     PageDeltagereIndestab,
     PageDeltagerePiltestab,
     PageDeltagereVæbnerstab,
     PageDeltagereResten,
     PageDeltagereAlle,
-} from "./deltagere/basic";
-import {PageDeltagereProblematiske} from "./deltagere/problematiske";
-import {PageDeltagereTransport} from "./deltagere/transport";
-import {PageDeltagereFødselsdage} from "./deltagere/fødselsdage";
-import {PageDeltagereKøkken} from "./deltagere/køkken";
-import {PageDeltagereLejrlæge} from "./deltagere/lejrlæge";
-import {PageDeltagereSøg} from "./deltagere/søg";
-import {PageDeltager} from "./deltagere/deltager";
+} from "src/deltagere/basic";
+import {PageDeltagereProblematiske} from "src/deltagere/problematiske";
+import {PageDeltagereTransport} from "src/deltagere/transport";
+import {PageDeltagereFødselsdage} from "src/deltagere/fødselsdage";
+import {PageDeltagereKøkken} from "src/deltagere/køkken";
+import {PageDeltagereLejrlæge} from "src/deltagere/lejrlæge";
+import {PageDeltagereSøg} from "src/deltagere/søg";
+import {PageDeltager} from "src/deltagere/deltager";
 
-import {PageDeltagereAfkrydsning} from "./deltagere/afkrydsning";
-import {PageDeltagereTelefoner} from "./deltagere/telefoner";
-import {PageDeltagereSangbog} from "./deltagere/sangbog";
-import {PageDeltagerePost} from "./deltagere/post";
-import {PageDeltagereVæbnerkop} from "./deltagere/væbnerkop";
+import {PageDeltagereAfkrydsning} from "src/deltagere/afkrydsning";
+import {PageDeltagereTelefoner} from "src/deltagere/telefoner";
+import {PageDeltagereSangbog} from "src/deltagere/sangbog";
+import {PageDeltagerePost} from "src/deltagere/post";
+import {PageDeltagereVæbnerkop} from "src/deltagere/væbnerkop";
 
-import {PageLivgrupperAdminOld} from "./livgrupper/old";
-import {PageMinus} from "./livgrupper/minus";
-import {PageArbejdsbyrde} from "./livgrupper/arbejdsbyrde";
+import {PageLivgrupperAdminOld} from "src/livgrupper/old";
+import {PageMinus} from "src/livgrupper/minus";
+import {PageArbejdsbyrde} from "src/livgrupper/arbejdsbyrde";
 
-import {PageGrupper} from "./sekretær/grupper";
+import {PageGrupper} from "src/sekretær/grupper";
 
-import {PageFrontpage} from "./frontpage/frontpage";
+import {PageFrontpage} from "src/frontpage/frontpage";
 
-import {PageAdmin} from "./admin/admin";
+import {PageAdmin} from "src/admin/admin";
 
-import {UiLoadingApi} from "./api";
-import {formatDateTime} from "./utils";
+import {UiLoadingApi} from "src/api";
+import {formatDateTime} from "src/utils";
 
 
 

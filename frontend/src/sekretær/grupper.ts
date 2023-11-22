@@ -1,11 +1,11 @@
 import m from "mithril";
-import {error} from "../error";
-import {$it, Iter, foo} from "../lib/iter";
-import {H1, H2, H5, Tr, formatDate, calculateAge} from "../utils";
-import {GRUPPE_SERVICE, Gruppe} from "../services/gruppe_service";
-import {DELTAGER_SERVICE} from "../services/deltager_service";
-import {openModal, closeModal, Modal} from "../modal";
-import {Search, SearchEngine} from "../search";
+import {error} from "src/error";
+import {$it, Iter, foo} from "src/lib/iter";
+import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
+import {GRUPPE_SERVICE, Gruppe} from "src/services/gruppe_service";
+import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {openModal, closeModal, Modal} from "src/modal";
+import {Search, SearchEngine} from "src/search";
 
 export class PageGrupper {
     public view(vnode: m.Vnode) {

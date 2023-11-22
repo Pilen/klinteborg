@@ -1,5 +1,5 @@
 import m from "mithril";
-import {$it, Iter, make_extract} from "./lib/iter";
+import {$it, Iter, make_extract} from "src/lib/iter";
 
 function escapeRegExp(string) {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions

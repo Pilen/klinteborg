@@ -1,11 +1,11 @@
 import m from "mithril";
-import {error} from "./error";
-import {$it, Iter, foo} from "./lib/iter";
-import {H1, H2, H5, Tr, formatDate, calculateAge} from "./utils";
-import {GRUPPE_SERVICE, Gruppe} from "./services/gruppe_service";
-import {MINUS_SERVICE} from "./services/minus_service";
-import {openModal, closeModal, Modal} from "./modal";
-import {load, UiLoading} from "./load";
+import {error} from "src/error";
+import {$it, Iter, foo} from "src/lib/iter";
+import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
+import {GRUPPE_SERVICE, Gruppe} from "src/services/gruppe_service";
+import {MINUS_SERVICE} from "src/services/minus_service";
+import {openModal, closeModal, Modal} from "src/modal";
+import {load, UiLoading} from "src/load";
 
 class ModelSetting {
     setting: string;

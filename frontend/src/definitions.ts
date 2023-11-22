@@ -1,4 +1,4 @@
-import {addDays, calculateModa} from "./utils";
+import {addDays, calculateModa} from "src/utils";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Køn
