@@ -26,7 +26,7 @@ import {PageDeltagereVæbnerkop} from "src/deltagere/væbnerkop";
 
 import {PageLivgrupperAdminOld} from "src/livgrupper/old";
 import {PageMinus} from "src/livgrupper/minus";
-import {PageArbejdsbyrde} from "src/livgrupper/arbejdsbyrde";
+import {PageArbejdsbyrde} from "src/livgrupper/arbejdsbyrde/page";
 
 import {PageGrupper} from "src/sekretær/grupper";
 

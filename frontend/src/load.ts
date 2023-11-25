@@ -1,19 +1,68 @@
 import m from "mithril";
+import {Api, ApiStream} from "src/api";
 
 
-export function load(state, element) {
-    // console.log("in load");
-    if (state.isLoaded) {
-        return element;
+// export function load(state, element) {
+//     // console.log("in load");
+//     if (state.isLoaded) {
+//         return element;
+//     }
+//     for (let loader of state.loaders) {
+//         if (loader() === undefined) {
+//             return m("div", "Loading...");
+//         }
+//     }
+//     state.load();
+//     state.isLoaded = true;
+//     return element;
+// }
+
+interface State {
+
+}
+export function load(things, element) {
+    if (!Array.isArray(things)) {
+        things = [things];
     }
-    for (let loader of state.loaders) {
-        if (loader() === undefined) {
-            return m("div", "Loading...");
+    let isLoaded = true;
+    for (thing of things) {
+        if (thing instanceof ApiStream) {
+            if (thing.stream()() === undefined) {
+                isLoaded = false;
+            }
+        } else if (thing instanceof Stream) {
+            if (thing() === undefined) {
+                isLoaded = false;
+            }
+        } else if (typeof thing === "function") {
+            if (thing() === undefined) {
+                isLoaded = false;
+            }
+        } else {
+            // if (thing instanceof State) {
+            let state = thing;
+            if (state.isLoaded) {
+                continue;
+            }
+            let loadState = true;
+            for (let loader of state.loaders) {
+                if (loader() === undefined) {
+                    isLoaded = false;
+                    loadState = false;
+                    break;
+                }
+            }
+            if (loadState) {
+                state.load();
+                state.isLoaded = true;
+            }
         }
     }
-    state.load();
-    state.isLoaded = true;
-    return element;
+    if (isLoaded) {
+        return element;
+    } else {
+        return m(UiLoading)
+    }
 }
 
 export class UiLoading {

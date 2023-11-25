@@ -1,4 +1,5 @@
 import m from "mithril";
+import Stream from "mithril/stream";
 import {error} from "src/error";
 
 let loadingApis = new Set();
@@ -10,17 +11,23 @@ export class Api {
         this._then = then;
         this._request = null;
         this._xhr = null;
+        if (this._then === undefined) {
+            this._then = (result) => result;
+        }
     }
     public get(url) {
         this._method = "GET";
         this._url = url;
+        return this;
     }
     public post(url) {
         this._method = "POST";
         this._url = url;
+        return this;
     }
     public then(then) {
         this._then = then;
+        return this;
     }
 
     public request(body, params) {
@@ -29,13 +36,13 @@ export class Api {
         }
         let options = {
             method: this._method,
-            url: thir._url,
+            url: this._url,
             withCredentials: true,
             params: params,
             body: body,
             config: (xhr) => {this._xhr = xhr;},
         };
-        this._request = m.request(this._options)
+        this._request = m.request(options)
             .catch((e) => {
                 this.done();
                 error(e);
@@ -82,13 +89,13 @@ export class ApiStream extends Api{
         }
         let options = {
             method: this._method,
-            url: thir._url,
+            url: this._url,
             withCredentials: true,
             params: params,
             body: body,
             config: (xhr) => {this._xhr = xhr;},
         };
-        this._request = m.request(this._options)
+        this._request = m.request(options)
             .catch((e) => {
                 this.done();
                 error(e);
