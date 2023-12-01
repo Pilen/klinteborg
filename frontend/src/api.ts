@@ -37,7 +37,7 @@ export class Api {
 
     public request(body = undefined, params = undefined) {
         if (this._request !== null) {
-            return;
+            return this._request;
         }
         let options = {
             method: this._method,
@@ -55,6 +55,7 @@ export class Api {
             .then((data) => {
                 this.done();
                 let result = this._then(data);
+                this._post_then(result);
                 return result;
             })
             .catch((e) => {
@@ -93,42 +94,9 @@ export class ApiStream<T> extends Api{
         this._stream = Stream();
     }
 
-    public request(body = undefined, params = undefined) {
-        let r = super.request(body, params);
-        r.then((result) => {
-            this._stream(result);
-            return result;
-        })
-        return r;
+    protected _post_then(result) {
+        this._stream(result);
     }
-    // public request(body, params) {
-    //     if (this._request !== null) {
-    //         return;
-    //     }
-    //     let options = {
-    //         method: this._method,
-    //         url: this._url,
-    //         withCredentials: true,
-    //         params: params,
-    //         body: body,
-    //         config: (xhr) => {this._xhr = xhr;},
-    //     };
-    //     this._request = m.request(options)
-    //         .catch((e) => {
-    //             this.done();
-    //             error(e);
-    //         })
-    //         .then((data) => {
-    //             this.done();
-    //             let result = this._then(data);
-    //             this._stream(result); // This is the difference between Api.request and ApiStream.request
-    //             return result;
-    //         })
-    //         .catch((e) => {
-    //             error(e);
-    //         });
-    //     loadingApis.add(this);
-    // }
 
     public stream(body = undefined, params = undefined) {
         if (this._stream() === undefined) {
@@ -148,7 +116,7 @@ export class UiLoadingApi {
         return m("div.loading-full",
                  m("p",
                    m("h1", "Loading..."),
-                   `${loadingApis.size} remaining`,
+                   `${loadingApis.size}`,
                   )
                 );
     }

@@ -4,6 +4,7 @@ import m from "mithril";
 let current_error = null;
 
 export function error(status, message?) {
+    console.log("error");
     if (typeof(status) === "object" && message === undefined) {
         // @ts-ignore
         // window.e = status;
