@@ -1,18 +1,28 @@
 import m from "mithril";
+// @ts-ignore
 import ApexCharts from "apexcharts";
 
+import {$it, Iter, foo} from "src/lib/iter";
+
+interface IStateChart {
+    options: any;
+    chart: ApexCharts | null;
+}
 export class UiChartBase {
-    public oncreate(vnode: m.Vnode<{options: any, state: any}>) {
+    public oncreate(vnode: m.VnodeDOM<{state: IStateChart}>) {
+    // public oncreate({dom, attrs}) {
+    //     let vnode = {dom: dom, attrs: attrs};
+        let dom = vnode.dom;
         let state = vnode.attrs.state;
         state.chart = new ApexCharts(vnode.dom, state.options);
         state.chart.render();
     }
-    public onremove(vnode: m.Vnode<{options: any, state: any}>) {
+    public onremove(vnode: m.Vnode<{state: IStateChart}>) {
         let state = vnode.attrs.state
         state.chart.destroy();
         state.chart = null;
     }
-    public view(vnode: m.Vnode<{options: any, state: any}>) {
+    public view(vnode: m.Vnode<{state: IStateChart}>) {
         return m("div");
     }
 }

@@ -41,7 +41,7 @@ class KøkkenSummary {
             [2, "2. Fredag", "bordhold_uge2"],
             [2, "3. Lørdag", "bordhold_uge2"],
         ];
-        $it(lookup).map((l) =>
+        $it(lookup).map((l: Array<any>) =>
             l.push({
                 "Spisesal total": 0,
                 "Spisesal børn": 0,

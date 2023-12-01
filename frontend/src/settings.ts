@@ -4,7 +4,7 @@ import {$it, Iter, foo} from "src/lib/iter";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
 import {GRUPPE_SERVICE, Gruppe} from "src/services/gruppe_service";
 import {MINUS_SERVICE} from "src/services/minus_service";
-import {openModal, closeModal, Modal} from "src/modal";
+import {openModal, closeModal, ModalBase} from "src/modal";
 import {load, UiLoading} from "src/load";
 
 class ModelSetting {
@@ -48,11 +48,17 @@ class ServiceSettings {
         }
         console.error("Unknown setting");
     }
+    public set(setting: string, value: any) {
+        console.error("Not implemented yet!");
+    }
 }
 const SERVICE_SETTINGS = new ServiceSettings();
 
-export class UiSetting {
+class UiSetting {
     setting;
+    value;
+    raw: string;
+    bad: boolean;
     public oninit(vnode: m.Vnode<{setting: ModelSetting}>) {
         // if (vnode.attrs.setting instanceof string) {
         //     this.setting = SERVICE_SETTINGS.get(vnode.attrs.setting);
@@ -68,7 +74,7 @@ export class UiSetting {
     public change(raw) {
         this.raw = raw;
         if (this.setting.type == "int") {
-            value = parseInt(raw);
+            let value = parseInt(raw);
             if (isNaN(value)) {
                 this.bad = true;
                 this.value = null;
@@ -86,7 +92,7 @@ export class UiSetting {
         }
         SERVICE_SETTINGS.set(this.setting.setting, this.value);
     }
-    public view(vnode: m.Vnode<{setting: string}>) {
+    public view(vnode: m.Vnode<{setting: ModelSetting}>) {
         return m("div",
                  m("span", this.setting.setting),
                  m("input",

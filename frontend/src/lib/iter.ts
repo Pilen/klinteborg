@@ -75,6 +75,18 @@ export class Iter<T> {
         });
     }
 
+    public filterValue(pred: (x: T) => any) {
+        let it = this.it;
+        return new Iter(function*() {
+            for (let item of it) {
+                let v = pred(item)
+                if (v !== null && v !== undefined) {
+                    yield item;
+                }
+            }
+        });
+    }
+
     public flatten() {
         // Types are broken for this
         // Unfortunately this loses the type information and produces an Iter<any>
@@ -285,7 +297,7 @@ export class Iter<T> {
         });
     }
 
-    public sort(key?: string | number | ((x: T) => any), reverse = false): Iter<T>{
+    public sort(key?: string | number | ((x: T) => any), reverse = false): Iter<T> {
         let it = this.it;
         let extract = make_extract(key);
         return new Iter(function*() {
@@ -593,7 +605,11 @@ export class Iter<T> {
         });
     }
 
-    public mapRuns(key, handle_individual, handle_group): Iter<any> {
+    public mapRuns<T2, T3>(
+        key: string | number | ((x: T) => any),
+        handle_individual: (item: T, key: any) => T2,
+        handle_group: (items: Array<T2>, key: any) => T3
+    ): Iter<T3> {
         let it = this.it;
         let extract = make_extract(key);
         let previous = undefined;

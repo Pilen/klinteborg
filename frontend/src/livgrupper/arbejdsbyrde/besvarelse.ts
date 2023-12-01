@@ -3,6 +3,10 @@ import {error} from "src/error";
 import {$it, Iter, foo} from "src/lib/iter";
 import {load} from "src/load";
 
+import {ModelArbejdsbyrdeBesvarelse} from "src/livgrupper/arbejdsbyrde/models";
+import {GRUPPE_SERVICE} from "src/services/gruppe_service";
+import {MINUS_SERVICE} from "src/services/minus_service";
+import {SERVICE_ARBEJDSBYRDE_BESVARELSE} from "src/livgrupper/arbejdsbyrde/services";
 
 export class StateArbejdsbyrdeBesvarelse {
     besvarelse: ModelArbejdsbyrdeBesvarelse | undefined;

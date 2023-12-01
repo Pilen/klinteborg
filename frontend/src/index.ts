@@ -156,5 +156,7 @@ m.route(document.body, "/", {
 });
 
 DELTAGER_SERVICE.downloadDeltagere();
+// @ts-ignore
 window.m = m;
+// @ts-ignore
 window.Stream = Stream;

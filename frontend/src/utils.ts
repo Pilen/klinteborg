@@ -27,7 +27,8 @@ export function addDays(date, days) {
 }
 
 export function calculateAge(date: Date): number {
-    let delta = Date.now() - date;
+    // https://stackoverflow.com/a/21984136
+    let delta = Date.now() - date.getTime();
     let d = new Date(delta)
     return Math.abs(d.getUTCFullYear() - 1970)
 }

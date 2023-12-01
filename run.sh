@@ -138,12 +138,12 @@ case $COMMAND in
         ;;
     frontend-typecheck | frontend-typescript)
         ENTER_DOCKER node
-        ./frontend/node_modules/typescript/bin/tsc --noEmit --esModuleInterop --target es6 frontend/src/index.ts
+        ./frontend/node_modules/typescript/bin/tsc --noEmit --esModuleInterop --target es2021 frontend/src/index.ts
         ;;
     frontend-typecheck-watch | frontend-typescript-watch)
         ENTER_DOCKER node
         # cd frontend
-        ./frontend/node_modules/typescript/bin/tsc --noEmit --esModuleInterop --target es6 --watch frontend/src/index.ts
+        ./frontend/node_modules/typescript/bin/tsc --noEmit --esModuleInterop --target es2021 --watch frontend/src/index.ts
         # ./frontend/node_modules/typescript/bin/tsc --help
         ;;
 
@@ -198,6 +198,7 @@ case $COMMAND in
         npm install --save-dev esbuild
         npm install --save-dev typescript
         npm install --save-dev @types/mithril
+        npm install apexchart
         ;;
     "")
         echo "ERROR: No command given";

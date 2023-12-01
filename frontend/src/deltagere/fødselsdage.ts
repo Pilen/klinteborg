@@ -10,9 +10,9 @@ import {Days} from "src/deltagere/core";
 export class PageDeltagereFødselsdage {
     public view(vnode: m.Vnode) {
         let deltagere = $it(DELTAGER_SERVICE.deltagere())
-            .filter((deltager) => deltager.fødselsdato)
-            .filter((deltager) => DATES.find((date) => deltager.fødselsdato.getMonth() === date.getMonth() && deltager.fødselsdato.getDate() === date.getDate()))
-            .sort((deltager) => [deltager.fødselsdato.getMonth(), deltager.fødselsdato.getDate(), -deltager.fødselsdato.getYear()])
+            .filterValue((deltager) => deltager.fødselsdato)
+            .filterValue((deltager) => DATES.find((date) => deltager.fødselsdato.getMonth() === date.getMonth() && deltager.fødselsdato.getDate() === date.getDate()))
+            .sort((deltager) => [deltager.fødselsdato.getMonth(), deltager.fødselsdato.getDate(), -deltager.fødselsdato.getFullYear()])
             .map((deltager) =>
                 m("tr",
                   m("td", m(m.route.Link, {selector: "a.subdued-link", href: "/deltager/:fdfid", params: {fdfid: deltager.fdfid}}, deltager.navn)),
@@ -21,7 +21,7 @@ export class PageDeltagereFødselsdage {
                   m("td", deltager.er_voksen ? "Voksen" : "Barn"),
                   m("td", formatDate(deltager.fødselsdato)),
                   // m("td", calculateAge(deltager.fødselsdato)),
-                  m("td", START_DATE.getYear() - deltager.fødselsdato.getYear()),
+                  m("td", START_DATE.getFullYear() - deltager.fødselsdato.getFullYear()),
                   m("td", DAYS[DATES.indexOf(DATES.find((date) => deltager.fødselsdato.getMonth() === date.getMonth() && deltager.fødselsdato.getDate() === date.getDate()))]),
                   m("td",
                     (calculateModa(deltager.fødselsdato) < calculateModa(deltager.ankomst_dato) ? "Ikke ankommet endnu" :

@@ -5,6 +5,7 @@ let current_error = null;
 
 export function error(status, message?) {
     if (typeof(status) === "object" && message === undefined) {
+        // @ts-ignore
         // window.e = status;
         let arg = status;
         status = arg.code;

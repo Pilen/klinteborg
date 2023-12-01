@@ -7,12 +7,10 @@ function escapeRegExp(string) {
 }
 
 export class SearchEngine<T> {
-    data: Array<[string, T]>;
+    data: Array<{text: string, value: T}>;
     onSelect: (v: T) => void;
     query: string;
-    suggestions: Array<{
-
-    }>;
+    suggestions: Array<{text: string, value: T, score: number}>;
     totalResults: number;
     limit: number;
     active: number | null;
@@ -21,16 +19,17 @@ export class SearchEngine<T> {
 
     constructor(
         data: Array<T>,
-        extract: any,
-        onSelect) {
-        extract = make_extract(extract)
-        this.data = $it(data).map((entry) => [extract(entry), entry]).List();
+        extract: string | number | ((T) => string),
+        onSelect: (T) => void,
+        limit: number = 20,
+    ) {
+        let _extract = make_extract(extract);
+        this.data = $it(data).map((entry) => ({text: _extract(entry), value: entry})).List();
         this.onSelect = onSelect;
         this.query = "";
         this.suggestions = [];
         this.totalResults = 0;
-        this.limit = 20;
-        // this.limit = 5;
+        this.limit = limit;
         this.active = null;
         // this.task = null;
     }
@@ -71,16 +70,14 @@ export class SearchEngine<T> {
             return;
         }
         let pattern = new RegExp("\\b" + escapeRegExp(this.query).replaceAll(/\s+/g, ".*\\b"), "i"); // Should we add a word boundery to the beginning of pattern, or is it fine that the first query can be used to match against internal parts of the words?
-        console.log(this.data);
-        this.suggestions = (
-            $it(this.data)
-                .map(([text, value]) => [text.search(pattern), text, value])
-                .filter(([score, text, value]) => score >= 0)
-                .sideEffect((_, i) => {this.totalResults = i + 1})
-                .sort(([score, text, value]) => [score, text])
-                .takeFirst(this.limit)
-                .map(([score, text, value]) => ({score: score, text: text, value: value}))
-                .List());
+        this.suggestions = $it(this.data)
+            .map(({text, value}) => ({score: text.search(pattern), text, value}))
+            .filter(({score, text, value}) => score >= 0)
+            .sideEffect((_, i) => {this.totalResults = i + 1;})
+            .sort(({score, text, value}) => [score, text])
+            .takeFirst(this.limit)
+            .List();
+
     }
 }
 

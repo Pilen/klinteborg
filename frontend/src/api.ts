@@ -5,7 +5,12 @@ import {error} from "src/error";
 let loadingApis = new Set();
 
 export class Api {
-    constructor(method, url, then) {
+    _method: string;
+    _url: string;
+    _then: (any) => any;
+    _request: Promise<any> | null;
+    _xhr: XMLHttpRequest | null;
+    constructor(method = undefined, url = undefined, then = undefined) {
         this._method = method;
         this._url = url;
         this._then = then;
@@ -30,7 +35,7 @@ export class Api {
         return this;
     }
 
-    public request(body, params) {
+    public request(body = undefined, params = undefined) {
         if (this._request !== null) {
             return;
         }
@@ -56,11 +61,15 @@ export class Api {
                 error(e);
             });
         loadingApis.add(this);
+        return this._request;
+    }
+    protected _post_then(result) {
+
     }
 
-    public newRequest(body, params) {
+    public newRequest(body = undefined, params = undefined) {
         this.abort();
-        this.request(body, params);
+        return this.request(body, params);
     }
 
     public abort() {
@@ -77,42 +86,51 @@ export class Api {
     }
 }
 
-export class ApiStream extends Api{
-    constructor(method, url, then) {
+export class ApiStream<T> extends Api{
+    _stream: Stream<T>;
+    constructor(method = undefined, url = undefined, then = undefined) {
         super(method, url, then);
         this._stream = Stream();
     }
 
-    public request(body, params) {
-        if (this._request !== null) {
-            return;
-        }
-        let options = {
-            method: this._method,
-            url: this._url,
-            withCredentials: true,
-            params: params,
-            body: body,
-            config: (xhr) => {this._xhr = xhr;},
-        };
-        this._request = m.request(options)
-            .catch((e) => {
-                this.done();
-                error(e);
-            })
-            .then((data) => {
-                this.done();
-                let result = this._then(data);
-                this._stream(result); // This is the difference between Api.request and ApiStream.request
-                return result;
-            })
-            .catch((e) => {
-                error(e);
-            });
-        loadingApis.add(this);
+    public request(body = undefined, params = undefined) {
+        let r = super.request(body, params);
+        r.then((result) => {
+            this._stream(result);
+            return result;
+        })
+        return r;
     }
+    // public request(body, params) {
+    //     if (this._request !== null) {
+    //         return;
+    //     }
+    //     let options = {
+    //         method: this._method,
+    //         url: this._url,
+    //         withCredentials: true,
+    //         params: params,
+    //         body: body,
+    //         config: (xhr) => {this._xhr = xhr;},
+    //     };
+    //     this._request = m.request(options)
+    //         .catch((e) => {
+    //             this.done();
+    //             error(e);
+    //         })
+    //         .then((data) => {
+    //             this.done();
+    //             let result = this._then(data);
+    //             this._stream(result); // This is the difference between Api.request and ApiStream.request
+    //             return result;
+    //         })
+    //         .catch((e) => {
+    //             error(e);
+    //         });
+    //     loadingApis.add(this);
+    // }
 
-    public stream(body, params) {
+    public stream(body = undefined, params = undefined) {
         if (this._stream() === undefined) {
             this.request(body, params);
         }
@@ -136,5 +154,7 @@ export class UiLoadingApi {
     }
 }
 
+// @ts-ignore
 window.Api = Api;
+// @ts-ignore
 window.loadingApis = loadingApis;

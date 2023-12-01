@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "src/error";
 
-class Gruppe{
+export class Gruppe{
     gruppe: string;
     type: string;
     beskrivelse: string;

@@ -9,11 +9,14 @@ export function closeModal() {
     modal = null;
 }
 export class ModalBase {
-    public view(vnode: m.Vnode) {
+    public view(vnode: m.Vnode<unknown>) {
         if (modal) {
             return m(".modal-base",
                      {onclick: (e) => {
-                         if (e.target === vnode.dom) {
+                         // Should the dom be saved in this inside an oncreate?
+                         // @ts-ignore
+                         let dom = vnode.dom;
+                         if (e.target === dom) {
                              closeModal();
                          }
                      }},

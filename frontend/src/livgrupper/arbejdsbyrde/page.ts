@@ -1,6 +1,7 @@
 import m from "mithril";
 import {error} from "src/error";
 import {$it, Iter} from "src/lib/iter";
+import {openModal, closeModal, ModalBase} from "src/modal";
 import {load} from "src/load";
 
 import {UiChartArbejdsbyrder} from "src/livgrupper/arbejdsbyrde/statistics";

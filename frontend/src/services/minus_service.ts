@@ -60,4 +60,3 @@ class MinusService {
 }
 
 export const MINUS_SERVICE = new MinusService();
-window.MINUS_SERVICE = MINUS_SERVICE;

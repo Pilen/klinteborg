@@ -9,7 +9,7 @@ import {Days} from "src/deltagere/core";
 export class PageDeltagerePost {
     public view(vnode: m.Vnode<{er_voksen: boolean}>) {
         let deltagere = $it(DELTAGER_SERVICE.deltagere())
-            .filter((deltager) => deltager.bordhold_uge2)
+            .filterValue((deltager) => deltager.bordhold_uge2)
             .sort((deltager) => [deltager.navn])
             .groupRuns((deltager) => deltager.navn.substring(0, 1))
             .map((run) =>

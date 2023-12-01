@@ -60,6 +60,7 @@ import {MINUS_SERVICE} from "src/services/minus_service";
 //     }
 // }
 // const MINUS_BESVARELSE_SERVICE = new MinusBesvarelseService();
+// @ts-ignore
 // window.MINUS_BESVARELSE_SERVICE = MINUS_BESVARELSE_SERVICE;
 // class UiMinusSpørgeskemaBesvarelse {
 //     public view(vnode: m.Vnode<{state: StateMinusBesvarelse}>) {
@@ -133,7 +134,7 @@ export class PageMinus {
 
     // }}
 
-    stateMinusBesvarelse: StateMinusBesvarelse | undefined;
+    // stateMinusBesvarelse: StateMinusBesvarelse | undefined;
     public view(vnode: m.Vnode) {
         // if (this.stateMinusBesvarelse === undefined) {
         //     if (MINUS_SERVICE.grupperGivingMinus() !== undefined && GRUPPE_SERVICE.grupper() !== undefined) {

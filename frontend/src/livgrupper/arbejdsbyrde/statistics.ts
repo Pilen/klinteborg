@@ -2,10 +2,9 @@ import m from "mithril";
 import {error} from "src/error";
 import {$it, Iter, foo} from "src/lib/iter";
 import {load} from "src/load";
-
 import {UiChartBase} from "src/chart";
-import ApexCharts from "apexcharts";
 
+import {StateArbejdsbyrdeBesvarelser} from "src/livgrupper/arbejdsbyrde/besvarelser";
 
 class StateChart {
     options = {
@@ -46,7 +45,8 @@ class StateChart {
         },
     };
     chart = null;
-    shown: StateArbejdsbyrdeBesvarelser;
+    besvarelser: StateArbejdsbyrdeBesvarelser
+    shown: unknown;
 
     constructor(besvarelser: StateArbejdsbyrdeBesvarelser) {
         this.besvarelser = besvarelser;
@@ -89,12 +89,12 @@ class StateChart {
 
 
 export class UiChartArbejdsbyrder {
-    state: StateChart
+    state: StateChart;
 
     public oninit(vnode: m.Vnode<{state: StateArbejdsbyrdeBesvarelser}>) {
         this.state = new StateChart(vnode.attrs.state);
     }
-    public view(vnode: m.Vnode) {
+    public view(vnode: m.Vnode<{state: StateArbejdsbyrdeBesvarelser}>) {
         let content = $it(this.state.besvarelser.arbejdsbyrder)
             .sort((arbejdsbyrde) => [arbejdsbyrde.gruppe.type, isNaN(arbejdsbyrde.score) ? 0 : arbejdsbyrde.score], true)
             .mapRuns((arbejdsbyrde) => arbejdsbyrde.gruppe.type,
@@ -115,7 +115,7 @@ export class UiChartArbejdsbyrder {
                    m("tbody",
                      m("tr", m("th", m("h4", "Vægtning"))),
                      m("tr", m("td", "Vægtning:"), m("td", this.state.besvarelser.avgVægtning)))),
-                 m(UiChartBase, {state: this.state, style: "background: red;"}),
+                 m(UiChartBase, {state: this.state}),
                 );
     }
 }

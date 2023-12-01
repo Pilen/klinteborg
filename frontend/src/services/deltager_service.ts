@@ -86,4 +86,3 @@ class DeltagerService {
 }
 
 export const DELTAGER_SERVICE = new DeltagerService();
-window.DELTAGER_SERVICE = DELTAGER_SERVICE;

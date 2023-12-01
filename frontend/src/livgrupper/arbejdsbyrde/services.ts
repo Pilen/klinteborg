@@ -1,15 +1,23 @@
+import m from "mithril";
+import Stream from "mithril/stream";
+import {error} from "src/error";
+import {$it, Iter, foo} from "src/lib/iter";
+import {load} from "src/load";
 import {Api, ApiStream} from "src/api";
 
+import {ModelArbejdsbyrdeBesvarelse} from "src/livgrupper/arbejdsbyrde/models";
+
+
 class ServiceArbejdsbyrdeBesvarelse {
-    apiStreamBesvarelser = new ApiStream().get("/api/minus/arbejdsbyrde/besvarelse/all");
+    apiStreamBesvarelser = new ApiStream<Array<ModelArbejdsbyrdeBesvarelse>>().get("/api/minus/arbejdsbyrde/besvarelse/all");
     apiSave = new Api()
         .post("/api/minus/arbejdsbyrde/besvarelse/save")
         .then(() => this.apiStreamBesvarelser.newRequest());
-    public besvarelser() {
+    public besvarelser(): Stream<Array<ModelArbejdsbyrdeBesvarelse>>{
         return this.apiStreamBesvarelser.stream();
     }
     public save(besvarelse: ModelArbejdsbyrdeBesvarelse) {
-        this.apiSave.request({
+        return this.apiSave.request({
             id: besvarelse.id,
             grupper: besvarelse.grupper,
             vægtning: besvarelse.vægtning});
@@ -28,10 +36,10 @@ class ServiceCustomScores {
         return this.apiStreamCustomScores.stream();
     }
     public save(gruppe: string, score: number){
-        this.apiSave.request({gruppe, score});
+        return this.apiSave.request({gruppe, score});
     }
     public delete(gruppe: string) {
-        this.apiDelete.request({gruppe});
+        return this.apiDelete.request({gruppe});
     }
 }
 export const SERVICE_CUSTOM_SCORES = new ServiceCustomScores();

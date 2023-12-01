@@ -1,4 +1,5 @@
 import m from "mithril";
+import Stream from "mithril/stream";
 import {Api, ApiStream} from "src/api";
 
 
@@ -20,20 +21,20 @@ import {Api, ApiStream} from "src/api";
 interface State {
 
 }
-export function load(things, element) {
+export function load(things: any, element: m.Vnode) {
     if (!Array.isArray(things)) {
         things = [things];
     }
     let isLoaded = true;
-    for (thing of things) {
+    for (let thing of things) {
         if (thing instanceof ApiStream) {
             if (thing.stream()() === undefined) {
                 isLoaded = false;
             }
-        } else if (thing instanceof Stream) {
-            if (thing() === undefined) {
-                isLoaded = false;
-            }
+        // } else if (thing instanceof Stream<any>) {
+        //     if (thing() === undefined) {
+        //         isLoaded = false;
+        //     }
         } else if (typeof thing === "function") {
             if (thing() === undefined) {
                 isLoaded = false;
