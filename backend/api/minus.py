@@ -73,28 +73,34 @@ def arbejdsbyrde_besvarelse_all(tx: TX):
 
 
 
-@router.get("/arbejdsbyrde/custom_score/all")
+@router.get("/arbejdsbyrde/custom-score/all")
 def arbejdsbyrde_custom_score_all(tx: TX):
     rows = tx.fetch_all("SELECT gruppe, score from arbejdsbyrde_custom_scores");
     result = {row["gruppe"]: row["score"] for row in rows}
     return result
 
-@router.post("/arbejdsbyrde/custom_score/save")
-def arbejdsbyrde_custom_score_save(
-        tx: TX,
-        gruppe: Annotated[str, Body()],
-        score: Annotated[int, Body()]):
-    tx.execute("""
-    INSERT INTO arbejdsbyrde_custom_scores (gruppe, score)
-    VALUES (?, ?)
-    ON CONFLICT (gruppe)
-    DO
-    UPDATE SET score = EXCLUDED.score
-    """, gruppe, score)
+# @router.post("/arbejdsbyrde/custom_score/save")
+# def arbejdsbyrde_custom_score_save(
+#         tx: TX,
+#         gruppe: Annotated[str, Body()],
+#         score: Annotated[int, Body()]):
+#     tx.execute("""
+#     INSERT INTO arbejdsbyrde_custom_scores (gruppe, score)
+#     VALUES (?, ?)
+#     ON CONFLICT (gruppe)
+#     DO
+#     UPDATE SET score = EXCLUDED.score
+#     """, gruppe, score)
 
-@router.post("/arbejdsbyrde/custom_score/delete")
-def arbejdsbyrde_custom_score_delete(tx: TX, gruppe: Annotated[str, Body()]):
-    tx.execute("""
-    DELETE FROM arbejdsbyrde_custom_scores
-          WHERE gruppe = ?
-    """, gruppe)
+# @router.post("/arbejdsbyrde/custom_score/delete")
+# def arbejdsbyrde_custom_score_delete(tx: TX, gruppe: Annotated[str, Body()]):
+#     tx.execute("""
+#     DELETE FROM arbejdsbyrde_custom_scores
+#           WHERE gruppe = ?
+#     """, gruppe)
+
+@router.post("/arbejdsbyrde/custom-score/save-all")
+def arbejdsbyrde_custom_score_save_all(tx: TX, scores: Annotated[dict[str, float], Body()]):
+    tx.execute("DELETE FROM arbejdsbyrde_custom_scores")
+    tx.insert_many("arbejdsbyrde_custom_scores",
+                   [{"gruppe": gruppe, "score": score} for gruppe, score in scores.items()])
