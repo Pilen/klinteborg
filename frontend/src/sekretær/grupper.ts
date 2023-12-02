@@ -56,7 +56,7 @@ export class PageGrupper {
                              antal = `${gruppe.minimum_antal}-${gruppe.maximum_antal}`;
                          }
                          let medlemmer = $it(gruppe.medlemmer)
-                             .sort((medlem) => [!medlem.tovholder, medlem.fdfid])
+                             .sort((medlem) => [!medlem.tovholder, DELTAGER_SERVICE.getDeltager(medlem.fdfid).navn])
                              .map((medlem) => {
                                  let deltager = DELTAGER_SERVICE.getDeltager(medlem.fdfid);
                                  let navn = deltager?.navn;
@@ -81,7 +81,7 @@ export class PageGrupper {
                                               {onclick: (e) => {
                                                   let searchEngine = new SearchEngine(DELTAGER_SERVICE.deltagere().filter((deltager) => deltager.er_voksen),
                                                                                       (deltager) => deltager.navn,
-                                                                                      (deltager) => {console.log(deltager); GRUPPE_SERVICE.addPerson(gruppe.gruppe, deltager.fdfid); closeModal()});
+                                                                                      (deltager) => {GRUPPE_SERVICE.addPerson(gruppe.gruppe, deltager.fdfid); closeModal()});
                                                   openModal(() => {
                                                       return [
                                                           m("h2", "Vælg gruppemedlem"),
