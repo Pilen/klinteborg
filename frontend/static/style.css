@@ -407,6 +407,12 @@ header > nav > .dropdown:hover > a {
 
     overflow: scroll;
 }
+.modal.fitted {
+    min-height: inherit;
+    min-width: inherit;
+    width: fit-content;
+    height: fit-content;
+}
 
 /*******************************************************************************
  * Animations

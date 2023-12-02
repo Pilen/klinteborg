@@ -85,9 +85,9 @@ export class PageGrupper {
                                                   openModal(() => {
                                                       return [
                                                           m("h2", "Vælg gruppemedlem"),
-                                                          m(Search, {engine: searchEngine, render: (deltager) => m("span", deltager.navn)}),
+                                                          m(Search, {engine: searchEngine, render: (deltager) => m("span", deltager.navn), autofocus: true}),
                                                       ];
-                                                  })}},
+                                                  }, "fitted")}},
                                               m("span.fdficon.green", "\uf39a")
                                              ))),
                                  )},

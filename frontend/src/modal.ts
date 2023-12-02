@@ -2,8 +2,10 @@ import m from "mithril";
 
 
 let modal = null;
-export function openModal(modal_) {
+let className = null;
+export function openModal(modal_, className_) {
     modal = modal_;
+    className = className_;
 }
 export function closeModal() {
     modal = null;
@@ -21,6 +23,7 @@ export class ModalBase {
                          }
                      }},
                      m(".modal",
+                       {class: className},
                        modal(),
                       ));
         }

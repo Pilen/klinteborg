@@ -83,6 +83,11 @@ export class SearchEngine<T> {
 
 
 export class Search<T> {
+    public oncreate(vnode: m.Vnode<{autofocus: boolean | undefined}>) {
+        if (vnode.attrs.autofocus === true) {
+            vnode.dom.firstChild.focus();
+        }
+    }
     public view(vnode: m.Vnode<{engine: SearchEngine<T>, render: (T) => any}>) {
         let engine = vnode.attrs.engine;
         let render = vnode.attrs.render;
