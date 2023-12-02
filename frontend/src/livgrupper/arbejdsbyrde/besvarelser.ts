@@ -15,7 +15,6 @@ export class StateArbejdsbyrdeBesvarelser {
                () => GRUPPE_SERVICE.grupper(),
                () => SERVICE_ARBEJDSBYRDE_BESVARELSE.besvarelser()(),
                // SERVICE_ARBEJDSBYRDE_BESVARELSE.besvarelser(), // TODO: figure out how I want this
-               () => {console.log("hej"); return 10}
               ];
     isLoaded = false;
 
@@ -124,7 +123,6 @@ export class UiArbejdsbyrdeBesvarelser {
     public view(vnode: m.Vnode<{state: StateArbejdsbyrdeBesvarelser}>) {
         let grupperGivingMinus = MINUS_SERVICE.grupperGivingMinus();
         let content = $it(vnode.attrs.state.arbejdsbyrder)
-            .filter((arbejdsbyrde) => grupperGivingMinus.has(arbejdsbyrde.gruppe.gruppe))
             .mapRuns((x) => x.gruppe.type,
                      (gruppe) => {
                          let results = $it(gruppe.besvarelser)
