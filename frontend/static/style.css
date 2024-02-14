@@ -347,6 +347,19 @@ header > nav > .dropdown:hover > a {
     /* display: block */
 }
 
+header > nav > .spacer {
+    flex-grow: 1;
+}
+header > nav > .dropdown.right {
+    margin-right: 12px;
+    padding-left: 20px; // Give an area to transfer mouse to dropdown-content without leaving box
+}
+header > nav > .dropdown.right > .dropdown-content{
+    left: initial;
+    right: -4px;
+
+}
+
 /*******************************************************************************
  * Error
  ******************************************************************************/
