@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Request, Response, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import BaseModel
 from typing import Annotated
-from backend.database import TX, DB, RawSQL
+from backend.database import TX, RawSQL
 from backend.config import config
 from backend.utils import fragment
 from backend.exceptions import Error, BadInputError

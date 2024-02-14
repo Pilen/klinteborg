@@ -63,6 +63,8 @@ class DB:
                 dbname = config.postgres_database,
                 row_factory = psycopg.rows.dict_row,
                 autocommit = True)
+        else:
+            self.pgconn = pgconn
         self._is_in_use = False
 
     @contextlib.contextmanager
