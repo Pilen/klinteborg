@@ -19,6 +19,7 @@ export class StateArbejdsbyrdeBesvarelser {
     isLoaded = false;
 
     arbejdsbyrder: Array<ModelArbejdsbyrde>;
+    arbejdsbyrderMap: Map<string, ModelArbejdsbyrde>;
     vægtninger: Array<number | null>;
     avgVægtning: number;
 
@@ -115,6 +116,9 @@ export class StateArbejdsbyrdeBesvarelser {
                 return arbejdsbyrde;
             })
             .List();
+        this.arbejdsbyrderMap = $it(this.arbejdsbyrder)
+            .map((arbejdsbyrde) => [arbejdsbyrde.gruppe.gruppe, arbejdsbyrde])
+            .Map();
     }
 }
 

@@ -651,6 +651,7 @@ export class Iter<T> {
 
 
 
+
     public All(): boolean {
         let it = this.it;
         for (let item of it) {
@@ -689,6 +690,26 @@ export class Iter<T> {
         }
         return result;
     }
+
+    public GroupInner(key: (T) => Iterable<any>) {
+        let it = this.it;
+        let extract = make_extract(key)
+        let result = new Map();
+        for (let item of it) {
+            for (let key of extract(item)) {
+                let list;
+                if (result.has(key)) {
+                    list = result.get(key);
+                } else {
+                    list = [];
+                    result.set(key, list);
+                }
+                list.push(item);
+            }
+        }
+        return result;
+    }
+
 
     public count(default_value?: any) {
         return $it(this.Count(default_value));
