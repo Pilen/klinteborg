@@ -18,12 +18,12 @@ export class UiMinusGrupper {
                      (gruppe) => {
                          if (grupperGivingMinus.has(gruppe.gruppe)) {
                              return m("tr",
-                                      {onclick: (e) => MINUS_SERVICE.setGruppeMinus(gruppe.gruppe, false)},
+                                      {onclick: (e) => MINUS_SERVICE.setGruppeGivingMinus(gruppe.gruppe, false)},
                                       m("td", m("a.button", m("b", gruppe.gruppe))),
                                       m("td", m("span.fdficon", "\uf2d2")));
                          } else {
                              return m("tr",
-                                      {onclick: (e) => MINUS_SERVICE.setGruppeMinus(gruppe.gruppe, true)},
+                                      {onclick: (e) => MINUS_SERVICE.setGruppeGivingMinus(gruppe.gruppe, true)},
                                       m("td", m("a.button", gruppe.gruppe)),
                                       m("td", m("span", "")));
                          }

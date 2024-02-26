@@ -33,7 +33,7 @@ class MinusService {
         return this._grupperGivingMinus;
     }
 
-    public setGruppeMinus(gruppe: string, minus: boolean) {
+    public setGruppeGivingMinus(gruppe: string, minus: boolean) {
         return m.request({
             method: "POST",
             url: "/api/minus/set-gruppe-giving-minus",
