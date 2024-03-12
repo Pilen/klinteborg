@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "src/error";
 import {$it, Iter, foo} from "src/lib/iter";
-import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {Deltager} from "src/deltagere/model_deltager";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "src/utils";
@@ -10,7 +10,7 @@ import {UiDays} from "src/deltagere/ui_days";
 
 export class PageDeltagereProblematiske {
     public view(vnode: m.Vnode) {
-        let problematic = $it(DELTAGER_SERVICE.deltagere())
+        let problematic = $it(SERVICE_DELTAGER.deltagere())
             .filter((deltager) => deltager.problemer.length > 0)
             .sort((deltager: Deltager) => [
                 deltager.er_voksen,
@@ -69,7 +69,7 @@ export class PageDeltagereProblematiske {
 
 export class Ændringer {
     public view(vnode: m.Vnode) {
-        let deltagere = $it(DELTAGER_SERVICE.deltagere())
+        let deltagere = $it(SERVICE_DELTAGER.deltagere())
             .map((deltager) => {
                 if (formatDateTime(deltager.tilmeldt_dato) === formatDateTime(deltager.sidst_ændret_dato)) {
                     return [["Tilmeldt", deltager.tilmeldt_dato, deltager]];

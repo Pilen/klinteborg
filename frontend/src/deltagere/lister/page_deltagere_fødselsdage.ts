@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "src/error";
 import {$it, Iter, foo} from "src/lib/iter";
-import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {Deltager} from "src/deltagere/model_deltager";
 import {Stab, Patrulje, Tilstede, DAYS, DATES, START_DATE, END_DATE} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge, calculateModa} from "src/utils";
@@ -10,7 +10,7 @@ import {UiDays} from "src/deltagere/ui_days";
 
 export class PageDeltagereFødselsdage {
     public view(vnode: m.Vnode) {
-        let deltagere = $it(DELTAGER_SERVICE.deltagere())
+        let deltagere = $it(SERVICE_DELTAGER.deltagere())
             .filterValue((deltager) => deltager.fødselsdato)
             .filterValue((deltager) => DATES.find((date) => deltager.fødselsdato.getMonth() === date.getMonth() && deltager.fødselsdato.getDate() === date.getDate()))
             .sort((deltager) => [deltager.fødselsdato.getMonth(), deltager.fødselsdato.getDate(), -deltager.fødselsdato.getFullYear()])

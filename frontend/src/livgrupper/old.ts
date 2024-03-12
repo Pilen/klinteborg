@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "src/error";
 import {$it, Iter, foo} from "src/lib/iter";
-import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {Deltager} from "src/deltagere/model_deltager";
 import {Stab, Patrulje, Tilstede, DAYS, DATES, START_DATE} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, addDays} from "src/utils";
@@ -56,7 +56,7 @@ function split(t) {
 export class PageLivgrupperAdminOld {
     public view(vnode: m.Vnode) {
         let longest = 0;
-        let ledere = $it(DELTAGER_SERVICE.deltagere())
+        let ledere = $it(SERVICE_DELTAGER.deltagere())
             .filter((deltager) => deltager.navn === "Nadia Sara Møller" || (
                 deltager.er_voksen &&
                 deltager.patrulje != Patrulje.get("Numlinge") &&

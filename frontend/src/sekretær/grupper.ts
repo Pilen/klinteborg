@@ -3,7 +3,7 @@ import {error} from "src/error";
 import {$it, Iter, foo} from "src/lib/iter";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
 import {GRUPPE_SERVICE, Gruppe} from "src/services/gruppe_service";
-import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {openModal, closeModal, ModalBase} from "src/modal";
 import {Search, SearchEngine} from "src/search";
 
@@ -56,9 +56,9 @@ export class PageGrupper {
                              antal = `${gruppe.minimum_antal}-${gruppe.maximum_antal}`;
                          }
                          let medlemmer = $it(gruppe.medlemmer)
-                             .sort((medlem) => [!medlem.tovholder, DELTAGER_SERVICE.getDeltager(medlem.fdfid).navn])
+                             .sort((medlem) => [!medlem.tovholder, SERVICE_DELTAGER.getDeltager(medlem.fdfid).navn])
                              .map((medlem) => {
-                                 let deltager = DELTAGER_SERVICE.getDeltager(medlem.fdfid);
+                                 let deltager = SERVICE_DELTAGER.getDeltager(medlem.fdfid);
                                  let navn = deltager?.navn;
                                  return m("li",
                                           medlem.tovholder ? m("b", navn) : navn,
@@ -79,7 +79,7 @@ export class PageGrupper {
                                             medlemmer,
                                             m("a.button",
                                               {onclick: (e) => {
-                                                  let searchEngine = new SearchEngine(DELTAGER_SERVICE.deltagere().filter((deltager) => deltager.er_voksen),
+                                                  let searchEngine = new SearchEngine(SERVICE_DELTAGER.deltagere().filter((deltager) => deltager.er_voksen),
                                                                                       (deltager) => deltager.navn,
                                                                                       (deltager) => {GRUPPE_SERVICE.addPerson(gruppe.gruppe, deltager.fdfid); closeModal()});
                                                   openModal(() => {

@@ -4,7 +4,7 @@ import {$it, Iter} from "src/lib/iter";
 import {openModal, closeModal, ModalBase} from "src/modal";
 import {load} from "src/load";
 
-import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {Deltager} from "src/deltagere/model_deltager";
 import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "src/utils";
 import {UiDays} from "src/deltagere/ui_days";
@@ -27,7 +27,7 @@ export class PageMinus {
 
 class PageOverview {
     public view(vnode: m.Vnode) {
-        let deltagere = $it(DELTAGER_SERVICE.deltagere() ?? [])
+        let deltagere = $it(SERVICE_DELTAGER.deltagere() ?? [])
             .sort((deltager) => [calculateAge(deltager.fødselsdato)])
             .filter((deltager) => (deltager.row["Deltagelse Uge 1: / Lørdag 1"] || deltager.row["Deltagelse Uge 1: / Søndag 1"] || deltager.row["Deltagelse Uge 1: / Mandag 1"] || deltager.row["Deltagelse Uge 1: / Tirsdag 1"] || deltager.row["Deltagelse Uge 1: / Onsdag 1"] || deltager.row["Deltagelse Uge 1: / Torsdag 1"] || deltager.row["Deltagelse Uge 1: / Fredag 1"] || deltager.row["Deltagelse Uge 1: / Lørdag 2"] || deltager.row["Deltagelse Uge 2: / Lørdag 2"] || deltager.row["Deltagelse Uge 2: / Søndag 2"] || deltager.row["Deltagelse Uge 2: / Mandag 2"] || deltager.row["Deltagelse Uge 2: / Tirsdag 2"] || deltager.row["Deltagelse Uge 2: / Onsdag 2"] || deltager.row["Deltagelse Uge 2: / Torsdag 2"] || deltager.row["Deltagelse Uge 2: / Fredag 2"] || deltager.row["Deltagelse Uge 2: / Lørdag 3"]))
             .filter((deltager) => !compare(deltager))

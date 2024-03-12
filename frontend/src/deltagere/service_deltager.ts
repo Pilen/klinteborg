@@ -53,4 +53,4 @@ class ServiceDeltager {
     }
 }
 
-export const DELTAGER_SERVICE = new DeltagerService();
+export const SERVICE_DELTAGER = new ServiceDeltager();

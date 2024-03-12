@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "src/error";
 import {$it, Iter, foo} from "src/lib/iter";
-import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {Deltager} from "src/deltagere/model_deltager";
 import {Stab, Patrulje, Tilstede, DAYS, DATES, TILMELDING_HEADERS} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "src/utils";
@@ -11,7 +11,7 @@ import {UiDays} from "src/deltagere/ui_days";
 export class PageDeltager {
     public view(vnode: m.Vnode<{fdfid: string}>) {
         let fdfid = Number(vnode.attrs.fdfid);
-        let deltager: Deltager = DELTAGER_SERVICE.deltagere().find((deltager) => deltager.fdfid === fdfid);
+        let deltager: Deltager = SERVICE_DELTAGER.deltagere().find((deltager) => deltager.fdfid === fdfid);
         if (deltager === undefined) {
             return m("div", "Ukendt person / fdfid");
         }

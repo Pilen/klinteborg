@@ -1,6 +1,6 @@
 import {Stab, Patrulje, Tilstede, DAYS, DATES, START_DATE} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, addDays} from "src/utils";
-import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {Deltager} from "src/deltagere/model_deltager";
 import {GRUPPE_SERVICE, Gruppe} from "src/services/gruppe_service";
 import {StateArbejdsbyrdeBesvarelser} from "src/livgrupper/arbejdsbyrde/besvarelser";
@@ -142,7 +142,7 @@ class ModelDeltagerMinus {
 export class StateMinus {
     stateArbejdsbyrdeBesvarelser = new StateArbejdsbyrdeBesvarelser();
     stateCustomScores = new StateCustomScores();
-    loaders = [() => DELTAGER_SERVICE.deltagere(),
+    loaders = [() => SERVICE_DELTAGER.deltagere(),
                () => GRUPPE_SERVICE.grupper(),
                this.stateArbejdsbyrdeBesvarelser,
                this.stateCustomScores,
@@ -177,7 +177,7 @@ export class StateMinus {
             .Go();
         window.arbejdsbyrder_by_deltager = arbejdsbyrder_by_deltager;
         window.stateArbejdsbyrdeBesvarelser = this.stateArbejdsbyrdeBesvarelser;
-        this.deltagere = $it(DELTAGER_SERVICE.deltagere())
+        this.deltagere = $it(SERVICE_DELTAGER.deltagere())
             // .filter((deltager) => deltager.er_voksen)
             .filter((deltager) => LIVGRUPPE_LEDERE.indexOf(deltager.fdfid) != -1)
             .map((deltager) =>

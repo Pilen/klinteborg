@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "src/error";
 import {$it, Iter, foo} from "src/lib/iter";
-import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {Deltager} from "src/deltagere/model_deltager";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
@@ -56,7 +56,7 @@ class KøkkenSummary {
                 "Unknown": 0,
             })).Go();
 
-        let deltagere = $it(DELTAGER_SERVICE.deltagere())
+        let deltagere = $it(SERVICE_DELTAGER.deltagere())
             .map((deltager) =>
                 $it(deltager.dage)
                     .zip(lookup)
@@ -138,7 +138,7 @@ class KøkkenSummary {
 
 class KøkkenDeltagere {
     public view(vnode: m.Vnode<{er_voksen: boolean}>) {
-        let deltagere = $it(DELTAGER_SERVICE.deltagere())
+        let deltagere = $it(SERVICE_DELTAGER.deltagere())
             .filter((deltager) => deltager.er_voksen === vnode.attrs.er_voksen)
             .sort((deltager) => [deltager.navn])
             .groupRuns((deltager) => deltager.navn.substring(0, 1))

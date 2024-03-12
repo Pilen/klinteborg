@@ -2,7 +2,7 @@ import m from "mithril";
 import Stream from "mithril/stream";
 import {ErrorView} from "src/error";
 import {ModalBase} from "src/modal";
-import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {PageDeltager} from "src/deltagere/page_deltager";
 import {
     PageDeltagereIndestab,
@@ -51,7 +51,7 @@ class NotFound {
 class Layout {
     public view(vnode: m.Vnode<{title: string}>) {
         document.title = vnode.attrs.title;
-        if (!DELTAGER_SERVICE.isReady()) {
+        if (!SERVICE_DELTAGER.isReady()) {
             return m(".loading", m("span", "Loading"));
         }
         return m.fragment({}, [
@@ -162,7 +162,7 @@ m.route(document.body, "/", {
     "/:404...":              Layout.wrap(NotFound, "Siden mangler"),
 });
 
-DELTAGER_SERVICE.downloadDeltagere();
+SERVICE_DELTAGER.downloadDeltagere();
 // @ts-ignore
 window.m = m;
 // @ts-ignore
