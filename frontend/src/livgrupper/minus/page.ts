@@ -7,9 +7,24 @@ import {load} from "src/load";
 import {DELTAGER_SERVICE, Deltager} from "src/services/deltager_service";
 import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "src/utils";
 import {Days} from "src/deltagere/core";
+import {StateMinus} from "src/livgrupper/minus/state";
+import {UiSummary} from "src/livgrupper/minus/ui_summary";
+import {UiAlgorithmMinusSettings} from "src/livgrupper/minus/ui_algorithm_minus_settings";
+import {SERVICE_SETTINGS} from "src/settings";
 
 
 export class PageMinus {
+    stateMinus = new StateMinus();
+    public view(vnode: m.Vnode) {
+        return m("div",
+                 load([() => SERVICE_SETTINGS.settings()], m(UiAlgorithmMinusSettings)),
+                 load([this.stateMinus], m(UiSummary, {state: this.stateMinus})),
+                 m(PageOverview),
+                );
+    }
+}
+
+class PageOverview {
     public view(vnode: m.Vnode) {
         let deltagere = $it(DELTAGER_SERVICE.deltagere() ?? [])
             .sort((deltager) => [calculateAge(deltager.fødselsdato)])

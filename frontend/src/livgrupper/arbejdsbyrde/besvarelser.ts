@@ -19,7 +19,7 @@ export class StateArbejdsbyrdeBesvarelser {
     isLoaded = false;
 
     arbejdsbyrder: Array<ModelArbejdsbyrde>;
-    arbejdsbyrderMap: Map<string, ModelArbejdsbyrde>;
+    arbejdsbyrdeMap: Map<string, ModelArbejdsbyrde>;
     vægtninger: Array<number | null>;
     avgVægtning: number;
 
@@ -58,6 +58,10 @@ export class StateArbejdsbyrdeBesvarelser {
         let avgFør = sumFør / countFør;
         let avgUnder = sumUnder / countUnder;
         let score = avgFør * (1.0 - weight) + avgUnder * weight;
+        if (isNaN(score)) {
+            // score can be NaN if all all `før` or `efter` are null, meaning no replies
+            score = 0;
+        }
         return score;
     }
 
@@ -116,7 +120,7 @@ export class StateArbejdsbyrdeBesvarelser {
                 return arbejdsbyrde;
             })
             .List();
-        this.arbejdsbyrderMap = $it(this.arbejdsbyrder)
+        this.arbejdsbyrdeMap = $it(this.arbejdsbyrder)
             .map((arbejdsbyrde) => [arbejdsbyrde.gruppe.gruppe, arbejdsbyrde])
             .Map();
     }

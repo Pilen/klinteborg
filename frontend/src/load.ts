@@ -22,44 +22,58 @@ interface State {
 
 }
 export function load(things: any, element: m.Vnode) {
-    if (!Array.isArray(things)) {
-        things = [things];
-    }
-    let isLoaded = true;
-    for (let thing of things) {
-        if (thing instanceof ApiStream) {
-            if (thing.stream()() === undefined) {
-                isLoaded = false;
-            }
-        // } else if (thing instanceof Stream<any>) {
-        //     if (thing() === undefined) {
-        //         isLoaded = false;
-        //     }
-        } else if (typeof thing === "function") {
-            if (thing() === undefined) {
-                isLoaded = false;
-            }
-        } else {
-            // if (thing instanceof State) {
-            let state = thing;
-            if (state.isLoaded) {
-                continue;
-            }
-            let loadState = true;
-            for (let loader of state.loaders) {
-                if (loader() === undefined) {
+    function isLoaded_(things) {
+        if (!Array.isArray(things)) {
+            things = [things];
+        }
+
+        let isLoaded = true;
+        for (let thing of things) {
+            if (thing instanceof ApiStream) {
+                if (thing.stream()() === undefined) {
                     isLoaded = false;
-                    loadState = false;
-                    break;
+                }
+            // } else if (thing instanceof Stream<any>) {
+            //     if (thing() === undefined) {
+            //         isLoaded = false;
+            //     }
+            } else if (typeof thing === "function") {
+                if (thing() === undefined) {
+                    isLoaded = false;
+                }
+            } else {
+                // if (thing instanceof State) {
+                // let state = thing;
+                // if (state.isLoaded) {
+                //     continue;
+                // }
+                // let loadState = true;
+                // for (let loader of state.loaders) {
+                //     if (loader() === undefined) {
+                //         isLoaded = false;
+                //         loadState = false;
+                //         break;
+                //     }
+                // }
+                // if (loadState) {
+                //     state.load();
+                //     state.isLoaded = true;
+                // }
+                let state = thing;
+                if (state.isLoaded) {
+                    continue;
+                }
+                if (isLoaded_(state.loaders)) {
+                    state.load()
+                    state.isLoaded = true;
+                } else {
+                    isLoaded = false;
                 }
             }
-            if (loadState) {
-                state.load();
-                state.isLoaded = true;
-            }
         }
+        return isLoaded;
     }
-    if (isLoaded) {
+    if (isLoaded_(things)) {
         return element;
     } else {
         return m(UiLoading)

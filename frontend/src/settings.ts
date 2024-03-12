@@ -52,11 +52,11 @@ class ServiceSettings {
         console.error("Not implemented yet!");
     }
 }
-const SERVICE_SETTINGS = new ServiceSettings();
+export const SERVICE_SETTINGS = new ServiceSettings();
 
-class UiSetting {
+export class UiSetting {
     setting;
-    value;
+    values;
     raw: string;
     bad: boolean;
     public oninit(vnode: m.Vnode<{setting: ModelSetting}>) {
@@ -67,6 +67,7 @@ class UiSetting {
         // }
         // this.setting = SERVICE_SETTINGS.get(vnode.attrs.setting);
         this.setting = vnode.attrs.setting;
+        console.assert(this.setting !== undefined);
         this.value = this.setting.value;
         this.raw = ""; // TODO: unparse this.value
         this.bad = false;
@@ -93,17 +94,18 @@ class UiSetting {
         SERVICE_SETTINGS.set(this.setting.setting, this.value);
     }
     public view(vnode: m.Vnode<{setting: ModelSetting}>) {
-        return m("div",
-                 m("span", this.setting.setting),
-                 m("input",
-                   {value: this.value,
-                    oninput: (e) => this.change(e.currentTarget.value)}),
-                 m("button",
-                   {"class": this.bad ? "red" : "green",
-                    "style": this.bad ? {cursor: "disabled"} : null,
-                    onclick: (e) => this.save()},
-                   "Gem"),
+        return m("tr",
+                 m("td", this.setting.setting),
+                 m("td", m("input",
+                           {value: this.value,
+                            oninput: (e) => this.change(e.currentTarget.value)})),
+                 m("td", m("button",
+                           {"class": this.bad ? "red" : "green",
+                            "style": this.bad ? {cursor: "disabled"} : null,
+                            onclick: (e) => this.save()},
+                           "Gem")),
                 );
+
     }
 }
 
