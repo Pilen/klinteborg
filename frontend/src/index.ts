@@ -10,7 +10,7 @@ import {
     PageDeltagereVæbnerstab,
     PageDeltagereResten,
     PageDeltagereAlle,
-}                                   from "src/deltagere/lister/basic";
+}                                   from "src/deltagere/lister/page_deltagere_basic";
 import {PageDeltagereProblematiske} from "src/deltagere/lister/page_deltagere_problematiske";
 import {PageDeltagereTransport}     from "src/deltagere/lister/page_deltagere_transport";
 import {PageDeltagereFødselsdage}   from "src/deltagere/lister/page_deltagere_fødselsdage";

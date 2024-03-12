@@ -2,7 +2,7 @@ import m from "mithril";
 import {error} from "src/error";
 import {load} from "src/load";
 
-import {SERVICE_MINUS} from "src/minus/service_minus";
+import {SERVICE_MINUS} from "src/livgrupper/minus/service_minus";
 
 
 export class UiArbejdsbyrdeBesvarelser {

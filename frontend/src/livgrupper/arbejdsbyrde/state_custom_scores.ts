@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "src/error";
 import {$it} from "src/lib/iter";
-import {SERVICE_CUSTOM_SCORES} from "src/livgrupper/arbejdsbyrde/services";
+import {SERVICE_CUSTOM_SCORES} from "src/livgrupper/arbejdsbyrde/service_custom_scores";
 
 
 export class StateCustomScores {

@@ -4,8 +4,8 @@ import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {Deltager} from "src/deltagere/model_deltager";
 import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
 import {Gruppe} from "src/grupper/model_gruppe";
-import {StateArbejdsbyrdeBesvarelser} from "src/livgrupper/arbejdsbyrde/besvarelser";
-import {StateCustomScores} from "src/livgrupper/arbejdsbyrde/custom_scores";
+import {StateArbejdsbyrdeBesvarelser} from "src/livgrupper/arbejdsbyrde/state_arbejdsbyrde_besvarelser";
+import {StateCustomScores} from "src/livgrupper/arbejdsbyrde/state_custom_scores";
 import {LIVGRUPPE_PERIODER, LIVGRUPPE_LEDERE} from "src/config";
 
 

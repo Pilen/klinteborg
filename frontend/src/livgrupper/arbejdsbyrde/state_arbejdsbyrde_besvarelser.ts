@@ -4,8 +4,8 @@ import {$it} from "src/lib/iter";
 
 import {ModelArbejdsbyrde} from "src/livgrupper/arbejdsbyrde/model_arbejdsbyrde";
 
-import {SERVICE_MINUS} from "src/minus/service_minus";
-import {SERVICE_ARBEJDSBYRDE_BESVARELSE} from "src/livgrupper/arbejdsbyrde/services";
+import {SERVICE_MINUS} from "src/livgrupper/minus/service_minus";
+import {SERVICE_ARBEJDSBYRDE_BESVARELSE} from "src/livgrupper/arbejdsbyrde/service_arbejdsbyrde_besvarelse";
 import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
 
 

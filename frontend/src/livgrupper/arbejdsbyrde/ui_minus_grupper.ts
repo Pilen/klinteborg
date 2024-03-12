@@ -5,7 +5,7 @@ import {load} from "src/load";
 
 import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
 import {Gruppe} from "src/grupper/model_gruppe";
-import {SERVICE_MINUS} from "src/minus/service_minus";
+import {SERVICE_MINUS} from "src/livgrupper/minus/service_minus";
 
 export class UiMinusGrupper {
     public view(vnode: m.Vnode) {
