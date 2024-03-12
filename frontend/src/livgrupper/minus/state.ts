@@ -2,7 +2,8 @@ import {Stab, Patrulje, Tilstede, DAYS, DATES, START_DATE} from "src/definitions
 import {H1, H2, H5, Tr, formatDate, addDays} from "src/utils";
 import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {Deltager} from "src/deltagere/model_deltager";
-import {GRUPPE_SERVICE, Gruppe} from "src/services/gruppe_service";
+import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
+import {Gruppe} from "src/grupper/model_gruppe";
 import {StateArbejdsbyrdeBesvarelser} from "src/livgrupper/arbejdsbyrde/besvarelser";
 import {StateCustomScores} from "src/livgrupper/arbejdsbyrde/custom_scores";
 import {LIVGRUPPE_PERIODER, LIVGRUPPE_LEDERE} from "src/config";
@@ -143,7 +144,7 @@ export class StateMinus {
     stateArbejdsbyrdeBesvarelser = new StateArbejdsbyrdeBesvarelser();
     stateCustomScores = new StateCustomScores();
     loaders = [() => SERVICE_DELTAGER.deltagere(),
-               () => GRUPPE_SERVICE.grupper(),
+               () => SERVICE_GRUPPE.grupper(),
                this.stateArbejdsbyrdeBesvarelser,
                this.stateCustomScores,
               ];
@@ -152,14 +153,14 @@ export class StateMinus {
     // deltagere = Map<Number, ModelDeltagerMinus>;
 
     public load() {
-        let grupper_by_deltager = $it(GRUPPE_SERVICE.grupper())
+        let grupper_by_deltager = $it(SERVICE_GRUPPE.grupper())
             .GroupInner((gruppe) =>
                 $it(gruppe.medlemmer)
                     .map((medlem) => medlem.fdfid)
                     .List());
 
         let arbejdsbyrder_by_deltager = new Map<number, ModelArbejdsbyrde>();
-        $it(GRUPPE_SERVICE.grupper())
+        $it(SERVICE_GRUPPE.grupper())
             .map((gruppe) =>
                 $it(gruppe.medlemmer)
                     .map((medlem) => {

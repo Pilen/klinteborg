@@ -50,7 +50,7 @@ class MinusService {
 
     // }
     // public makeBesvarelse(): LivgrupperMinusBesvarelse {
-    //     if (!GRUPPE_SERVICE.isReady) {
+    //     if (!SERVICE_GRUPPE.isReady) {
     //         console.assert(false);
     //         return undefined;
     //     }

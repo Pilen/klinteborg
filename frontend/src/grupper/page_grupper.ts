@@ -2,14 +2,15 @@ import m from "mithril";
 import {error} from "src/error";
 import {$it, Iter, foo} from "src/lib/iter";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
-import {GRUPPE_SERVICE, Gruppe} from "src/services/gruppe_service";
+import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
+import {Gruppe} from "src/grupper/model_gruppe";
 import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {openModal, closeModal, ModalBase} from "src/modal";
 import {Search, SearchEngine} from "src/search";
 
 export class PageGrupper {
     public view(vnode: m.Vnode) {
-        // let table_rows = $it(GRUPPE_SERVICE.grupper())
+        // let table_rows = $it(SERVICE_GRUPPE.grupper())
         //     .map((gruppe) => {
         //         let antal = "";
         //         if (gruppe.minimum_antal === null && gruppe.maximum_antal === null) {
@@ -42,7 +43,7 @@ export class PageGrupper {
         //            m("tbody",
         //              table_rows)));
 
-        let content = $it(GRUPPE_SERVICE.grupper() ?? [])
+        let content = $it(SERVICE_GRUPPE.grupper() ?? [])
             .mapRuns("type",
                      (gruppe) => {
                          let antal = "";
@@ -63,11 +64,11 @@ export class PageGrupper {
                                  return m("li",
                                           medlem.tovholder ? m("b", navn) : navn,
                                           m("a.button",
-                                            {onclick: (e) => GRUPPE_SERVICE.setTovholder(gruppe.gruppe, medlem.fdfid, !medlem.tovholder)},
+                                            {onclick: (e) => SERVICE_GRUPPE.setTovholder(gruppe.gruppe, medlem.fdfid, !medlem.tovholder)},
                                             m("span.fdficon.yellow", "\uf3d3"),
                                            ),
                                           m("a.button",
-                                            {onclick: (e) => GRUPPE_SERVICE.removePerson(gruppe.gruppe, medlem.fdfid)},
+                                            {onclick: (e) => SERVICE_GRUPPE.removePerson(gruppe.gruppe, medlem.fdfid)},
                                             m("span.fdficon.red", "\uf368"),
                                            ))})
                              .List();
@@ -81,7 +82,7 @@ export class PageGrupper {
                                               {onclick: (e) => {
                                                   let searchEngine = new SearchEngine(SERVICE_DELTAGER.deltagere().filter((deltager) => deltager.er_voksen),
                                                                                       (deltager) => deltager.navn,
-                                                                                      (deltager) => {GRUPPE_SERVICE.addPerson(gruppe.gruppe, deltager.fdfid); closeModal()});
+                                                                                      (deltager) => {SERVICE_GRUPPE.addPerson(gruppe.gruppe, deltager.fdfid); closeModal()});
                                                   openModal(() => {
                                                       return [
                                                           m("h2", "Vælg gruppemedlem"),

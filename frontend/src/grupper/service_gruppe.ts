@@ -1,16 +1,7 @@
 import m from "mithril";
 import {error} from "src/error";
 
-export class Gruppe{
-    gruppe: string;
-    type: string;
-    beskrivelse: string;
-    minimum_antal: number | null;
-    maximum_antal: number | null;
-    medlemmer: Array<{"fdfid": number, "tovholder": boolean}>;
-}
-
-class GruppeService {
+class ServiceGruppe {
     _grupper: Array<Gruppe> | undefined;
 
     public isReady() {
@@ -79,4 +70,4 @@ class GruppeService {
 }
 
 
-export const GRUPPE_SERVICE = new GruppeService();
+export const SERVICE_GRUPPE = new ServiceGruppe();

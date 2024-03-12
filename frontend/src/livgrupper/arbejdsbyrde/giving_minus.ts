@@ -3,13 +3,14 @@ import {error} from "src/error";
 import {$it, Iter} from "src/lib/iter";
 import {load} from "src/load";
 
-import {GRUPPE_SERVICE, Gruppe} from "src/services/gruppe_service";
+import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
+import {Gruppe} from "src/grupper/model_gruppe";
 import {MINUS_SERVICE} from "src/services/minus_service";
 
 export class UiMinusGrupper {
     public view(vnode: m.Vnode) {
         let grupperGivingMinus = MINUS_SERVICE.grupperGivingMinus();
-        let grupper = GRUPPE_SERVICE.grupper()
+        let grupper = SERVICE_GRUPPE.grupper()
         if (grupperGivingMinus === undefined || grupper == undefined) {
             return m("div", "loading");
         }

@@ -1,4 +1,4 @@
-import {Gruppe} from "src/services/gruppe_service";
+import {Gruppe} from "src/grupper/model_gruppe";
 
 export class ModelArbejdsbyrdeBesvarelse {
     id: number | null;

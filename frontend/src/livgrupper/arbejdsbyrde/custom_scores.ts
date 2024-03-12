@@ -5,7 +5,8 @@ import {load} from "src/load";
 // import {State} from "src/base";
 
 // import {ModelArbejdsbyrde} from "src/livgrupper/arbejdsbyrde/models";
-import {GRUPPE_SERVICE, Gruppe} from "src/services/gruppe_service";
+import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
+import {Gruppe} from "src/grupper/model_gruppe";
 import {MINUS_SERVICE} from "src/services/minus_service";
 import {SERVICE_ARBEJDSBYRDE_BESVARELSE, SERVICE_CUSTOM_SCORES} from "src/livgrupper/arbejdsbyrde/services";
 

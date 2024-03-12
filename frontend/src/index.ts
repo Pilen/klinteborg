@@ -28,7 +28,7 @@ import {PageLivgrupperAdminOld} from "src/livgrupper/old";
 import {PageMinus} from "src/livgrupper/minus/page";
 import {PageArbejdsbyrde} from "src/livgrupper/arbejdsbyrde/page";
 
-import {PageGrupper} from "src/sekretær/grupper";
+import {PageGrupper} from "src/grupper/page_grupper";
 
 import {PageFrontpage} from "src/frontpage/page_frontpage";
 

@@ -4,7 +4,9 @@ import {$it, Iter, foo} from "src/lib/iter";
 import {load} from "src/load";
 
 import {ModelArbejdsbyrde} from "src/livgrupper/arbejdsbyrde/models";
-import {GRUPPE_SERVICE, Gruppe} from "src/services/gruppe_service";
+import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
+import {Gruppe} from "src/grupper/model_gruppe";
+
 import {MINUS_SERVICE} from "src/services/minus_service";
 import {SERVICE_ARBEJDSBYRDE_BESVARELSE} from "src/livgrupper/arbejdsbyrde/services";
 
@@ -12,7 +14,7 @@ import {SERVICE_ARBEJDSBYRDE_BESVARELSE} from "src/livgrupper/arbejdsbyrde/servi
 
 export class StateArbejdsbyrdeBesvarelser {
     loaders = [() => MINUS_SERVICE.grupperGivingMinus(),
-               () => GRUPPE_SERVICE.grupper(),
+               () => SERVICE_GRUPPE.grupper(),
                () => SERVICE_ARBEJDSBYRDE_BESVARELSE.besvarelser()(),
                // SERVICE_ARBEJDSBYRDE_BESVARELSE.besvarelser(), // TODO: figure out how I want this
               ];
@@ -74,7 +76,7 @@ export class StateArbejdsbyrdeBesvarelser {
     public load() {
         let besvarelser = SERVICE_ARBEJDSBYRDE_BESVARELSE.besvarelser()();
         let grupperGivingMinus = MINUS_SERVICE.grupperGivingMinus();
-        let grupper = GRUPPE_SERVICE.grupper();
+        let grupper = SERVICE_GRUPPE.grupper();
 
         this.vægtninger = $it(besvarelser).get("vægtning").List();
         this.avgVægtning = this.avg(this.vægtninger);

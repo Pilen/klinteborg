@@ -4,20 +4,20 @@ import {$it, Iter, foo} from "src/lib/iter";
 import {load} from "src/load";
 
 import {ModelArbejdsbyrdeBesvarelse} from "src/livgrupper/arbejdsbyrde/models";
-import {GRUPPE_SERVICE} from "src/services/gruppe_service";
+import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
 import {MINUS_SERVICE} from "src/services/minus_service";
 import {SERVICE_ARBEJDSBYRDE_BESVARELSE} from "src/livgrupper/arbejdsbyrde/services";
 
 export class StateArbejdsbyrdeBesvarelse {
     besvarelse: ModelArbejdsbyrdeBesvarelse | undefined;
     loaders = [() => MINUS_SERVICE.grupperGivingMinus(),
-               () =>  GRUPPE_SERVICE.grupper()];
+               () =>  SERVICE_GRUPPE.grupper()];
     isLoaded = false;
 
     public load() {
         // this.besvarelse = [];
         let grupperGivingMinus = MINUS_SERVICE.grupperGivingMinus();
-        let grupper = $it(GRUPPE_SERVICE.grupper())
+        let grupper = $it(SERVICE_GRUPPE.grupper())
             .filter((gruppe) => grupperGivingMinus.has(gruppe.gruppe))
             .sort("type")
             .map((gruppe) => {return {"gruppe": gruppe.gruppe, "før": null, "under": null, "erfaring": null};})
