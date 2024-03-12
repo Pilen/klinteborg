@@ -1,6 +1,7 @@
 import m from "mithril";
 import {UiSetting} from "src/settings";
-import {SERVICE_SETTINGS} from "src/settings";
+import {SERVICE_SETTINGS} from "src/settings/service_settings";
+import {UiSetting} from "src/settings/ui_setting";
 
 
 export class UiAlgorithmMinusSettings {

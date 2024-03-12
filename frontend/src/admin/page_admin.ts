@@ -7,7 +7,7 @@ import {Gruppe} from "src/grupper/model_gruppe";
 import {SERVICE_MINUS} from "src/minus/service_minus";
 import {openModal, closeModal, ModalBase} from "src/modal";
 import {load} from "src/load";
-import {UiSettings} from "src/settings";
+import {UiSettings} from "src/settings/ui_settings";
 
 export class PageAdmin {
     public view(vnode: m.Vnode) {

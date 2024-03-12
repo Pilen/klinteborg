@@ -1,59 +1,7 @@
 import m from "mithril";
 import {error} from "src/error";
-import {$it, Iter, foo} from "src/lib/iter";
-import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
-import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
-import {Gruppe} from "src/grupper/model_gruppe";
-import {SERVICE_MINUS} from "src/minus/service_minus";
-import {openModal, closeModal, ModalBase} from "src/modal";
-import {load, UiLoading} from "src/load";
+import {$it} from "src/lib/iter";
 
-class ModelSetting {
-    setting: string;
-    value: any;
-    default: any;
-    type: any
-    description: string;
-}
-
-class ServiceSettings {
-    _settings: Array<ModelSetting>;
-
-    public downloadSettings() {
-        return m.request({
-            method: "GET",
-            url: "/api/settings/all",
-            withCredentials: true
-        }).catch((e) => {
-            error(e)
-        }).then((result: Array<ModelSetting>) => {
-            this._settings = result;
-        });
-    }
-
-    public settings() {
-        if (this._settings === undefined) {
-            this.downloadSettings();
-            return undefined;
-        }
-        return this._settings
-    }
-    public get(setting: string) {
-        if (this._settings === undefined) {
-            return undefined;
-        }
-        for (let s of this._settings) {
-            if (setting === s.setting) {
-                return s;
-            }
-        }
-        console.error("Unknown setting");
-    }
-    public set(setting: string, value: any) {
-        console.error("Not implemented yet!");
-    }
-}
-export const SERVICE_SETTINGS = new ServiceSettings();
 
 export class UiSetting {
     setting;
@@ -107,18 +55,5 @@ export class UiSetting {
                            "Gem")),
                 );
 
-    }
-}
-
-export class UiSettings {
-    public view(vnode: m.Vnode) {
-        let settings = SERVICE_SETTINGS.settings();
-        if (settings === undefined) {
-            return m(UiLoading);
-        }
-        let content = $it(settings)
-            .map((setting) => m(UiSetting, {setting: setting}))
-            .List()
-        return m("div", content);
     }
 }
