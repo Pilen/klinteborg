@@ -4,12 +4,14 @@ import {$it, Iter} from "src/lib/iter";
 import {openModal, closeModal, ModalBase} from "src/modal";
 import {load} from "src/load";
 
-import {UiChartArbejdsbyrder} from "src/livgrupper/arbejdsbyrde/statistics";
-import {UiCustomScores, StateCustomScores} from "src/livgrupper/arbejdsbyrde/custom_scores";
+import {UiChartArbejdsbyrder} from "src/livgrupper/arbejdsbyrde/ui_chart_arbejdsbyrder";
+import {StateCustomScores} from "src/livgrupper/arbejdsbyrde/state_custom_scores";
+import {UiCustomScores} from "src/livgrupper/arbejdsbyrde/ui_custom_scores";
 import {UiArbejdsbyrdeBesvarelse} from "src/livgrupper/arbejdsbyrde/ui_arbejdsbyrde_besvarelse";
 import {StateArbejdsbyrdeBesvarelse} from "src/livgrupper/arbejdsbyrde/state_arbejdsbyrde_besvarelse";
-import {UiArbejdsbyrdeBesvarelser, StateArbejdsbyrdeBesvarelser} from "src/livgrupper/arbejdsbyrde/besvarelser";
-import {UiMinusGrupper} from "src/livgrupper/arbejdsbyrde/giving_minus";
+import {StateArbejdsbyrdeBesvarelser} from "src/livgrupper/arbejdsbyrde/state_arbejdsbyrde_besvarelser";
+import {UiArbejdsbyrdeBesvarelser} from "src/livgrupper/arbejdsbyrde/ui_arbejdsbyrde_besvarelser";
+import {UiMinusGrupper} from "src/livgrupper/arbejdsbyrde/ui_minus_grupper";
 
 export class PageArbejdsbyrde {
     currentBesvarelse: StateArbejdsbyrdeBesvarelse = new StateArbejdsbyrdeBesvarelse();

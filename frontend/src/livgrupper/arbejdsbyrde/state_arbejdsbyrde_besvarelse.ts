@@ -1,7 +1,7 @@
 import m from "mithril";
 import {$it} from "src/lib/iter";
 
-import {ModelArbejdsbyrdeBesvarelse} from "src/livgrupper/arbejdsbyrde/models";
+import {ModelArbejdsbyrdeBesvarelse} from "src/livgrupper/arbejdsbyrde/model_arbejdsbyrde_besvarelse";
 import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
 import {SERVICE_MINUS} from "src/minus/service_minus";
 import {SERVICE_ARBEJDSBYRDE_BESVARELSE} from "src/livgrupper/arbejdsbyrde/services";

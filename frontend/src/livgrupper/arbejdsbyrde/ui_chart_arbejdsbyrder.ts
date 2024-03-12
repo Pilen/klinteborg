@@ -4,7 +4,7 @@ import {$it, Iter, foo} from "src/lib/iter";
 import {load} from "src/load";
 import {UiChartBase} from "src/chart";
 
-import {StateArbejdsbyrdeBesvarelser} from "src/livgrupper/arbejdsbyrde/besvarelser";
+import {StateArbejdsbyrdeBesvarelser} from "src/livgrupper/arbejdsbyrde/state_arbejdsbyrde_besvarelser";
 
 class StateChart {
     options = {
