@@ -6,7 +6,7 @@ import {Stab, Patrulje, Tilstede, DAYS, DATES} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
 
 
-export class Days {
+export class UiDays {
     public view(vnode: m.Vnode<{days: Array<Tilstede>}>) {
         let days = $it(vnode.attrs.days).zip(DAYS).map(([day, weekday]) => {
             if (day === "Ja") {

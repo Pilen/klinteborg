@@ -4,9 +4,9 @@ import {$it, Iter, foo} from "src/lib/iter";
 import {DELTAGER_SERVICE, Deltager} from "src/services/deltager_service";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
-import {Days} from "src/deltagere/core";
+import {Days} from "src/deltagere/lister/core";
 
-class ViewDeltagereTable {
+class UiDeltagereTable {
     public view(vnode: m.Vnode<{stab: Stab, er_voksen: boolean, group: boolean}>) {
         let deltagere = (
             $it(DELTAGER_SERVICE.deltagere())
@@ -141,9 +141,9 @@ export class PageDeltagereIndestab {
     public view(vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: Stab.get("Indestab"), er_voksen: false, group: true}),
+                 m(UiDeltagereTable, {stab: Stab.get("Indestab"), er_voksen: false, group: true}),
                  m(H1, {break: true}, "Ledere"),
-                 m(ViewDeltagereTable, {stab: Stab.get("Indestab"), er_voksen: true, group: false}),
+                 m(UiDeltagereTable, {stab: Stab.get("Indestab"), er_voksen: true, group: false}),
                  m(H1, "Opsummering"),
                  m(Summary, {stab: Stab.get("Indestab")}),
                 );
@@ -155,9 +155,9 @@ export class PageDeltagerePiltestab {
     public view(vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: Stab.get("Piltestab"), er_voksen: false, group: true}),
+                 m(UiDeltagereTable, {stab: Stab.get("Piltestab"), er_voksen: false, group: true}),
                  m(H1, {break: true}, "Ledere"),
-                 m(ViewDeltagereTable, {stab: Stab.get("Piltestab"), er_voksen: true, group: false}),
+                 m(UiDeltagereTable, {stab: Stab.get("Piltestab"), er_voksen: true, group: false}),
                  m(H1, "Opsummering"),
                  m(Summary, {stab: Stab.get("Piltestab")}),
                 );
@@ -169,9 +169,9 @@ export class PageDeltagereVæbnerstab {
     public view(vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: Stab.get("Væbnerstab"), er_voksen: false, group: true}),
+                 m(UiDeltagereTable, {stab: Stab.get("Væbnerstab"), er_voksen: false, group: true}),
                  m(H1, {break: true}, "Ledere"),
-                 m(ViewDeltagereTable, {stab: Stab.get("Væbnerstab"), er_voksen: true, group: false}),
+                 m(UiDeltagereTable, {stab: Stab.get("Væbnerstab"), er_voksen: true, group: false}),
                  m(H1, "Opsummering"),
                  m(Summary, {stab: Stab.get("Væbnerstab")}),
                 );
@@ -183,9 +183,9 @@ export class PageDeltagereResten {
     public view(vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: Stab.get("Resten"), er_voksen: false, group: true}),
+                 m(UiDeltagereTable, {stab: Stab.get("Resten"), er_voksen: false, group: true}),
                  m(H1, {break: true}, "Ledere"),
-                 m(ViewDeltagereTable, {stab: Stab.get("Resten"), er_voksen: true, group: false}),
+                 m(UiDeltagereTable, {stab: Stab.get("Resten"), er_voksen: true, group: false}),
                  m(H1, "Opsummering"),
                  m(Summary, {stab: Stab.get("Resten")}),
                 );
@@ -197,9 +197,9 @@ export class PageDeltagereAlle {
     public view(vnode: m.Vnode) {
         return m("div",
                  m(H1, "Børn"),
-                 m(ViewDeltagereTable, {stab: null, er_voksen: false, group: true}),
+                 m(UiDeltagereTable, {stab: null, er_voksen: false, group: true}),
                  m(H1, {break: true}, "Ledere"),
-                 m(ViewDeltagereTable, {stab: null, er_voksen: true, group: true}),
+                 m(UiDeltagereTable, {stab: null, er_voksen: true, group: true}),
                  m(H1, {break: true}, "Opsummering"),
                  m(Summary, {stab: null}),
                 );

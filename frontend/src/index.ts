@@ -3,26 +3,26 @@ import Stream from "mithril/stream";
 import {ErrorView} from "src/error";
 import {ModalBase} from "src/modal";
 import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {PageDeltager} from "src/deltagere/page_deltager";
 import {
     PageDeltagereIndestab,
     PageDeltagerePiltestab,
     PageDeltagereVæbnerstab,
     PageDeltagereResten,
     PageDeltagereAlle,
-} from "src/deltagere/basic";
-import {PageDeltagereProblematiske} from "src/deltagere/problematiske";
-import {PageDeltagereTransport} from "src/deltagere/transport";
-import {PageDeltagereFødselsdage} from "src/deltagere/fødselsdage";
-import {PageDeltagereKøkken} from "src/deltagere/køkken";
-import {PageDeltagereLejrlæge} from "src/deltagere/lejrlæge";
-import {PageDeltagereSøg} from "src/deltagere/søg";
-import {PageDeltager} from "src/deltagere/deltager";
+}                                   from "src/deltagere/lister/basic";
+import {PageDeltagereProblematiske} from "src/deltagere/lister/page_deltagere_problematiske";
+import {PageDeltagereTransport}     from "src/deltagere/lister/page_deltagere_transport";
+import {PageDeltagereFødselsdage}   from "src/deltagere/lister/page_deltagere_fødselsdage";
+import {PageDeltagereKøkken}        from "src/deltagere/lister/page_deltagere_køkken";
+import {PageDeltagereLejrlæge}      from "src/deltagere/lister/page_deltagere_lejrlæge";
+import {PageDeltagereSøg}           from "src/deltagere/lister/page_deltagere_søg";
 
-import {PageDeltagereAfkrydsning} from "src/deltagere/afkrydsning";
-import {PageDeltagereTelefoner} from "src/deltagere/telefoner";
-import {PageDeltagereSangbog} from "src/deltagere/sangbog";
-import {PageDeltagerePost} from "src/deltagere/post";
-import {PageDeltagereVæbnerkop} from "src/deltagere/væbnerkop";
+import {PageDeltagereAfkrydsning}   from "src/deltagere/lister/page_deltagere_afkrydsning";
+import {PageDeltagereTelefoner}     from "src/deltagere/lister/page_deltagere_telefoner";
+import {PageDeltagereSangbog}       from "src/deltagere/lister/page_deltagere_sangbog";
+import {PageDeltagerePost}          from "src/deltagere/lister/page_deltagere_post";
+import {PageDeltagereVæbnerkop}     from "src/deltagere/lister/page_deltagere_væbnerkop";
 
 import {PageLivgrupperAdminOld} from "src/livgrupper/old";
 import {PageMinus} from "src/livgrupper/minus/page";
