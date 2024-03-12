@@ -1,7 +1,8 @@
 import m from "mithril";
 import {error} from "src/error";
 import {$it, Iter, foo} from "src/lib/iter";
-import {DELTAGER_SERVICE, Deltager} from "src/services/deltager_service";
+import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {Deltager} from "src/deltagere/model_deltager";
 import {Stab, Patrulje, Tilstede, DAYS, DATES, TILMELDING_HEADERS} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "src/utils";
 import {UiDays} from "src/deltagere/ui_days";

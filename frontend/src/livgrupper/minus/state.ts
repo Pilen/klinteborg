@@ -1,6 +1,7 @@
 import {Stab, Patrulje, Tilstede, DAYS, DATES, START_DATE} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, addDays} from "src/utils";
-import {DELTAGER_SERVICE, Deltager} from "src/services/deltager_service";
+import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {Deltager} from "src/deltagere/model_deltager";
 import {GRUPPE_SERVICE, Gruppe} from "src/services/gruppe_service";
 import {StateArbejdsbyrdeBesvarelser} from "src/livgrupper/arbejdsbyrde/besvarelser";
 import {StateCustomScores} from "src/livgrupper/arbejdsbyrde/custom_scores";

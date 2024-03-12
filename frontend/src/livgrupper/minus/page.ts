@@ -4,7 +4,8 @@ import {$it, Iter} from "src/lib/iter";
 import {openModal, closeModal, ModalBase} from "src/modal";
 import {load} from "src/load";
 
-import {DELTAGER_SERVICE, Deltager} from "src/services/deltager_service";
+import {DELTAGER_SERVICE} from "src/services/deltager_service";
+import {Deltager} from "src/deltagere/model_deltager";
 import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "src/utils";
 import {UiDays} from "src/deltagere/ui_days";
 import {StateMinus} from "src/livgrupper/minus/state";
