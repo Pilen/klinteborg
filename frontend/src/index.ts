@@ -30,9 +30,9 @@ import {PageArbejdsbyrde} from "src/livgrupper/arbejdsbyrde/page";
 
 import {PageGrupper} from "src/sekretær/grupper";
 
-import {PageFrontpage} from "src/frontpage/frontpage";
+import {PageFrontpage} from "src/frontpage/page_frontpage";
 
-import {PageAdmin} from "src/admin/admin";
+import {PageAdmin} from "src/admin/page_admin";
 
 import {UiLoadingApi} from "src/api";
 import {formatDateTime} from "src/utils";
