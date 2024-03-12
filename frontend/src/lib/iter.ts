@@ -759,6 +759,82 @@ export class Iter<T> {
         return acc;
     }
 
+    public Sum() {
+        let it = this.it;
+        let sum = 0;
+        for (let item of it) {
+            sum += item;
+        }
+        return sum;
+    }
+    public Min() {
+        let it = this.it;
+        let result = undefined;
+        for (let item of it) {
+            if (result === undefined) {
+                result = item;
+            } else {
+                if (item < result) {
+                    result = item
+                }
+            }
+        }
+        return result;
+    }
+    public Max() {
+        let it = this.it;
+        let result = undefined;
+        for (let item of it) {
+            if (result === undefined) {
+                result = item;
+            } else {
+                if (item > result) {
+                    result = item
+                }
+            }
+        }
+        return result;
+    }
+    public MinKey(key: string | number | ((T) => any)) {
+        let it = this.it;
+        let extract = make_extract(key);
+        let max = undefined;
+        let result = undefined;
+        for (let item of it) {
+            let value = extract(item)
+            if (max === undefined) {
+                max = value;
+                result = item;
+            } else {
+                if (value < max) {
+                    max = value;
+                    result = item;
+                }
+            }
+        }
+        return result;
+    }
+
+    public MaxKey(key: string | number | ((T) => any)) {
+        let it = this.it;
+        let extract = make_extract(key);
+        let max = undefined;
+        let result = undefined;
+        for (let item of it) {
+            let value = extract(item)
+            if (max === undefined) {
+                max = value;
+                result = item;
+            } else {
+                if (value > max) {
+                    max = value;
+                    result = item;
+                }
+            }
+        }
+        return result;
+    }
+
     public List(): Array<T> {
         let it = this.it;
         let list = [];
