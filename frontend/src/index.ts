@@ -25,7 +25,7 @@ import {PageDeltagerePost}          from "src/deltagere/lister/page_deltagere_po
 import {PageDeltagereVæbnerkop}     from "src/deltagere/lister/page_deltagere_væbnerkop";
 
 import {PageLivgrupperAdminOld} from "src/livgrupper/old";
-import {PageMinus} from "src/livgrupper/minus/page";
+import {PageMinus} from "src/livgrupper/minus/page_minus";
 import {PageArbejdsbyrde} from "src/livgrupper/arbejdsbyrde/page";
 
 import {PageGrupper} from "src/grupper/page_grupper";

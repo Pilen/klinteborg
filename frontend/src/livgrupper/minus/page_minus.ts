@@ -8,7 +8,7 @@ import {SERVICE_DELTAGER} from "src/deltagere/service_deltager";
 import {Deltager} from "src/deltagere/model_deltager";
 import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "src/utils";
 import {UiDays} from "src/deltagere/ui_days";
-import {StateMinus} from "src/livgrupper/minus/state";
+import {StateMinus} from "src/livgrupper/minus/state_minus";
 import {UiSummary} from "src/livgrupper/minus/ui_summary";
 import {UiAlgorithmMinusSettings} from "src/livgrupper/minus/ui_algorithm_minus_settings";
 import {SERVICE_SETTINGS} from "src/settings";

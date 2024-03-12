@@ -19,9 +19,8 @@ class Minus {
     periods: number;
 
     lscore: number;
-
-
 }
+
 class ModelDeltagerMinus {
     deltager: Deltager;
     arbejdsbyrder: Array<ModelArbejdsbyrde> = [];
