@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+from typing import Any
 from pathlib import Path
 from backend.database import TX, DB, Json, Jsonb
 # from backend.api.user import make_login
@@ -8,7 +9,8 @@ from backend.tasks import load_arbejdsbyrde_besvarelser
 import backend.deltagere
 from backend.config import config
 
-
+class Interface:
+    pass
 class Subparser(Interface):
     def add_argument(self, *args: Any, **kwargs: Any) -> None:
         ...
@@ -17,23 +19,30 @@ COMMANDS = []
 class Command:
     command: str
     help: str
-    def args(self, subparser: Subparser) -> None:
+    @staticmethod
+    def args(subparser: Subparser) -> None:
         pass
+
+    @staticmethod
     def run(tx: TX, args: argparse.Namespace) -> None:
         pass
-    def __init_subclass__(self, cls) -> None:
+
+    def __init_subclass__(cls) -> None:
         COMMANDS.append(cls)
+
 
 class Invite(Command):
     command = "invite"
     help = "Invite a user"
-    def args(self, subparser: Subparser) -> None:
+    @staticmethod
+    def args(subparser: Subparser) -> None:
         # subparser = subparsers.add_parser("invite", help="Invite a user")
         # subparser.set_defaults(command_func=command_invite)
         subparser.add_argument("--fdfid", required=False, type=int, help="The fdfid of the user to invite")
         subparser.add_argument("--email", type=str, help="The email of the user to invite, if not specified the users email is used")
         subparser.add_argument("--print", action="store_true", help="Print the login link")
 
+    @staticmethod
     def run(tx: TX, args: argparse.Namespace) -> None:
         fdfid = args.fdfid
         email = args.email
@@ -49,13 +58,23 @@ class Invite(Command):
 class LoadJson(Command):
     command = "load-json"
     help = "Load json into the database"
-    def args(self, subparser: Subparser) -> None:
+
+    @staticmethod
+    def args(subparser: Subparser) -> None:
         subparser.add_argument("--file", required=True, type=Path, help="Path to the json file")
+        subparser.add_argument("--delete-all", action="store_true", help="Delete all rows before loading")
+
+    @staticmethod
     def run(tx: TX, args: argparse.Namespace) -> None:
+        print("in LoadJson")
         path = args.file
-        data = json.loads(path.read_text())
+        text = path.read_text()
+        data = json.loads(text)
         for table, rows in data.items():
             print(f"Inserting into {table}")
+            if args.delete_all:
+                assert table.isidentifier()
+                tx.execute(f"""DELETE FROM {table}""")
             for row in rows:
                 for k, v in row.items():
                     if isinstance(v, dict):
@@ -66,8 +85,13 @@ class LoadJson(Command):
 class ImportDeltagere(Command):
     command = "import-deltagere"
     help = "Import all the deltager data from excel file"
-    def args(self, subparser: Subparser) -> None:
+
+    @staticmethod
+    def args(subparser: Subparser) -> None:
         # subparser.add_argument("--file", required=True, type=Path, help="Path to the json file")
+        pass
+
+    @staticmethod
     def run(tx: TX, args: argparse.Namespace) -> None:
         print(config.data_dir)
         backend.deltagere.import_excel(tx)
@@ -76,8 +100,12 @@ class ImportDeltagere(Command):
 class LoadArbejdsbyrdeBesvarelser(Command):
     command = "load-arbejdsbyrde-besvarelser"
     help = "Load arbejdsbyrde besvarelser from csv file"
-    def args(self, subparser: Subparser) -> None:
+
+    @staticmethod
+    def args(subparser: Subparser) -> None:
         subparser.add_argument("--file", required=True, type=Path, help="Path to the csv file")
+
+    @staticmethod
     def run(tx: TX, args: argparse.Namespace) -> None:
         posts, weighting = load_arbejdsbyrde_besvarelser.load(args.file)
         print(len(posts))
@@ -92,9 +120,13 @@ class LoadArbejdsbyrdeBesvarelser(Command):
 class SaveJson(Command):
     command = "save-json"
     help = "Export some data to json"
-    def args(self, subparser: Subparser) -> None:
+
+    @staticmethod
+    def args(subparser: Subparser) -> None:
         subparser.add_argument("--table", required=True, action="append")
         subparser.add_argument("--output", required=True, type=Path, help="Path to the output file")
+
+    @staticmethod
     def run(tx: TX, args: argparse.Namespace) -> None:
         result = {}
         for table in args.table:
@@ -115,17 +147,18 @@ def main() -> None:
 
     for command in COMMANDS:
         subparser = subparsers.add_parser(command.command, help=command.help)
+        command.args(subparser)
         subparser.set_defaults(command=command)
 
-    args = parser.parse_args()
-    with DB() as db:
-        with db.transaction() as tx:
-            command = args.command()
-            command.run(tx, args)
+    # args = parser.parse_args()
+    # with DB() as db:
+    #     with db.transaction() as tx:
+    #         command = args.command()
+    #         command.run(tx, args)
 
     args = parser.parse_args()
     with DB() as db:
         with db.transaction() as tx:
-            args.command_func(tx, args)
+            args.command.run(tx, args)
 if __name__ == "__main__":
     main()
