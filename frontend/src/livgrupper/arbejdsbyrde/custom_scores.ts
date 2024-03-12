@@ -7,7 +7,7 @@ import {load} from "src/load";
 // import {ModelArbejdsbyrde} from "src/livgrupper/arbejdsbyrde/models";
 import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
 import {Gruppe} from "src/grupper/model_gruppe";
-import {MINUS_SERVICE} from "src/services/minus_service";
+import {SERVICE_MINUS} from "src/minus/service_minus";
 import {SERVICE_ARBEJDSBYRDE_BESVARELSE, SERVICE_CUSTOM_SCORES} from "src/livgrupper/arbejdsbyrde/services";
 
 
@@ -68,7 +68,7 @@ export class StateCustomScores {
 
 export class UiCustomScores {
     public view(vnode: m.Vnode<{state: StateCustomScores, besvarelser: StateArbejdsbyrdeBesvarelser}>) {
-        let grupperGivingMinus = MINUS_SERVICE.grupperGivingMinus();
+        let grupperGivingMinus = SERVICE_MINUS.grupperGivingMinus();
         let content = $it(vnode.attrs.besvarelser.arbejdsbyrder)
             .mapRuns((arbejdsbyrde) => arbejdsbyrde.gruppe.type,
                      (arbejdsbyrde) => {

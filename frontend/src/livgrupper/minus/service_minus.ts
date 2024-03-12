@@ -1,12 +1,7 @@
 import m from "mithril";
 import {error} from "src/error";
 
-class MinusBesvarelse {
-    constructor () {
-
-    }
-}
-class MinusService {
+class ServiceMinus {
     _grupperGivingMinus: Set<string> | undefined;
 
     public isReady() {
@@ -59,4 +54,4 @@ class MinusService {
 
 }
 
-export const MINUS_SERVICE = new MinusService();
+export const SERVICE_MINUS = new ServiceMinus();

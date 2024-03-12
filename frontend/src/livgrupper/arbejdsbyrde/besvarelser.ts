@@ -7,13 +7,13 @@ import {ModelArbejdsbyrde} from "src/livgrupper/arbejdsbyrde/models";
 import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
 import {Gruppe} from "src/grupper/model_gruppe";
 
-import {MINUS_SERVICE} from "src/services/minus_service";
+import {SERVICE_MINUS} from "src/minus/service_minus";
 import {SERVICE_ARBEJDSBYRDE_BESVARELSE} from "src/livgrupper/arbejdsbyrde/services";
 
 
 
 export class StateArbejdsbyrdeBesvarelser {
-    loaders = [() => MINUS_SERVICE.grupperGivingMinus(),
+    loaders = [() => SERVICE_MINUS.grupperGivingMinus(),
                () => SERVICE_GRUPPE.grupper(),
                () => SERVICE_ARBEJDSBYRDE_BESVARELSE.besvarelser()(),
                // SERVICE_ARBEJDSBYRDE_BESVARELSE.besvarelser(), // TODO: figure out how I want this
@@ -75,7 +75,7 @@ export class StateArbejdsbyrdeBesvarelser {
 
     public load() {
         let besvarelser = SERVICE_ARBEJDSBYRDE_BESVARELSE.besvarelser()();
-        let grupperGivingMinus = MINUS_SERVICE.grupperGivingMinus();
+        let grupperGivingMinus = SERVICE_MINUS.grupperGivingMinus();
         let grupper = SERVICE_GRUPPE.grupper();
 
         this.vægtninger = $it(besvarelser).get("vægtning").List();
@@ -131,7 +131,7 @@ export class StateArbejdsbyrdeBesvarelser {
 
 export class UiArbejdsbyrdeBesvarelser {
     public view(vnode: m.Vnode<{state: StateArbejdsbyrdeBesvarelser}>) {
-        let grupperGivingMinus = MINUS_SERVICE.grupperGivingMinus();
+        let grupperGivingMinus = SERVICE_MINUS.grupperGivingMinus();
         let content = $it(vnode.attrs.state.arbejdsbyrder)
             .mapRuns((x) => x.gruppe.type,
                      (gruppe) => {

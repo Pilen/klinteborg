@@ -5,18 +5,18 @@ import {load} from "src/load";
 
 import {ModelArbejdsbyrdeBesvarelse} from "src/livgrupper/arbejdsbyrde/models";
 import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
-import {MINUS_SERVICE} from "src/services/minus_service";
+import {SERVICE_MINUS} from "src/minus/service_minus";
 import {SERVICE_ARBEJDSBYRDE_BESVARELSE} from "src/livgrupper/arbejdsbyrde/services";
 
 export class StateArbejdsbyrdeBesvarelse {
     besvarelse: ModelArbejdsbyrdeBesvarelse | undefined;
-    loaders = [() => MINUS_SERVICE.grupperGivingMinus(),
-               () =>  SERVICE_GRUPPE.grupper()];
+    loaders = [() => SERVICE_MINUS.grupperGivingMinus(),
+               () => SERVICE_GRUPPE.grupper()];
     isLoaded = false;
 
     public load() {
         // this.besvarelse = [];
-        let grupperGivingMinus = MINUS_SERVICE.grupperGivingMinus();
+        let grupperGivingMinus = SERVICE_MINUS.grupperGivingMinus();
         let grupper = $it(SERVICE_GRUPPE.grupper())
             .filter((gruppe) => grupperGivingMinus.has(gruppe.gruppe))
             .sort("type")
