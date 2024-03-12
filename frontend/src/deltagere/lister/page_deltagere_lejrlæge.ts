@@ -4,7 +4,7 @@ import {$it, Iter, foo} from "src/lib/iter";
 import {DELTAGER_SERVICE, Deltager} from "src/services/deltager_service";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
-import {Days} from "src/deltagere/lister/core";
+import {UiDays} from "src/deltagere/ui_days";
 
 export class PageDeltagereLejrlæge {
     table(er_voksen: boolean) {
@@ -30,7 +30,7 @@ export class PageDeltagereLejrlæge {
                           //   m("thead", m("tr", m("th", "Alder"))),
                           //   m("tbody", m("tr", m("td", deltager.fødselsdato ? calculateAge(deltager.fødselsdato) : "?"))),
                           //   m("thead", m("tr", m("th", "Dage"))),
-                          //   m("tbody", m("tr", m("td", m(Days, {days: deltager.dage})))),
+                          //   m("tbody", m("tr", m("td", m(UiDays, {days: deltager.dage})))),
                           //   m("thead", m("tr", m("th", "Ankomst"))),
                           //   m("tbody", m("tr", m("td", deltager.ankomst_tidspunkt))),
                           //   m("thead", m("tr", m("th", "Afrejse"))),
@@ -72,7 +72,7 @@ export class PageDeltagereLejrlæge {
                           //       m("td", deltager.fødselsdato ? calculateAge(deltager.fødselsdato): "?")),
                           //     m("tr",
                           //       m("td", m("b", "Dage")),
-                          //       m("td", m(Days, {days: deltager.dage}))),
+                          //       m("td", m(UiDays, {days: deltager.dage}))),
                           //     m("tr",
                           //       m("td", m("b", "Ankomst")),
                           //       m("td", deltager.ankomst_dato ? formatDate(deltager.ankomst_dato) : "", deltager.ankomst_tidspunkt)),
@@ -126,7 +126,7 @@ export class PageDeltagereLejrlæge {
                           //       m("td", "")),
                           //     m("tr",
                           //       m("td", m("b", "Dage")),
-                          //       m("td", m(Days, {days: deltager.dage})),
+                          //       m("td", m(UiDays, {days: deltager.dage})),
                           //       m("td", m("b", "Ankomst")),
                           //       m("td", deltager.ankomst_dato ? formatDate(deltager.ankomst_dato) : "", deltager.ankomst_tidspunkt),
                           //       m("td", m("b", "Afrejse")),
@@ -200,7 +200,7 @@ export class PageDeltagereLejrlæge {
                                 m("td", "")),
                               m("tr",
                                 m("td", m("b", "Dage")),
-                                m("td", m(Days, {days: deltager.dage})),
+                                m("td", m(UiDays, {days: deltager.dage})),
                                 m("td", m("b", "Ankomst")),
                                 m("td", deltager.ankomst_dato ? formatDate(deltager.ankomst_dato) : "", (deltager.ankomst_tidspunkt ? ` (kl. ${deltager.ankomst_tidspunkt})` : null)),
                                 m("td", m("b", "Afrejse")),
@@ -288,7 +288,7 @@ export class PageDeltagereLejrlæge {
                           //      )),
                           //   m("tbody",
                           //     m("tr",
-                          //       m("td", m(Days, {days: deltager.dage})),
+                          //       m("td", m(UiDays, {days: deltager.dage})),
                           //       m("td", deltager.ankomst_tidspunkt),
                           //       m("td", deltager.afrejse_tidspunkt),
                           //      ))),

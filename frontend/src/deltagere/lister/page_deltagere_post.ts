@@ -4,7 +4,7 @@ import {$it, Iter, foo} from "src/lib/iter";
 import {DELTAGER_SERVICE, Deltager} from "src/services/deltager_service";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
-import {Days} from "src/deltagere/lister/core";
+import {UiDays} from "src/deltagere/ui_days";
 
 export class PageDeltagerePost {
     public view(vnode: m.Vnode<{er_voksen: boolean}>) {
@@ -21,7 +21,7 @@ export class PageDeltagerePost {
                             m("td", deltager.patrulje.abbreviation),
                             m("td", deltager.bordhold_uge1),
                             m("td", deltager.bordhold_uge2),
-                            m("td", m(Days, {days: deltager.dage})),
+                            m("td", m(UiDays, {days: deltager.dage})),
                             m("td", deltager.ankomst_tidspunkt),
                             m("td", deltager.afrejse_tidspunkt),
                            ))

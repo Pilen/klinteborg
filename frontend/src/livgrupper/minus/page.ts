@@ -6,7 +6,7 @@ import {load} from "src/load";
 
 import {DELTAGER_SERVICE, Deltager} from "src/services/deltager_service";
 import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "src/utils";
-import {Days} from "src/deltagere/lister/core";
+import {UiDays} from "src/deltagere/ui_days";
 import {StateMinus} from "src/livgrupper/minus/state";
 import {UiSummary} from "src/livgrupper/minus/ui_summary";
 import {UiAlgorithmMinusSettings} from "src/livgrupper/minus/ui_algorithm_minus_settings";
@@ -35,7 +35,7 @@ class PageOverview {
                 m("tr", m("td", ".")),
                 m("tr",
                   m("td", deltager.navn),
-                  m("td", m(Days, {days: deltager.dage})),
+                  m("td", m(UiDays, {days: deltager.dage})),
                   m("td", deltager.ankomst_tidspunkt),
                   m("td", deltager.afrejse_tidspunkt),
 

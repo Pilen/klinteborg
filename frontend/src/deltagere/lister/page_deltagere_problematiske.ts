@@ -4,7 +4,7 @@ import {$it, Iter, foo} from "src/lib/iter";
 import {DELTAGER_SERVICE, Deltager} from "src/services/deltager_service";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "src/utils";
-import {Days} from "src/deltagere/lister/core";
+import {UiDays} from "src/deltagere/ui_days";
 
 
 export class PageDeltagereProblematiske {
@@ -24,7 +24,7 @@ export class PageDeltagereProblematiske {
                    // // m("td", deltager.køn.abbreviation),
                    // m("td", deltager.er_voksen ? "Voksen" : "Barn"),
                    // m("td", deltager.patrulje.name),
-                   // // m("td", m(Days, {days: deltager.dage})),
+                   // // m("td", m(UiDays, {days: deltager.dage})),
                    // m("td", deltager.uge1 ? "Ja" : "Nej"),
                    // m("td", deltager.uge2 ? "Ja" : "Nej"),
                    // m("td", deltager.ankomst_type),

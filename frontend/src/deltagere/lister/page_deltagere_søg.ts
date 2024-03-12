@@ -4,7 +4,7 @@ import {$it, Iter, foo} from "src/lib/iter";
 import {DELTAGER_SERVICE, Deltager} from "src/services/deltager_service";
 import {Stab, Patrulje, Tilstede, DAYS, DATES} from "src/definitions";
 import {H1, H2, H5, Tr, formatDate, calculateAge} from "src/utils";
-import {Days} from "src/deltagere/lister/core";
+import {UiDays} from "src/deltagere/ui_days";
 
 
 export class PageDeltagereSøg {
