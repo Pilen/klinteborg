@@ -15,6 +15,7 @@ def all(tx: TX):
 @router.post("/set")
 def set(tx: TX,
         setting: Annotated[str, Body()],
+        category: Annotated[str, Body()],
         value: Annotated[Any, Body()]):
     # tx.execute("""
     # INSERT INTO settings (setting, value)
@@ -26,6 +27,7 @@ def set(tx: TX,
 
     tx.execute("""
     UPDATE settings
-    SET value = ?
-    WHERE setting = ?
-    """, Json(value), setting)
+       SET value = ?
+     WHERE setting = ?
+       AND category = ?
+    """, Json(value), setting, category)

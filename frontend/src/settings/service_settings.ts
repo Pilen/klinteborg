@@ -25,12 +25,12 @@ class ServiceSettings {
         }
         return this._settings
     }
-    public get(setting: string) {
+    public get(setting: string, category: string) {
         if (this._settings === undefined) {
             return undefined;
         }
         for (let s of this._settings) {
-            if (setting === s.setting) {
+            if (setting === s.setting && category === s.category) {
                 return s;
             }
         }
@@ -41,3 +41,41 @@ class ServiceSettings {
     }
 }
 export const SERVICE_SETTINGS = new ServiceSettings();
+
+
+
+class ServiceSettings2 {
+    apiStreamSettings = new ApiStream<Array<ModelSetting>>()
+        .get("/api/settings/all")
+
+    public settings() {
+        return this.apiStreamSettings.stream();
+    }
+    public getValue(setting: string, category: string) {
+        // TODO: should this method be discarded / get functionality of get?
+        let settings = this.apiStreamSettings.stream()();
+        if (settings === undefined) {
+            return undefined;
+        }
+        for (let s of settings) {
+            if (setting === s.setting && category === s.category) {
+                return s;
+            }
+        }
+        console.error(`Unknown setting: ${category}.${setting}`);
+    }
+    public get(setting: string, category: string) {
+        return this.apiStreamSettings.stream().map((settings) => {
+            for (let s of settings) {
+                if (setting === s.setting && category === s.category) {
+                    return s;
+                }
+            }
+            console.error(`Unknown setting: ${category}.${setting}`);
+        });
+    }
+    public set(setting: string, category: string, value: any) {
+        console.error("Not implemented yet!");
+    }
+
+}

@@ -4,10 +4,11 @@ import {$it} from "src/lib/iter";
 
 
 export class UiSetting {
-    setting;
-    values;
+    setting: ModelSetting;
+    value: any;
     raw: string;
     bad: boolean;
+    modified: boolean;
     public oninit(vnode: m.Vnode<{setting: ModelSetting}>) {
         // if (vnode.attrs.setting instanceof string) {
         //     this.setting = SERVICE_SETTINGS.get(vnode.attrs.setting);
@@ -20,9 +21,11 @@ export class UiSetting {
         this.value = this.setting.value;
         this.raw = ""; // TODO: unparse this.value
         this.bad = false;
+        this.modified = false;
     }
     public change(raw) {
         this.raw = raw;
+        this.modified = true;
         if (this.setting.type == "int") {
             let value = parseInt(raw);
             if (isNaN(value)) {
@@ -44,15 +47,15 @@ export class UiSetting {
     }
     public view(vnode: m.Vnode<{setting: ModelSetting}>) {
         return m("tr",
-                 m("td", this.setting.setting),
+                 m("td", {title: this.setting.description}, this.setting.setting),
                  m("td", m("input",
                            {value: this.value,
                             oninput: (e) => this.change(e.currentTarget.value)})),
-                 m("td", m("button",
+                 m("td", this.modified ? m("button",
                            {"class": this.bad ? "red" : "green",
-                            "style": this.bad ? {cursor: "disabled"} : null,
+                            "style": this.bad ? {cursor: "disabled !important"} : null,
                             onclick: (e) => this.save()},
-                           "Gem")),
+                                           "Gem") : ""),
                 );
 
     }
