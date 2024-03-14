@@ -3,12 +3,12 @@ import {error} from "src/error";
 import {$it, Iter, foo} from "src/lib/iter";
 import {load} from "src/load";
 
-import {SERVICE_MINUS} from "src/livgrupper/minus/service_minus";
+import {SERVICE_GIVING_MINUS} from "src/livgrupper/minus/service_giving_minus";
 
 
 export class UiCustomScores {
     public view(vnode: m.Vnode<{state: StateCustomScores, besvarelser: StateArbejdsbyrdeBesvarelser}>) {
-        let grupperGivingMinus = SERVICE_MINUS.grupperGivingMinus();
+        let grupperGivingMinus = SERVICE_GIVING_MINUS.grupperGivingMinus();
         let content = $it(vnode.attrs.besvarelser.arbejdsbyrder)
             .mapRuns((arbejdsbyrde) => arbejdsbyrde.gruppe.type,
                      (arbejdsbyrde) => {

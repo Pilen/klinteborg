@@ -3,19 +3,19 @@ import {$it} from "src/lib/iter";
 
 import {ModelArbejdsbyrdeBesvarelse} from "src/livgrupper/arbejdsbyrde/model_arbejdsbyrde_besvarelse";
 import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
-import {SERVICE_MINUS} from "src/livgrupper/minus/service_minus";
+import {SERVICE_GIVING_MINUS} from "src/livgrupper/minus/service_giving_minus";
 import {SERVICE_ARBEJDSBYRDE_BESVARELSE} from "src/livgrupper/arbejdsbyrde/service_arbejdsbyrde_besvarelse";
 
 
 export class StateArbejdsbyrdeBesvarelse {
     besvarelse: ModelArbejdsbyrdeBesvarelse | undefined;
-    loaders = [() => SERVICE_MINUS.grupperGivingMinus(),
+    loaders = [() => SERVICE_GIVING_MINUS.grupperGivingMinus(),
                () => SERVICE_GRUPPE.grupper()];
     isLoaded = false;
 
     public load() {
         // this.besvarelse = [];
-        let grupperGivingMinus = SERVICE_MINUS.grupperGivingMinus();
+        let grupperGivingMinus = SERVICE_GIVING_MINUS.grupperGivingMinus();
         let grupper = $it(SERVICE_GRUPPE.grupper())
             .filter((gruppe) => grupperGivingMinus.has(gruppe.gruppe))
             .sort("type")

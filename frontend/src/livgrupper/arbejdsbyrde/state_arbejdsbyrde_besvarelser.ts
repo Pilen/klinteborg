@@ -4,13 +4,13 @@ import {$it} from "src/lib/iter";
 
 import {ModelArbejdsbyrde} from "src/livgrupper/arbejdsbyrde/model_arbejdsbyrde";
 
-import {SERVICE_MINUS} from "src/livgrupper/minus/service_minus";
+import {SERVICE_GIVING_MINUS} from "src/livgrupper/minus/service_giving_minus";
 import {SERVICE_ARBEJDSBYRDE_BESVARELSE} from "src/livgrupper/arbejdsbyrde/service_arbejdsbyrde_besvarelse";
 import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
 
 
 export class StateArbejdsbyrdeBesvarelser {
-    loaders = [() => SERVICE_MINUS.grupperGivingMinus(),
+    loaders = [() => SERVICE_GIVING_MINUS.grupperGivingMinus(),
                () => SERVICE_GRUPPE.grupper(),
                () => SERVICE_ARBEJDSBYRDE_BESVARELSE.besvarelser()(),
                // SERVICE_ARBEJDSBYRDE_BESVARELSE.besvarelser(), // TODO: figure out how I want this
@@ -72,7 +72,7 @@ export class StateArbejdsbyrdeBesvarelser {
 
     public load() {
         let besvarelser = SERVICE_ARBEJDSBYRDE_BESVARELSE.besvarelser()();
-        let grupperGivingMinus = SERVICE_MINUS.grupperGivingMinus();
+        let grupperGivingMinus = SERVICE_GIVING_MINUS.grupperGivingMinus();
         let grupper = SERVICE_GRUPPE.grupper();
 
         this.vægtninger = $it(besvarelser).get("vægtning").List();

@@ -5,11 +5,11 @@ import {load} from "src/load";
 
 import {SERVICE_GRUPPE} from "src/grupper/service_gruppe";
 import {Gruppe} from "src/grupper/model_gruppe";
-import {SERVICE_MINUS} from "src/livgrupper/minus/service_minus";
+import {SERVICE_GIVING_MINUS} from "src/livgrupper/minus/service_giving_minus";
 
 export class UiMinusGrupper {
     public view(vnode: m.Vnode) {
-        let grupperGivingMinus = SERVICE_MINUS.grupperGivingMinus();
+        let grupperGivingMinus = SERVICE_GIVING_MINUS.grupperGivingMinus();
         let grupper = SERVICE_GRUPPE.grupper()
         if (grupperGivingMinus === undefined || grupper == undefined) {
             return m("div", "loading");
@@ -19,12 +19,12 @@ export class UiMinusGrupper {
                      (gruppe) => {
                          if (grupperGivingMinus.has(gruppe.gruppe)) {
                              return m("tr",
-                                      {onclick: (e) => SERVICE_MINUS.setGruppeGivingMinus(gruppe.gruppe, false)},
+                                      {onclick: (e) => SERVICE_GIVING_MINUS.setGruppeGivingMinus(gruppe.gruppe, false)},
                                       m("td", m("a.button", m("b", gruppe.gruppe))),
                                       m("td", m("span.fdficon", "\uf2d2")));
                          } else {
                              return m("tr",
-                                      {onclick: (e) => SERVICE_MINUS.setGruppeGivingMinus(gruppe.gruppe, true)},
+                                      {onclick: (e) => SERVICE_GIVING_MINUS.setGruppeGivingMinus(gruppe.gruppe, true)},
                                       m("td", m("a.button", gruppe.gruppe)),
                                       m("td", m("span", "")));
                          }

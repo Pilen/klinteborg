@@ -2,12 +2,12 @@ import m from "mithril";
 import {error} from "src/error";
 import {load} from "src/load";
 
-import {SERVICE_MINUS} from "src/livgrupper/minus/service_minus";
+import {SERVICE_GIVING_MINUS} from "src/livgrupper/minus/service_giving_minus";
 
 
 export class UiArbejdsbyrdeBesvarelser {
     public view(vnode: m.Vnode<{state: StateArbejdsbyrdeBesvarelser}>) {
-        let grupperGivingMinus = SERVICE_MINUS.grupperGivingMinus();
+        let grupperGivingMinus = SERVICE_GIVING_MINUS.grupperGivingMinus();
         let content = $it(vnode.attrs.state.arbejdsbyrder)
             .mapRuns((x) => x.gruppe.type,
                      (gruppe) => {

@@ -1,7 +1,7 @@
 import m from "mithril";
 import {error} from "src/error";
 
-class ServiceMinus {
+class ServiceGivingMinus {
     _grupperGivingMinus: Set<string> | undefined;
 
     public isReady() {
@@ -53,5 +53,22 @@ class ServiceMinus {
     // }
 
 }
+export const SERVICE_GIVING_MINUS = new ServiceGivingMinus();
 
-export const SERVICE_MINUS = new ServiceMinus();
+class ServiceGivingMinus2 {
+    apiStreamGrupperGivingMinus = new ApiStream<Set<string>>()
+        .get("/api/minus/grupper-giving-minus")
+        .then((result) => new Set(result));
+
+    apiSet = new Api()
+        .post("/api/minus/set-gruppe-giving-minus")
+        .then(this.apiStreamGrupperGivingMinus);
+
+    public grupperGivingMinus() {
+        return this.apiStreamGrupperGivingMinus.stream();
+    }
+
+    public setGruppeGivingMinus(gruppe: strin, minus: boolean) {
+        this.apiSet.request({gruppe: gruppe, minus: minus});
+    }
+}
