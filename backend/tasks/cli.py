@@ -66,7 +66,7 @@ class LoadJson(Command):
 
     @staticmethod
     def run(tx: TX, args: argparse.Namespace) -> None:
-        print("in LoadJson")
+        print(f"Loading {args.file}")
         path = args.file
         text = path.read_text()
         data = json.loads(text)
@@ -108,9 +108,8 @@ class LoadArbejdsbyrdeBesvarelser(Command):
     @staticmethod
     def run(tx: TX, args: argparse.Namespace) -> None:
         posts, weighting = load_arbejdsbyrde_besvarelser.load(args.file)
-        print(len(posts))
-        print(len(weighting))
         result = load_arbejdsbyrde_besvarelser.transform(posts, weighting)
+        print(len(result))
         for item in result:
             tx.insert("arbejdsbyrde_besvarelser",
                       grupper = Json(item["grupper"]),

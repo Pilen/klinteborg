@@ -457,6 +457,7 @@ table > thead {
        page-break-inside: never; */
     position: sticky;
     inset-block-start: 0px;
+    background-color: var(--hvid);
 }
 table > thead > tr {
     /* border-bottom: 1px solid #f0f0f0; */
