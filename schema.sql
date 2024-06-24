@@ -5,11 +5,13 @@ BEGIN;
 -- Settings
 --------------------------------------------------------------------------------
 CREATE TABLE settings (
-	setting			text	PRIMARY KEY,
-	value			jsonb	NOT NULL,
+	setting		text,
+	category	text,
+	value		jsonb	NOT NULL,
 	default_value	jsonb	NOT NULL,
-	type			text	NOT NULL,
-	description		text	NOT NULL
+	type		text	NOT NULL,
+	description	text	NOT NULL,
+	PRIMARY KEY(setting, category)
 );
 
 --------------------------------------------------------------------------------
@@ -39,18 +41,49 @@ CREATE TABLE login_tokens (
 	login_token		text		NOT NULL UNIQUE,
 	used			boolean		NOT NULL,
 	expires_at		timestamptz	NOT NULL,
-	created_at		timestamptz NOT NULL
+	created_at		timestamptz	NOT NULL
 );
 
 -- We keep the old tokens around after expiry / logout, this is to prevent a new token from having the same value as a previous one, thus keeping you logged in.
 -- They can / should be cleared out periodically
 CREATE TABLE session_tokens (
-	fdfid			integer		REFERENCES fdfids,
+	fdfid		integer		REFERENCES fdfids,
 	session_token	text		NOT NULL,
-	expires_at		timestamptz, -- Null means expired
-	created_at		timestamptz,
+	expires_at	timestamptz, -- Null means expired
+	created_at	timestamptz,
 	UNIQUE(fdfid, session_token)
 );
+
+
+-- --------------------------------------------------------------------------------
+-- -- Login
+-- --------------------------------------------------------------------------------
+
+-- -- A simple table of all the users that may login
+-- -- Rember to clear both login_permissions and login_sessions to log someone out.
+-- CREATE TABLE login_permissions (
+-- 	fdfid	integer	REFERENCES fdfids	UNIQUE
+-- );
+
+-- CREATE TABLE login_passwords (
+-- 	fdfid	integer REFERENCES fdfids	PRIMARY KEY
+-- 	password_hash	text, -- Null means disabled login
+-- 	created_at	timestamptz,
+-- );
+
+-- CREATE TABLE login_sessions (
+-- 	fdfid	integer		REFERENCES fdfids	PRIMARY KEY,
+-- 	session_token	text	NOT NULL,
+-- 	expires_at	timestamptz, -- Null means expired,
+-- 	created_at	timestamptz,
+-- );
+
+-- CREATE TABLE login_register_tokens {
+-- 	fdfid	integer	REFERENCES fdfids	PRIMARY KEY,
+-- 	register_token	text NOT NULL,
+-- 	created_at	timestamptz,
+-- }
+
 
 
 --------------------------------------------------------------------------------
@@ -67,7 +100,6 @@ CREATE TABLE user_permissions (
 	automatic	boolean			NOT NULL, -- Has this permission been granted automatically by the system
 	UNIQUE(fdfid, permission, automatic)
 );
-
 
 
 --------------------------------------------------------------------------------
@@ -113,26 +145,25 @@ CREATE TYPE Transport AS ENUM (
 
 
 CREATE TABLE deltagere (
-	fdfid				integer		REFERENCES fdfids,
-	row					jsonb		NOT NULL,
+	fdfid			integer		REFERENCES fdfids,
+	tilmelding		jsonb		NOT NULL,
 	tilmeldt_dato		timestamptz	NOT NULL,
 	sidst_ændret_dato	timestamptz	NOT NULL,
-	problemer			text[]		NOT NULL,
-	navn				text		NOT NULL,
+	problemer		text[]		NOT NULL,
+	navn			text		NOT NULL,
 	gammelt_medlemsnummer	int,
-	fødselsdato			date		NOT NULL,
-	adresse				text		NOT NULL,
-	telefon				text		NOT NULL,
-	pårørende			jsonb		NOT NULL,
-	er_voksen			boolean		NOT NULL,
-	stab				Stab		NOT NULL,
-	patrulje			Patrulje	NOT NULL,
+	fødselsdato		date		NOT NULL,
+	adresse			text		NOT NULL,
+	telefon			text,
+	pårørende		jsonb		NOT NULL,
+	er_voksen		boolean		NOT NULL,
+	stab			Stab		NOT NULL,
+	patrulje		Patrulje	NOT NULL,
 	bordhold_uge1		integer,
 	bordhold_uge2		integer,
-	uge1				boolean		NOT NULL,
-	uge2				boolean		NOT NULL,
-	dage				Tilstede[]	NOT NULL,
-	dage_x				Tilstede[],
+	uge1			boolean		NOT NULL,
+	uge2			boolean		NOT NULL,
+	dage			Tilstede[]	NOT NULL,
 	upræcis_periode		boolean		NOT NULL,
 	ankomst_type		Transport	NOT NULL,
 	ankomst_dato		date,
@@ -160,8 +191,8 @@ CREATE TABLE grupper (
 	gruppe	text		PRIMARY KEY,
 	type	Gruppe_type	NOT NULL,
 	beskrivelse	text	NOT NULL,
-	minimum_antal	integer, -- null means no limit
-	maximum_antal	integer  -- null means no limit
+	minimum_antal	integer,	-- null means no limit
+	maximum_antal	integer		-- null means no limit
 );
 
 CREATE TABLE gruppe_medlemmer (
@@ -193,8 +224,50 @@ CREATE TABLE gruppe_medlemmer (
 
 
 
+
 --------------------------------------------------------------------------------
--- Livgrupper
+-- Calendar / Events
+--------------------------------------------------------------------------------
+
+CREATE TYPE Tidsrum AS ENUM (
+	'Før morgenmad',
+	'Morgenmad',
+	'1. Livperiode',
+	'Middagsbadning',
+	'Frokost',
+	'Siesta',
+	'Sjade',
+	'2. Livperiode',
+	'Aftenbadning',
+	'Aftensmad',
+	'Lejrbål',
+	'Efter Retræte',
+	'Nat'
+);
+
+CREATE TYPE Begivenhed_type AS ENUM (
+	'Måltid',
+	'Badning',
+	'Livgrupper',
+	'Aktivitet',
+	'Andet',
+	'Program'
+);
+CREATE TABLE begivenheder (
+	id			SERIAL		PRIMARY KEY,
+	name			text		NOT NULL,
+	detaljer		text		NOT NULL,
+	type			Begivenhed_type	NOT NULL,
+	start_time		timestamptz	NOT NULL,
+	end_time		timestamptz	NOT NULL,
+	primary_activity	boolean		NOT NULL,
+	tidsrum			Tidsrum		NOT NULL
+);
+
+
+
+--------------------------------------------------------------------------------
+-- Arbejdsbyrder / Minus
 --------------------------------------------------------------------------------
 
 CREATE TABLE grupper_med_minus (
@@ -203,7 +276,7 @@ CREATE TABLE grupper_med_minus (
 );
 
 CREATE TABLE arbejdsbyrde_besvarelser (
-	id			SERIAL	PRIMARY KEY,
+	id		SERIAL	PRIMARY KEY,
 	grupper		json	NOT NULL,
 	vægtning	int
 );
@@ -212,6 +285,56 @@ CREATE TABLE arbejdsbyrde_custom_scores (
 	gruppe	text				REFERENCES grupper,
 	score	double precision	NOT NULL,
 	UNIQUE(gruppe)
+);
+
+
+--------------------------------------------------------------------------------
+-- Livgrupper
+--------------------------------------------------------------------------------
+
+CREATE TABLE ledere_antal_livgrupper (
+	fdfid	int	REFERENCES fdfids,
+	antal_uge1	int	NOT NULL,
+	antal_uge2	int	NOT NULL,
+	locked		boolean NOT NULL,
+	UNIQUE(fdfid)
+);
+CREATE TYPE LivgruppePeriode AS ENUM (
+	'1. Periode',
+	'2. Periode',
+	'Heldags',
+	'Nat'
+);
+CREATE TYPE Livgruppe_type AS ENUM (
+	'Andet',
+	'Heldags',
+	'Hold-Sport',
+	'Krea',
+	'Rolig',
+	'Speciel',
+	'Stor'
+);
+
+CREATE TABLE livgruppe_definitioner (
+	id		SERIAL	PRIMARY KEY,
+	livgruppe	text	NOT NULL,
+	beskrivelse	text	NOT NULL,
+	link		text	NOT NULL,
+	type	Livgruppe_type	NOT NULL,
+	år		int[]	NOT NULL
+);
+CREATE TABLE livgrupper (
+	id		SERIAL	PRIMARY KEY,
+	livdef_id	int	REFERENCES livgruppe_definitioner (id),
+	periode		LivgruppePeriode	NOT NULL,
+	begivenhed	int 	REFERENCES begivenheder (id),
+	pladser		int	NOT NULL
+);
+
+CREATE TABLE livgruppe_ledere (
+	livgruppe_id	int	REFERENCES livgrupper (id),
+	fdfid		int	REFERENCES fdfids,
+	UNIQUE (livgruppe_id, fdfid)
 );
 
 
