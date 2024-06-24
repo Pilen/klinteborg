@@ -10,22 +10,13 @@ cd "$DIRECTORY";
 ## Parse args
 ################################################################################
 RUN_IN_DOCKER=""
-IS_DEV=""
-IS_PRODUCTION=""
-
+ENV=()
 ARGS=()
 while [[ $# -gt 0 ]]; do
     case $1 in
-        -d|--docker)
-            RUN_IN_DOCKER="$1"
+        --env)
             shift
-            ;;
-        --dev)
-            IS_DEV="$1"
-            shift
-            ;;
-        --prod|--production)
-            IS_PRODUCTION="$1"
+            ENV+=("$1")
             shift
             ;;
         -*|--*)
@@ -43,10 +34,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-if [[ "$IS_DEV" != "" && "$IS_PRODUCTION" != "" ]]; then
-    echo "ERROR: Only one of $IS_DEV or $IS_PRODUCTION can be specified at the same time"
-fi
-
 if [[ "${#ARGS[@]}" == 0 ]]; then
     echo "ERROR: No command given"
     exit 1
@@ -57,20 +44,35 @@ COMMAND="${ARGS[0]}"
 ARGS=("${ARGS[@]:1}")
 
 
+
 ################################################################################
 ## Run in docker container
 ## and call this script recursively
 ################################################################################
 
+if [ -f /.dockerenv ]; then
+    RUN_IN_DOCKER=""
+else
+    RUN_IN_DOCKER="yes"
+fi
+
 DOCKER_FLAGS=()
 function ENTER_DOCKER() {
     IMAGE="$1"
     shift;
+    ENV_LIST=()
+    for env in ${ENV[@]}; do
+        ENV_LIST+=("--env")
+        ENV_LIST+=("$env")
+    done
     if [ -n "$RUN_IN_DOCKER" ]; then
-        docker run --rm -it --net="host" --volume="$PWD:/app" --env TERM -w /app -u "$(id --user):$(id --group)" "${DOCKER_FLAGS[@]}" "$IMAGE" bash ./run.sh $IS_DEV $IS_PRODUCTION "$COMMAND" "${ARGS[@]}"
+        docker run --rm -it --net="host" --volume="$PWD:/app" --env TERM -w /app -u "$(id --user):$(id --group)" "${DOCKER_FLAGS[@]}" "$IMAGE" bash ./run.sh "${ENV_LIST[@]}" "$COMMAND" "${ARGS[@]}"
         exit;
+    else
+        export PATH="$HOME/.local/bin:$HOME/remoteconfig/scripts:$PATH"
     fi
 }
+
 
 
 ################################################################################
@@ -79,19 +81,17 @@ function ENTER_DOCKER() {
 
 # set -a makes all variable definitions be exported by default
 # Remember to put ./ in source, else it will try to source command if it is found in $PATH
-# if [[ "$RUN_IN_DOCKER" == "" ]]; then
-if [[ "$IS_DEV" != "" ]]; then
-    set -a
-    source "./deploy/dev.env"
-    set +a
-fi
-if [[ "$IS_PRODUCTION" != "" ]]; then
-    set -a
-    source "./deploy/production.env"
-    set +a
-fi
-# fi
 
+for env in ${ENV[@]}; do
+    if [ -f "$env" ]; then
+        set -a
+        source "$(realpath $env)"
+        set +a
+    else
+        echo "env file not found: $env"
+        exit 1
+    fi
+done
 
 
 
@@ -156,8 +156,9 @@ case $COMMAND in
         docker stack rm klinteborg
         ;;
     psql)
-        docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} -e PSQL_HISTORY="/runtime/psql_history" -e HISTSIZE="-1" --volume "${HISTORY_MOUNT}:/runtime" postgres:15.0 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} --dbname ${POSTGRES_DATABASE}
+        echo docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} -e PSQL_HISTORY="/runtime/psql_history" -e HISTSIZE="-1" --volume "${HISTORY_MOUNT}:/runtime" postgres:15.0 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} --dbname ${POSTGRES_DATABASE}
         ;;
+
     reset-database)
         set -x
         # https://stackoverflow.com/questions/17449420/postgresql-unable-to-drop-database-because-of-some-auto-connections-to-db
@@ -168,6 +169,24 @@ case $COMMAND in
         docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} --volume "${PWD}:/mount" postgres:15.0 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} --dbname ${POSTGRES_DATABASE} --file /mount/schema.sql
 
         curl localhost:8000/api/database/pool/check
+        ;;
+    setup-database)
+        DOCKER_FLAGS=(--volume "${DATA_MOUNT}:${DATA_DIR}")
+        ENTER_DOCKER klinteborg
+        ./venv/bin/python3 -m backend.tasks.cli import-deltagere
+
+        ./venv/bin/python3 -m backend.tasks.cli load-json --file runtime/data/settings.json
+        ./venv/bin/python3 -m backend.tasks.cli load-json --file runtime/data/permissions.json
+        ./venv/bin/python3 -m backend.tasks.cli load-json --file runtime/data/grupper.json
+        ./venv/bin/python3 -m backend.tasks.cli load-json --file runtime/data/gruppe_medlemmer.json
+        ./venv/bin/python3 -m backend.tasks.cli load-json --file runtime/data/default.json
+        # ./venv/bin/python3 -m backend.tasks.cli load-json --file runtime/data/livgrupper.json
+
+        ./venv/bin/python3 -m backend.tasks.cli load-arbejdsbyrde-besvarelser --file runtime/data/livgrupper.csv
+
+        # event.registration.xls
+        # stamdata.xls
+
         ;;
 
     build)
