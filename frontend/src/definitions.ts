@@ -203,7 +203,8 @@ export const TILMELDING_HEADERS = [
 ]
 
 
-export const START_DATE = new Date("2023/06/24");
+// export const START_DATE = new Date("2023/06/24");
+export const START_DATE = new Date("2024/06/29");
 export const END_DATE = addDays(START_DATE, 14);
 export const DATES = [
     addDays(START_DATE, 0),  // 1. Lørdag

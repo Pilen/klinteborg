@@ -15,7 +15,7 @@ def download():
         now = datetime.datetime.now()
         download_dir = config.download_dir / now.isoformat()
         tmp_dir = download_dir / "tmp"
-        download_dir.mkdir(exists_ok=False)
+        download_dir.mkdir(exist_ok=False)
         tmp_dir.mkdir()
 
         # Open driver

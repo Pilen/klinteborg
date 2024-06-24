@@ -34,9 +34,18 @@ def load(path):
             elif post:
                 triplets = []
                 for before, during, experience in make_triplets(it):
+                    before, during, experience = before.strip("?"), during.strip("?"), experience.strip("?")
+                    if before == "-":
+                        before = ""
                     before = int(before) if before != "" else None
                     if during == "0-6":
                         during = "6"
+                    if during == "4/9":
+                        during = "6"
+                    if during == "pi+3":
+                        during = "6"
+                    if during == "4.5":
+                        during = "4"
                     during = int(during) if during != "" else None
                     experience = experience.lower() == "x"
                     triplets.append((before, during, experience))

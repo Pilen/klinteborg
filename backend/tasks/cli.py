@@ -6,7 +6,7 @@ from pathlib import Path
 from backend.database import TX, DB, Json, Jsonb
 # from backend.api.user import make_login
 from backend.tasks import load_arbejdsbyrde_besvarelser
-import backend.deltagere
+import backend.deltagere.deltager
 from backend.config import config
 
 class Interface:
@@ -19,6 +19,7 @@ COMMANDS = []
 class Command:
     command: str
     help: str
+
     @staticmethod
     def args(subparser: Subparser) -> None:
         pass
@@ -94,7 +95,8 @@ class ImportDeltagere(Command):
     @staticmethod
     def run(tx: TX, args: argparse.Namespace) -> None:
         print(config.data_dir)
-        backend.deltagere.import_excel(tx)
+        # backend.deltagere.import_excel(tx)
+        backend.deltagere.deltager.import_data(tx)
 
 
 class LoadArbejdsbyrdeBesvarelser(Command):
