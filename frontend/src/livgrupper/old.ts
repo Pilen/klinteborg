@@ -60,7 +60,7 @@ export class PageLivgrupperAdminOld {
             .filter((deltager) => deltager.navn === "Nadia Sara Møller" || (
                 deltager.er_voksen &&
                 deltager.patrulje != Patrulje.get("Numlinge") &&
-                deltager.patrulje != Patrulje.get("?") &&
+                // deltager.patrulje != Patrulje.get("?") &&
                 deltager.patrulje != Patrulje.get("Ingen")))
             .sort((deltager) => [
                 // deltager.patrulje.order,
@@ -98,8 +98,10 @@ export class PageLivgrupperAdminOld {
                 "   ",
                 handle(deltager, 14),
                 "], ",
-                deltager.row["Leder-oplysninger / Tutvagt"] ? "True" : "False", ", ",
-                deltager.row["Leder-oplysninger / Bundgarnspæl"] ? "True" : "False",
+                // deltager.tilmelding["Leder-oplysninger / Tutvagt"] ? "True" : "False", ", ",
+                // deltager.tilmelding["Leder-oplysninger / Bundgarnspæl"] ? "True" : "False",
+                deltager.tilmelding["Leder-oplysninger / Tutvagt"], ", ",
+                deltager.tilmelding["Leder-oplysninger / Bundgarnspæl"],
                 "),\n",
 
             ])

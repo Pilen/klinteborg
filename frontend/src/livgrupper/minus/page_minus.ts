@@ -29,7 +29,7 @@ class PageOverview {
     public view(vnode: m.Vnode) {
         let deltagere = $it(SERVICE_DELTAGER.deltagere() ?? [])
             .sort((deltager) => [calculateAge(deltager.fødselsdato)])
-            .filter((deltager) => (deltager.row["Deltagelse Uge 1: / Lørdag 1"] || deltager.row["Deltagelse Uge 1: / Søndag 1"] || deltager.row["Deltagelse Uge 1: / Mandag 1"] || deltager.row["Deltagelse Uge 1: / Tirsdag 1"] || deltager.row["Deltagelse Uge 1: / Onsdag 1"] || deltager.row["Deltagelse Uge 1: / Torsdag 1"] || deltager.row["Deltagelse Uge 1: / Fredag 1"] || deltager.row["Deltagelse Uge 1: / Lørdag 2"] || deltager.row["Deltagelse Uge 2: / Lørdag 2"] || deltager.row["Deltagelse Uge 2: / Søndag 2"] || deltager.row["Deltagelse Uge 2: / Mandag 2"] || deltager.row["Deltagelse Uge 2: / Tirsdag 2"] || deltager.row["Deltagelse Uge 2: / Onsdag 2"] || deltager.row["Deltagelse Uge 2: / Torsdag 2"] || deltager.row["Deltagelse Uge 2: / Fredag 2"] || deltager.row["Deltagelse Uge 2: / Lørdag 3"]))
+            .filter((deltager) => (deltager.tilmelding["Deltagelse Uge 1: / Lørdag 1"] || deltager.tilmelding["Deltagelse Uge 1: / Søndag 1"] || deltager.tilmelding["Deltagelse Uge 1: / Mandag 1"] || deltager.tilmelding["Deltagelse Uge 1: / Tirsdag 1"] || deltager.tilmelding["Deltagelse Uge 1: / Onsdag 1"] || deltager.tilmelding["Deltagelse Uge 1: / Torsdag 1"] || deltager.tilmelding["Deltagelse Uge 1: / Fredag 1"] || deltager.tilmelding["Deltagelse Uge 1: / Lørdag 2"] || deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"] || deltager.tilmelding["Deltagelse Uge 2: / Søndag 2"] || deltager.tilmelding["Deltagelse Uge 2: / Mandag 2"] || deltager.tilmelding["Deltagelse Uge 2: / Tirsdag 2"] || deltager.tilmelding["Deltagelse Uge 2: / Onsdag 2"] || deltager.tilmelding["Deltagelse Uge 2: / Torsdag 2"] || deltager.tilmelding["Deltagelse Uge 2: / Fredag 2"] || deltager.tilmelding["Deltagelse Uge 2: / Lørdag 3"]))
             .filter((deltager) => !compare(deltager))
             .map((deltager) => [
                 m("tr", m("td", ".")),
@@ -46,28 +46,28 @@ class PageOverview {
                   m("td", ""),
                   m("td", [
                       m("div.days",
-                        deltager.row["Deltagelse Uge 1: / Lørdag 1"] ? "x" : "_",
-                        deltager.row["Deltagelse Uge 1: / Søndag 1"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 1: / Lørdag 1"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 1: / Søndag 1"] ? "x" : "_",
                         ":",
-                        deltager.row["Deltagelse Uge 1: / Mandag 1"] ? "x" : "_",
-                        deltager.row["Deltagelse Uge 1: / Tirsdag 1"] ? "x" : "_",
-                        deltager.row["Deltagelse Uge 1: / Onsdag 1"] ? "x" : "_",
-                        deltager.row["Deltagelse Uge 1: / Torsdag 1"] ? "x" : "_",
-                        deltager.row["Deltagelse Uge 1: / Fredag 1"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 1: / Mandag 1"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 1: / Tirsdag 1"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 1: / Onsdag 1"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 1: / Torsdag 1"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 1: / Fredag 1"] ? "x" : "_",
                         ":",
-                        // deltager.row["Deltagelse Uge 1: / Lørdag 2"] ? "x" : "_",
-                        // deltager.row["Deltagelse Uge 2: / Lørdag 2"] ? "x" : "_",
-                        (deltager.row["Deltagelse Uge 1: / Lørdag 2"] && deltager.row["Deltagelse Uge 2: / Lørdag 2"] ? "b" : (deltager.row["Deltagelse Uge 2: / Lørdag 2"] ? "E" : (deltager.row["Deltagelse Uge 2: / Lørdag 2"] ? "T" : "_"))),
-                        deltager.row["Deltagelse Uge 2: / Søndag 2"] ? "x" : "_",
+                        // deltager.tilmelding["Deltagelse Uge 1: / Lørdag 2"] ? "x" : "_",
+                        // deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"] ? "x" : "_",
+                        (deltager.tilmelding["Deltagelse Uge 1: / Lørdag 2"] && deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"] ? "b" : (deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"] ? "E" : (deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"] ? "T" : "_"))),
+                        deltager.tilmelding["Deltagelse Uge 2: / Søndag 2"] ? "x" : "_",
 
                         ":",
-                        deltager.row["Deltagelse Uge 2: / Mandag 2"] ? "x" : "_",
-                        deltager.row["Deltagelse Uge 2: / Tirsdag 2"] ? "x" : "_",
-                        deltager.row["Deltagelse Uge 2: / Onsdag 2"] ? "x" : "_",
-                        deltager.row["Deltagelse Uge 2: / Torsdag 2"] ? "x" : "_",
-                        deltager.row["Deltagelse Uge 2: / Fredag 2"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 2: / Mandag 2"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 2: / Tirsdag 2"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 2: / Onsdag 2"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 2: / Torsdag 2"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 2: / Fredag 2"] ? "x" : "_",
                         ":",
-                        deltager.row["Deltagelse Uge 2: / Lørdag 3"] ? "x" : "_",
+                        deltager.tilmelding["Deltagelse Uge 2: / Lørdag 3"] ? "x" : "_",
                        )]))
 
             ])
@@ -120,42 +120,42 @@ function compare(deltager: Deltager) {
         f(14),
     )
     console.log(
-        h(deltager.row["Deltagelse Uge 1: / Lørdag 1"]),
-        h(deltager.row["Deltagelse Uge 1: / Søndag 1"]),
-        h(deltager.row["Deltagelse Uge 1: / Mandag 1"]),
-        h(deltager.row["Deltagelse Uge 1: / Tirsdag 1"]),
-        h(deltager.row["Deltagelse Uge 1: / Onsdag 1"]),
-        h(deltager.row["Deltagelse Uge 1: / Torsdag 1"]),
-        h(deltager.row["Deltagelse Uge 1: / Fredag 1"]),
-        // h(deltager.row["Deltagelse Uge 1: / Lørdag 2"]),
-        // h(deltager.row["Deltagelse Uge 2: / Lørdag 2"]),
-        h(deltager.row["Deltagelse Uge 1: / Lørdag 2"] && deltager.row["Deltagelse Uge 2: / Lørdag 2"] ? "X" : (deltager.row["Deltagelse Uge 2: / Lørdag 2"] ? "E" : (deltager.row["Deltagelse Uge 2: / Lørdag 2"] ? "T" : "_"))),
-        h(deltager.row["Deltagelse Uge 2: / Søndag 2"]),
-        h(deltager.row["Deltagelse Uge 2: / Mandag 2"]),
-        h(deltager.row["Deltagelse Uge 2: / Tirsdag 2"]),
-        h(deltager.row["Deltagelse Uge 2: / Onsdag 2"]),
-        h(deltager.row["Deltagelse Uge 2: / Torsdag 2"]),
-        h(deltager.row["Deltagelse Uge 2: / Fredag 2"]),
-        h(deltager.row["Deltagelse Uge 2: / Lørdag 3"]),
+        h(deltager.tilmelding["Deltagelse Uge 1: / Lørdag 1"]),
+        h(deltager.tilmelding["Deltagelse Uge 1: / Søndag 1"]),
+        h(deltager.tilmelding["Deltagelse Uge 1: / Mandag 1"]),
+        h(deltager.tilmelding["Deltagelse Uge 1: / Tirsdag 1"]),
+        h(deltager.tilmelding["Deltagelse Uge 1: / Onsdag 1"]),
+        h(deltager.tilmelding["Deltagelse Uge 1: / Torsdag 1"]),
+        h(deltager.tilmelding["Deltagelse Uge 1: / Fredag 1"]),
+        // h(deltager.tilmelding["Deltagelse Uge 1: / Lørdag 2"]),
+        // h(deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"]),
+        h(deltager.tilmelding["Deltagelse Uge 1: / Lørdag 2"] && deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"] ? "X" : (deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"] ? "E" : (deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"] ? "T" : "_"))),
+        h(deltager.tilmelding["Deltagelse Uge 2: / Søndag 2"]),
+        h(deltager.tilmelding["Deltagelse Uge 2: / Mandag 2"]),
+        h(deltager.tilmelding["Deltagelse Uge 2: / Tirsdag 2"]),
+        h(deltager.tilmelding["Deltagelse Uge 2: / Onsdag 2"]),
+        h(deltager.tilmelding["Deltagelse Uge 2: / Torsdag 2"]),
+        h(deltager.tilmelding["Deltagelse Uge 2: / Fredag 2"]),
+        h(deltager.tilmelding["Deltagelse Uge 2: / Lørdag 3"]),
     )
     return (
         true &&
-            f(0) === h(deltager.row["Deltagelse Uge 1: / Lørdag 1"]) &&
-            f(1) === h(deltager.row["Deltagelse Uge 1: / Søndag 1"]) &&
-            f(2) === h(deltager.row["Deltagelse Uge 1: / Mandag 1"]) &&
-            f(3) === h(deltager.row["Deltagelse Uge 1: / Tirsdag 1"]) &&
-            f(4) === h(deltager.row["Deltagelse Uge 1: / Onsdag 1"]) &&
-            f(5) === h(deltager.row["Deltagelse Uge 1: / Torsdag 1"]) &&
-            f(6) === h(deltager.row["Deltagelse Uge 1: / Fredag 1"]) &&
-            // f(7) === h(deltager.row["Deltagelse Uge 1: / Lørdag 2"]) &&
-            // f(8) === h(deltager.row["Deltagelse Uge 2: / Lørdag 2"]) &&
-            f(7) === h(deltager.row["Deltagelse Uge 1: / Lørdag 2"] && deltager.row["Deltagelse Uge 2: / Lørdag 2"] ? "X" : (deltager.row["Deltagelse Uge 2: / Lørdag 2"] ? "E" : (deltager.row["Deltagelse Uge 2: / Lørdag 2"] ? "T" : "_"))) &&
-            f(8) === h(deltager.row["Deltagelse Uge 2: / Søndag 2"]) &&
-            f(9) === h(deltager.row["Deltagelse Uge 2: / Mandag 2"]) &&
-            f(10) === h(deltager.row["Deltagelse Uge 2: / Tirsdag 2"]) &&
-            f(11) === h(deltager.row["Deltagelse Uge 2: / Onsdag 2"]) &&
-            f(12) === h(deltager.row["Deltagelse Uge 2: / Torsdag 2"]) &&
-            f(13) === h(deltager.row["Deltagelse Uge 2: / Fredag 2"]) &&
-            f(14) === h(deltager.row["Deltagelse Uge 2: / Lørdag 3"])
+            f(0) === h(deltager.tilmelding["Deltagelse Uge 1: / Lørdag 1"]) &&
+            f(1) === h(deltager.tilmelding["Deltagelse Uge 1: / Søndag 1"]) &&
+            f(2) === h(deltager.tilmelding["Deltagelse Uge 1: / Mandag 1"]) &&
+            f(3) === h(deltager.tilmelding["Deltagelse Uge 1: / Tirsdag 1"]) &&
+            f(4) === h(deltager.tilmelding["Deltagelse Uge 1: / Onsdag 1"]) &&
+            f(5) === h(deltager.tilmelding["Deltagelse Uge 1: / Torsdag 1"]) &&
+            f(6) === h(deltager.tilmelding["Deltagelse Uge 1: / Fredag 1"]) &&
+            // f(7) === h(deltager.tilmelding["Deltagelse Uge 1: / Lørdag 2"]) &&
+            // f(8) === h(deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"]) &&
+            f(7) === h(deltager.tilmelding["Deltagelse Uge 1: / Lørdag 2"] && deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"] ? "X" : (deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"] ? "E" : (deltager.tilmelding["Deltagelse Uge 2: / Lørdag 2"] ? "T" : "_"))) &&
+            f(8) === h(deltager.tilmelding["Deltagelse Uge 2: / Søndag 2"]) &&
+            f(9) === h(deltager.tilmelding["Deltagelse Uge 2: / Mandag 2"]) &&
+            f(10) === h(deltager.tilmelding["Deltagelse Uge 2: / Tirsdag 2"]) &&
+            f(11) === h(deltager.tilmelding["Deltagelse Uge 2: / Onsdag 2"]) &&
+            f(12) === h(deltager.tilmelding["Deltagelse Uge 2: / Torsdag 2"]) &&
+            f(13) === h(deltager.tilmelding["Deltagelse Uge 2: / Fredag 2"]) &&
+            f(14) === h(deltager.tilmelding["Deltagelse Uge 2: / Lørdag 3"])
     );
 }

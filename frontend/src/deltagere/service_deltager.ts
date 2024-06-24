@@ -26,7 +26,7 @@ class ServiceDeltager {
                 deltager.stab = Stab.get(deltager.stab);
                 // @ts-ignore
                 deltager.patrulje = Patrulje.get(deltager.patrulje);
-                deltager.køn = Køn.get(deltager.row["Køn"]);
+                deltager.køn = Køn.get(deltager.tilmelding["Køn"]);
                 deltager.tilmeldt_dato = new Date(deltager.tilmeldt_dato);
                 deltager.sidst_ændret_dato = new Date(deltager.sidst_ændret_dato);
                 deltager.fødselsdato = deltager.fødselsdato ? new Date(deltager.fødselsdato) : null;

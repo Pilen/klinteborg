@@ -25,7 +25,7 @@ export class PageDeltager {
                      m("tr", m("td", "Tilmeldt"), m("td", formatDateTime(deltager.tilmeldt_dato))),
                      m("tr", m("td", "Sidst ændret"), m("td", formatDateTime(deltager.sidst_ændret_dato))),
                      m("tr", m("td", "FDF id"), m("td", deltager.fdfid)),
-                     // m("tr", m("td", ""), m("td", deltager.row)),
+                     // m("tr", m("td", ""), m("td", deltager.tilmelding)),
                      // m("tr", m("td", ""), m("td", deltager.problemer)),
                      m("tr", m("td", "Navn"), m("td", deltager.navn)),
                      m("tr", m("td", "Medlemsnummer"), m("td", deltager.gammelt_medlemsnummer)),
@@ -62,7 +62,7 @@ export class PageDeltager {
                  m("table",
                    m("tbody",
                      m("tr", m("th", "Rå Tilmelding")),
-                     $it(TILMELDING_HEADERS).map((header) => m("tr", m("td", header), m("td", deltager.row[header]))).List()
+                     $it(TILMELDING_HEADERS).map((header) => m("tr", m("td", header), m("td", deltager.tilmelding[header]))).List()
                     ))
                 );
     }

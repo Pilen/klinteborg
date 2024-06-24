@@ -38,7 +38,7 @@ class UiDeltagereTable {
                               m("tr",
                                 // m("td", deltager.navn),
                                 m("td", m(m.route.Link, {selector: "a.subdued-link", href: "/deltager/:fdfid", params: {fdfid: deltager.fdfid}}, deltager.navn)),
-                                // m("td", KØN[deltager.row["Køn"]] || error(`Ukendt køn ${deltager.row["Køn"]}`)),
+                                // m("td", KØN[deltager.tilmelding["Køn"]] || error(`Ukendt køn ${deltager.tilmelding["Køn"]}`)),
                                 m("td", deltager.køn.abbreviation),
                                 m("td", deltager.patrulje.abbreviation),
                                 m("td", m(UiDays, {days: deltager.dage})),

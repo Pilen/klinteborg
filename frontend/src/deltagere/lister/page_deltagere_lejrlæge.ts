@@ -18,7 +18,7 @@ export class PageDeltagereLejrlæge {
                     .map((deltager, i) => [
                         m("div", {"class": (!(ri === 0 && i === 0) && (i % 4 === 0) ? "break" : ""), "style": "margin-top:60px;"},
                           m("h6", m(m.route.Link, {selector: "a.subdued-link", href: "/deltager/:fdfid", params: {fdfid: deltager.fdfid}}, deltager.navn)),
-                          // m("p", deltager.row["Andre oplysninger"]),
+                          // m("p", deltager.tilmelding["Andre oplysninger"]),
                           // m("table",
                           //   m("thead", m("tr", m("th", "Patrulje"))),
                           //   m("tbody", m("tr", m("td", deltager.patrulje.name))),
@@ -39,19 +39,19 @@ export class PageDeltagereLejrlæge {
                           //   m("thead", m("tr", m("th", "adresse"))),
                           //   m("tbody", m("tr", m("td", deltager.adresse))),
                           //   m("thead", m("tr", m("th", "Køresyge"))),
-                          //   m("tbody", m("tr", m("td", deltager.row["Køresyge? / Ofte køresyge (opkast)"]))),
+                          //   m("tbody", m("tr", m("td", deltager.tilmelding["Køresyge? / Ofte køresyge (opkast)"]))),
                           //   m("thead", m("tr", m("th", "Fødevareallergier / vegetar"))),
-                          //   m("tbody", m("tr", m("td", deltager.row["Har du nogen fødevareallergier eller er vegetar så skriv det her"]))),
+                          //   m("tbody", m("tr", m("td", deltager.tilmelding["Har du nogen fødevareallergier eller er vegetar så skriv det her"]))),
                           //   m("thead", m("tr", m("th", "Sygdom og medicin"))),
-                          //   m("tbody", m("tr", m("td", deltager.row["Sygdom og medicin"]))),
+                          //   m("tbody", m("tr", m("td", deltager.tilmelding["Sygdom og medicin"]))),
                           //   m("thead", m("tr", m("th", "Penicillin"))),
-                          //   m("tbody", m("tr", m("td", deltager.row["Tåler ikke penicillin? / Tåler ikke penicillin"]))),
+                          //   m("tbody", m("tr", m("td", deltager.tilmelding["Tåler ikke penicillin? / Tåler ikke penicillin"]))),
                           //   m("thead", m("tr", m("th", "Bedøvelse"))),
-                          //   m("tbody", m("tr", m("td", deltager.row["Tåler ikke bedøvelse? / Tåler ikke bedøvelse"]))),
+                          //   m("tbody", m("tr", m("td", deltager.tilmelding["Tåler ikke bedøvelse? / Tåler ikke bedøvelse"]))),
                           //   m("thead", m("tr", m("th", "Stivkrampevaccination"))),
-                          //   m("tbody", m("tr", m("td", deltager.row["Stivkrampevaccination:"]))),
+                          //   m("tbody", m("tr", m("td", deltager.tilmelding["Stivkrampevaccination:"]))),
                           //   m("thead", m("tr", m("th", "Andre helbredsoplysninger"))),
-                          //   m("tbody", m("tr", m("td", deltager.row["Andre helbredsoplysninger:"]))),
+                          //   m("tbody", m("tr", m("td", deltager.tilmelding["Andre helbredsoplysninger:"]))),
                           //  ),
 
                           // m("table",
@@ -85,25 +85,25 @@ export class PageDeltagereLejrlæge {
                           //       m("tr", m("td", deltager.adresse))),
                           //     m("tr",
                           //       m("td", m("b", "Køresyge")),
-                          //       m("td", deltager.row["Køresyge? / Ofte køresyge (opkast)"])),
+                          //       m("td", deltager.tilmelding["Køresyge? / Ofte køresyge (opkast)"])),
                           //     m("tr",
                           //       m("td", m("b", "Fødevareallergier / vegetar")),
-                          //       m("td", deltager.row["Har du nogen fødevareallergier eller er vegetar så skriv det her"])),
+                          //       m("td", deltager.tilmelding["Har du nogen fødevareallergier eller er vegetar så skriv det her"])),
                           //     m("tr",
                           //       m("td", m("b", "Sygdom og medicin")),
-                          //       m("td", deltager.row["Sygdom og medicin"])),
+                          //       m("td", deltager.tilmelding["Sygdom og medicin"])),
                           //     m("tr",
                           //       m("td", m("b", "Penicillin")),
-                          //       m("td", deltager.row["Tåler ikke penicillin? / Tåler ikke penicillin"])),
+                          //       m("td", deltager.tilmelding["Tåler ikke penicillin? / Tåler ikke penicillin"])),
                           //     m("tr",
                           //       m("td", m("b", "Bedøvelse")),
-                          //       m("td", deltager.row["Tåler ikke bedøvelse? / Tåler ikke bedøvelse"])),
+                          //       m("td", deltager.tilmelding["Tåler ikke bedøvelse? / Tåler ikke bedøvelse"])),
                           //     m("tr",
                           //       m("td", m("b", "Stivkrampevaccination")),
-                          //       m("td", deltager.row["Stivkrampevaccination:"])),
+                          //       m("td", deltager.tilmelding["Stivkrampevaccination:"])),
                           //     m("tr",
                           //       m("td", m("b", "Andre helbredsoplysninger")),
-                          //       m("td", deltager.row["Andre helbredsoplysninger:"])),
+                          //       m("td", deltager.tilmelding["Andre helbredsoplysninger:"])),
                           //    )
                           //  ),
 
@@ -137,36 +137,36 @@ export class PageDeltagereLejrlæge {
                           //       m("td", {colspan: 5}, deltager.adresse)),
                           //     m("tr",
                           //       m("td", m("b", "Stivkrampevaccination")),
-                          //       m("td", {colspan: 5}, deltager.row["Stivkrampevaccination:"])),
-                          //     deltager.row["Køresyge? / Ofte køresyge (opkast)"] ?
+                          //       m("td", {colspan: 5}, deltager.tilmelding["Stivkrampevaccination:"])),
+                          //     deltager.tilmelding["Køresyge? / Ofte køresyge (opkast)"] ?
                           //       m("tr",
                           //         m("td", m("b", "Køresyge?")),
                           //         m("td", {colspan: 5}, "Ofte køresyge (opkast)"))
                           //       : null,
-                          //     deltager.row["Tåler ikke penicillin? / Tåler ikke penicillin"] ?
+                          //     deltager.tilmelding["Tåler ikke penicillin? / Tåler ikke penicillin"] ?
                           //       m("tr",
                           //         m("td", m("b", "Penicillin?")),
                           //         m("td", {colspan: 5}, "Tåler ikke penicillin"))
                           //       : null,
-                          //     deltager.row["Tåler ikke bedøvelse? / Tåler ikke bedøvelse"] ?
+                          //     deltager.tilmelding["Tåler ikke bedøvelse? / Tåler ikke bedøvelse"] ?
                           //       m("tr",
                           //         m("td", m("b", "Tåler Bedøvelse?")),
                           //         m("td", {colspan: 5}, "Tåler ikke bedøvelse"))
                           //       : null,
-                          //     deltager.row["Har du nogen fødevareallergier eller er vegetar så skriv det her"] ?
+                          //     deltager.tilmelding["Har du nogen fødevareallergier eller er vegetar så skriv det her"] ?
                           //       m("tr",
                           //         m("td", m("b", "Fødevareallergier / vegetar")),
-                          //         m("td", {colspan: 5}, deltager.row["Har du nogen fødevareallergier eller er vegetar så skriv det her"]))
+                          //         m("td", {colspan: 5}, deltager.tilmelding["Har du nogen fødevareallergier eller er vegetar så skriv det her"]))
                           //       : null,
-                          //     deltager.row["Sygdom og medicin"] ?
+                          //     deltager.tilmelding["Sygdom og medicin"] ?
                           //       m("tr",
                           //         m("td", m("b", "Sygdom og medicin")),
-                          //         m("td", {colspan: 5}, deltager.row["Sygdom og medicin"]))
+                          //         m("td", {colspan: 5}, deltager.tilmelding["Sygdom og medicin"]))
                           //       : null,
-                          //     deltager.row["Andre helbredsoplysninger:"] ?
+                          //     deltager.tilmelding["Andre helbredsoplysninger:"] ?
                           //       m("tr",
                           //         m("td", m("b", "Andre helbredsoplysninger")),
-                          //         m("td", {colspan: 5}, deltager.row["Andre helbredsoplysninger:"]))
+                          //         m("td", {colspan: 5}, deltager.tilmelding["Andre helbredsoplysninger:"]))
                           //       : null,
                           //    )
                           //  ),
@@ -214,36 +214,36 @@ export class PageDeltagereLejrlæge {
                             m("tbody",
                               m("tr",
                                 m("td", m("b", "Stivkrampevaccination")),
-                                m("td", {colspan: 5}, deltager.row["Stivkrampevaccination:"])),
-                              deltager.row["Køresyge? / Ofte køresyge (opkast)"] ?
+                                m("td", {colspan: 5}, deltager.tilmelding["Stivkrampevaccination:"])),
+                              deltager.tilmelding["Køresyge? / Ofte køresyge (opkast)"] ?
                                 m("tr",
                                   m("td", m("b", "Køresyge?")),
                                   m("td", {colspan: 5}, "Ofte køresyge (opkast)"))
                                 : null,
-                              deltager.row["Tåler ikke penicillin? / Tåler ikke penicillin"] ?
+                              deltager.tilmelding["Tåler ikke penicillin? / Tåler ikke penicillin"] ?
                                 m("tr",
                                   m("td", m("b", "Penicillin?")),
                                   m("td", {colspan: 5}, "Tåler ikke penicillin"))
                                 : null,
-                              deltager.row["Tåler ikke bedøvelse? / Tåler ikke bedøvelse"] ?
+                              deltager.tilmelding["Tåler ikke bedøvelse? / Tåler ikke bedøvelse"] ?
                                 m("tr",
                                   m("td", m("b", "Tåler Bedøvelse?")),
                                   m("td", {colspan: 5}, "Tåler ikke bedøvelse"))
                                 : null,
-                              deltager.row["Har du nogen fødevareallergier eller er vegetar så skriv det her"] ?
+                              deltager.tilmelding["Har du nogen fødevareallergier eller er vegetar så skriv det her"] ?
                                 m("tr",
                                   m("td", m("b", "Fødevareallergier / vegetar")),
-                                  m("td", {colspan: 5}, deltager.row["Har du nogen fødevareallergier eller er vegetar så skriv det her"]))
+                                  m("td", {colspan: 5}, deltager.tilmelding["Har du nogen fødevareallergier eller er vegetar så skriv det her"]))
                                 : null,
-                              deltager.row["Sygdom og medicin"] ?
+                              deltager.tilmelding["Sygdom og medicin"] ?
                                 m("tr",
                                   m("td", m("b", "Sygdom og medicin")),
-                                  m("td", {colspan: 5}, deltager.row["Sygdom og medicin"]))
+                                  m("td", {colspan: 5}, deltager.tilmelding["Sygdom og medicin"]))
                                 : null,
-                              deltager.row["Andre helbredsoplysninger:"] ?
+                              deltager.tilmelding["Andre helbredsoplysninger:"] ?
                                 m("tr",
                                   m("td", m("b", "Andre helbredsoplysninger")),
-                                  m("td", {colspan: 5}, deltager.row["Andre helbredsoplysninger:"]))
+                                  m("td", {colspan: 5}, deltager.tilmelding["Andre helbredsoplysninger:"]))
                                 : null,
                              )),
                           deltager.pårørende.length > 0 ?
@@ -315,13 +315,13 @@ export class PageDeltagereLejrlæge {
                           //      )),
                           //   m("tbody",
                           //     m("tr",
-                          //       m("td", deltager.row["Køresyge? / Ofte køresyge (opkast)"]),
-                          //       m("td", deltager.row["Har du nogen fødevareallergier eller er vegetar så skriv det her"]),
-                          //       m("td", deltager.row["Sygdom og medicin"]),
-                          //       m("td", deltager.row["Tåler ikke penicillin? / Tåler ikke penicillin"]),
-                          //       m("td", deltager.row["Tåler ikke bedøvelse? / Tåler ikke bedøvelse"]),
-                          //       m("td", deltager.row["Stivkrampevaccination:"]),
-                          //       m("td", deltager.row["Andre helbredsoplysninger:"]),
+                          //       m("td", deltager.tilmelding["Køresyge? / Ofte køresyge (opkast)"]),
+                          //       m("td", deltager.tilmelding["Har du nogen fødevareallergier eller er vegetar så skriv det her"]),
+                          //       m("td", deltager.tilmelding["Sygdom og medicin"]),
+                          //       m("td", deltager.tilmelding["Tåler ikke penicillin? / Tåler ikke penicillin"]),
+                          //       m("td", deltager.tilmelding["Tåler ikke bedøvelse? / Tåler ikke bedøvelse"]),
+                          //       m("td", deltager.tilmelding["Stivkrampevaccination:"]),
+                          //       m("td", deltager.tilmelding["Andre helbredsoplysninger:"]),
                           //      ))),
                           // m("table", m("thead", m("tr", m("th", "Kontaktperson"), m("th", "email"), m("th", "telefon"))),
                           //   m("tbody",

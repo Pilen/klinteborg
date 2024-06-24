@@ -24,19 +24,19 @@ export class PageDeltagereSangbog {
 
         function f(key) {
         let content = $it(SERVICE_DELTAGER.deltagere())
-            .filter((deltager) => deltager.row["Sangbog"])
+            .filter((deltager) => deltager.tilmelding["Sangbog"])
             .filter(key)
-            // .sort((deltager) => [deltager.row["Sangbog"], deltager.er_voksen, deltager.dage, deltager.navn, deltager.patrulje.order])
+            // .sort((deltager) => [deltager.tilmelding["Sangbog"], deltager.er_voksen, deltager.dage, deltager.navn, deltager.patrulje.order])
             .sort((deltager) => [deltager.bordhold_uge1 || deltager.bordhold_uge2, deltager.er_voksen, deltager.navn])
             .map((deltager) =>
                 m("tr",
                   m("td", m(m.route.Link, {selector: "a.subdued-link", href: "/deltager/:fdfid", params: {fdfid: deltager.fdfid}}, deltager.navn)),
-                  m("td", deltager.row["Sangbog"].includes(" med ") ? "spiral" : "almindelig"),
+                  m("td", deltager.tilmelding["Sangbog"].includes(" med ") ? "spiral" : "almindelig"),
                   m("td", deltager.bordhold_uge1),
                   m("td", deltager.bordhold_uge2),
                   m("td", deltager.patrulje.name),
                   m("td", m(UiDays, {days: deltager.dage})),
-                  // m("td", deltager.row["Sangbog"]),
+                  // m("td", deltager.tilmelding["Sangbog"]),
                  ))
             .List();
             return m("table",
@@ -53,14 +53,14 @@ export class PageDeltagereSangbog {
         }
 
 
-            // .mapRuns((deltager) => deltager.row["Sangbog"],
+            // .mapRuns((deltager) => deltager.tilmelding["Sangbog"],
             //          (deltager) => m("tr",
             //                          m("td", m(m.route.Link, {selector: "a.subdued-link", href: "/deltager/:fdfid", params: {fdfid: deltager.fdfid}}, deltager.navn)),
             //                          m("td", deltager.patrulje.name),
             //                          m("td", m(UiDays, {days: deltager.dage})),
             //                          m("td", deltager.bordhold_uge1),
             //                          m("td", deltager.bordhold_uge2),
-            //                          // m("td", deltager.row["Sangbog"]),
+            //                          // m("td", deltager.tilmelding["Sangbog"]),
             //                         ),
             //          (deltagere, variable) => m("table",
             //                                     m("tbody",

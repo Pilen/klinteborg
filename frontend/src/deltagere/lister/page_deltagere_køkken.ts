@@ -154,7 +154,7 @@ class KøkkenDeltagere {
                             m("td", m(UiDays, {days: deltager.dage})),
                             m("td", deltager.ankomst_tidspunkt),
                             m("td", deltager.afrejse_tidspunkt),
-                            m("td", deltager.row["Har du nogen fødevareallergier eller er vegetar så skriv det her"]),
+                            m("td", deltager.tilmelding["Har du nogen fødevareallergier eller er vegetar så skriv det her"]),
                            ))
                       .List()
                  ))
