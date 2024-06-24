@@ -259,6 +259,9 @@ button.yellow {
 button.red {
     background-color: var(--efterårsrød);
 }
+button.gray {
+    background-color: var(--granit);
+}
 
 /*******************************************************************************
  * Navigation

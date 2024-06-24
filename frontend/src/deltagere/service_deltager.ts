@@ -54,3 +54,40 @@ class ServiceDeltager {
 }
 
 export const SERVICE_DELTAGER = new ServiceDeltager();
+
+
+class ServiceDeltager2 {
+    _deltager_by_fdfid: Map<number, Deltager> | undefined;
+    apiStreamDeltagere = new ApiStream<Array<Deltager>>()
+        .get("/api/deltagere/all")
+        .then((result) => {
+            this._deltager_by_fdfid = new Map();
+            for (let deltager of result) {
+                // @ts-ignore
+                deltager.stab = Stab.get(deltager.stab)
+                // @ts-ignore
+                deltager.patrulje = Patrulje.get(deltager.patrulje);
+                deltager.køn = Køn.get(deltager.tilmelding["Køn"]);
+                deltager.tilmeldt_dato = new Date(deltager.tilmeldt_dato);
+                deltager.sidst_ændret_dato = new Date(deltager.sidst_ændret_dato);
+                deltager.fødselsdato = deltager.fødselsdato ? new Date(deltager.fødselsdato) : null;
+                deltager.ankomst_dato = deltager.ankomst_dato ? new Date(deltager.ankomst_dato) : null;
+                deltager.afrejse_dato = deltager.afrejse_dato ? new Date(deltager.afrejse_dato) : null;
+
+                this._deltager_by_fdfid.set(deltager.fdfid, deltager);
+            }
+            return result;
+        })
+
+
+    public deltagere() {
+        return this.ApiStream.stream();
+    }
+
+    public getDeltager(fdfid: number): Deltager {
+        if (this._deltager_by_fdfid === undefined) {
+            return undefined;
+        }
+        return this._deltager_by_fdfid.get(fdfid);
+    }
+}

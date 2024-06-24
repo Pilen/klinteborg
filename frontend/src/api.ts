@@ -31,7 +31,11 @@ export class Api {
         return this;
     }
     public then(then) {
-        this._then = then;
+        if (then instanceof Api) {
+            this._then = () => then.newRequest();
+        } else {
+            this._then = then;
+        }
         return this;
     }
 

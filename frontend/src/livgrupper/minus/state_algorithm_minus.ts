@@ -10,19 +10,19 @@ interface Week {
 }
 
 
-WEEK1 = {
+export const WEEK_1 = {
     week: 1,
     periods: 8,
     min_periods: 1,
     max_periods: 6,
     max_score_cutoff: 25,
-    activity_bonus = 0,
-    full_camp_bonus = 0,
-    slots = 125 - 2 - 3,
-}
+    activity_bonus: 0,
+    full_camp_bonus: 0,
+    slots: 125 - 2 - 3,
+};
 
-WEEK2 = {
-    week: 2
+export const WEEK_2 = {
+    week: 2,
     periods: 8,
     min_periods: 1,
     max_periods: 6,
@@ -30,7 +30,7 @@ WEEK2 = {
     activity_bonus: 0,
     full_camp_bonus: 0,
     slots: 95,
-}
+};
 
 
 function lerp(
@@ -43,6 +43,12 @@ function lerp(
 }
 
 
+export function algorithmMinus(persons: Array<ModelDeltagerMinus>, week: Week)  {
+    let s = new StateAlgorithmMinus(persons, week)
+    s.calculate()
+    return s.errors
+}
+
 export class StateAlgorithmMinus {
     errors: Array<text> = [];
 
@@ -52,12 +58,13 @@ export class StateAlgorithmMinus {
             .sort((person) => person.arbejdsbyrde_sum)
             .List();
         this.week = week;
+        this.errors = [];
     }
 
     public calculate() {
         let g = (person) => person.minus.get(this.week.week);
-        let ratio (person) => g(person).periods / g(person).lscore;
-        let max_score = $it(this.persons).Max((person) => person.arbejdsbyrde_sum);
+        let ratio = (person) => g(person).periods / g(person).score;
+        let largest_arbejdsbyrde_sum = $it(this.persons).map((person) => person.arbejdsbyrde_sum).Max();
         let total_max_periods = $it(this.persons).map((person) => g(person).max_periods).Sum();
         if (total_max_periods < this.week.slots) {
             this.errors.push(`Der er for få personer! ${total_max_periods} < {this.week.slots}`);
@@ -66,13 +73,11 @@ export class StateAlgorithmMinus {
         $it(this.persons)
             .sideEffect((person) => {
                 let minus = g(person);
-
-                let lscore = min(max_score, this.week.MAX_SCORE_CUTOFF);
-                let score = min(self.score, self.week.MAX_SCORE_CUTOFF);
-                let lscore = lerp(score, 0, max_score, this.week.max_periods, this.week.min_periods);
-                minus.score = lscore;
-
-                minus.periods += minus.min_periods;
+                let max_score = Math.min(largest_arbejdsbyrde_sum, this.week.max_score_cutoff);
+                let arbejdsbyrde = Math.min(person.arbejdsbyrde_sum, this.week.max_score_cutoff);
+                let score = lerp(arbejdsbyrde, 0, max_score, minus.max_periods, minus.min_periods);
+                minus.score = score;
+                minus.periods = minus.min_periods;
                 slots -= minus.min_periods;
             })
             .Go();
@@ -80,19 +85,24 @@ export class StateAlgorithmMinus {
             this.errors.push(`Der var for få livgrupper til at folk kunne få deres minimum, nu er vi i underskud med ${slots}`);
         }
         while (slots > 0) {
-            let person = $it(this.persons).MinKey((person) => g(person).periods < g(person).max_periods ? ratio(person) : 1_000_000_000)
-            if (g(person).periods >= g(person).max_periods) {
+            let person = $it(this.persons).MinKey((person) => g(person).periods < g(person).max_periods ? ratio(person) : 1_000_000_000);
+            if (g(person).periods > g(person).max_periods) {
                 this.errors.push("Der er for få ledere eller for mange livgrupper");
                 break;
             }
             g(person).periods += 1;
             slots -= 1;
         }
-        if (len(this.errors) == 0) {
-            if ($it(this.persons).map((person) => g(person).periods).Sum() != this.week.slots) {
-                this.errors("Der er en regnefejl i algoritmen")
+        $it(this.persons)
+            .sideEffect((person) => {
+                g(person).ratio = ratio(person);
+            }).Go();
+        if (this.errors.length === 0) {
+            let s = $it(this.persons).map((person) => g(person).periods).Sum()
+            if (s != this.week.slots) {
+                this.errors.push(`Der er en regnefejl i algoritmen ${s} != ${this.week.slots}`)
             }
         }
-        this.persons = $it(this.persons).sort((person) => [-g(person).periods, ratio(person)]).List();
+        // this.persons = $it(this.persons).sort((person) => [-g(person).periods, ratio(person)]).List();
     }
 }

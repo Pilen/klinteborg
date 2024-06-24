@@ -15,6 +15,7 @@ class Config(BaseSettings):
     static_dir: Path
     fragment_dir: Path
     data_dir: Path
+    download_dir: Path
 
     login_expires_at: datetime.datetime
     session_expires_at: datetime.datetime

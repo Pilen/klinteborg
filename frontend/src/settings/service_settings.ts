@@ -34,7 +34,7 @@ class ServiceSettings {
                 return s;
             }
         }
-        console.error("Unknown setting");
+        console.error(`Unknown setting ${setting} ${category}`);
     }
     public set(setting: string, value: any) {
         console.error("Not implemented yet!");

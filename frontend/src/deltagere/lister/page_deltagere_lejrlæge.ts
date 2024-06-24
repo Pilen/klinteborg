@@ -345,7 +345,7 @@ export class PageDeltagereLejrlæge {
             m(H1, {break: true}, ""),
             m("div", {style: "font-size: 5em;"},
               m("h1", {style: "text-align: center; padding-top: 200px;"}, "Lejrlægelisten"),
-              m("h2", {style: "text-align: center; margin-top: 100px;"}, "Klinteborg 2023"),
+              m("h2", {style: "text-align: center; margin-top: 100px;"}, "Klinteborg 2024"),
              )
         ]
     }

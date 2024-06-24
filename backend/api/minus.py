@@ -104,3 +104,28 @@ def arbejdsbyrde_custom_score_save_all(tx: TX, scores: Annotated[dict[str, float
     tx.execute("DELETE FROM arbejdsbyrde_custom_scores")
     tx.insert_many("arbejdsbyrde_custom_scores",
                    [{"gruppe": gruppe, "score": score} for gruppe, score in scores.items()])
+
+
+@router.get("/livgruppe-antal")
+def livgruppe_antal(tx: TX):
+    rows = tx.fetch_all("SELECT * FROM ledere_antal_livgrupper")
+    return rows
+
+@pydantic.dataclasses.dataclass()
+class ModelLedereAntalLivgrupper:
+    fdfid: int
+    antal_uge1: int
+    antal_uge2: int
+    locked: bool
+
+@router.post("/save-livgruppe-antal")
+def save_livgruppe_antal(tx: TX, rows: Annotated[list[ModelLedereAntalLivgrupper], Body()]):
+    rows = [(m.fdfid, m.antal_uge1, m.antal_uge2, m.locked) for m in rows]
+    tx.execute_many("""
+    INSERT INTO   ledere_antal_livgrupper (fdfid, antal_uge1, antal_uge2, locked)
+         VALUES   (?, ?, ?, ?)
+    ON CONFLICT   (fdfid)
+    DO UPDATE SET antal_uge1 = EXCLUDED.antal_uge1,
+                  antal_uge2 = EXCLUDED.antal_uge2,
+                  locked = EXCLUDED.locked
+    """, rows)

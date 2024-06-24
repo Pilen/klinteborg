@@ -10,18 +10,25 @@ import {H1, H2, H5, Tr, formatDate, formatDateTime, calculateAge} from "src/util
 import {UiDays} from "src/deltagere/ui_days";
 import {StateMinus} from "src/livgrupper/minus/state_minus";
 import {UiSummary} from "src/livgrupper/minus/ui_summary";
+import {UiMinus} from "src/livgrupper/minus/ui_minus";
 import {UiAlgorithmMinusSettings} from "src/livgrupper/minus/ui_algorithm_minus_settings";
+import {UiSettings} from "src/settings/ui_settings";
 import {SERVICE_SETTINGS} from "src/settings/service_settings";
+import {SERVICE_DELTAGER_LIVGRUPPE_COUNT, ModelDeltagerLivgruppeCount} from "src/livgrupper/minus/service_deltager_livgruppe_count";
 
 
 export class PageMinus {
     stateMinus = new StateMinus();
+
     public view(vnode: m.Vnode) {
         return m("div",
-                 load([() => SERVICE_SETTINGS.settings()], m(UiAlgorithmMinusSettings)),
+                 load([() => SERVICE_SETTINGS.settings(), () => SERVICE_DELTAGER_LIVGRUPPE_COUNT.all()], m(UiAlgorithmMinusSettings)),
+                 load([this.stateMinus], m(UiMinus, {state: this.stateMinus})),
+                 load([this.stateMinus], m(UiMinus, {state: this.stateMinus})),
+                 // load([() => SERVICE_SETTINGS.settings()], m(UiSettings, {filter: (setting) => setting.category = "Livgrupper"})),
                  load([this.stateMinus], m(UiSummary, {state: this.stateMinus})),
-                 m(PageOverview),
-                );
+                 // // m(PageOverview),
+               );
     }
 }
 

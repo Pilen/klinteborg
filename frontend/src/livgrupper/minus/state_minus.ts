@@ -7,6 +7,8 @@ import {Gruppe} from "src/grupper/model_gruppe";
 import {StateArbejdsbyrdeBesvarelser} from "src/livgrupper/arbejdsbyrde/state_arbejdsbyrde_besvarelser";
 import {StateCustomScores} from "src/livgrupper/arbejdsbyrde/state_custom_scores";
 import {LIVGRUPPE_PERIODER, LIVGRUPPE_LEDERE} from "src/config";
+import {SERVICE_DELTAGER_LIVGRUPPE_COUNT, ModelDeltagerLivgruppeCount} from "src/livgrupper/minus/service_deltager_livgruppe_count";
+import {algorithmMinus, WEEK_1, WEEK_2} from "src/livgrupper/minus/state_algorithm_minus";
 
 
 
@@ -14,11 +16,13 @@ class Minus {
     livgruppe_periods_available: number = 0;
     other_periods_available: number = 0;
 
-    min_periods: number;
-    max_periods: number;
+    min_periods: number = 1;
+    max_periods: number = 6;
     periods: number;
 
-    lscore: number;
+    score: number = 0;
+    ratio: number = 0;
+    // lscore: number;
 }
 
 class ModelDeltagerMinus {
@@ -30,8 +34,9 @@ class ModelDeltagerMinus {
     minus: Map<int, Minus>;
 
     // algorithmStates: Map<string, StateMinusAlgorithm> = new Map();
+    modelDeltagerLivgruppeCount: ModelDeltagerLivgruppeCount;
 
-    constructor(deltager: Deltager, arbejdsbyrder: Array<ModelArbejdsbyrde>) {
+    constructor(deltager: Deltager, arbejdsbyrder: Array<ModelArbejdsbyrde>, modelDeltagerLivgruppeCount: ModelDeltagerLivgruppeCount) {
         this.deltager = deltager;
         this.arbejdsbyrder = arbejdsbyrder;
         this.arbejdsbyrde_sum = $it(arbejdsbyrder).map((arbejdsbyrde) => arbejdsbyrde.score).Reduce((x, y) => x + y, 0);
@@ -42,20 +47,21 @@ class ModelDeltagerMinus {
         this.minus.set(2, this.minus_uge2);
 
         this._calculate_periods_available();
+        this.minus_uge1.max_periods = this.minus_uge1.livgruppe_periods_available;
+        this.minus_uge2.max_periods = this.minus_uge2.livgruppe_periods_available;
 
+        this.modelDeltagerLivgruppeCount = modelDeltagerLivgruppeCount;
     }
 
     private _calculate_periods_available() {
         // TODO: handle this bettew once we got a better calendar concept
         // taken from livgrupper/old.ts
-        if (this.deltager.navn === "Ditlev Bastian Lykke Andersen") {console.log("DITLEV", this.deltager.dage)}
 
         let i = -1;
         for (let [a, b, day_name] of LIVGRUPPE_PERIODER) {
             i++;
             let day = addDays(START_DATE, i);
             let d = this.deltager.dage[i];
-            if (this.deltager.navn === "Ditlev Bastian Lykke Andersen") {console.log("DITLEV NEJ", i, d)}
             if (d === "Nej") {
                 continue;
             }
@@ -96,9 +102,6 @@ class ModelDeltagerMinus {
                 } else {
                     console.error("failure")
                 }
-            }
-            if (this.deltager.navn === "Ditlev Bastian Lykke Andersen") {
-                console.log(i, aa, a, bb, b);
             }
 
             if (false) {
@@ -151,7 +154,11 @@ export class StateMinus {
     deltagere: Array<ModelDeltagerMinus>;
     // deltagere = Map<Number, ModelDeltagerMinus>;
 
+    errors_uge1: Array<string>;
+    errors_uge2: Array<string>;
+
     public load() {
+        let deltager_livgruppe_count = SERVICE_DELTAGER_LIVGRUPPE_COUNT.all()();
         let grupper_by_deltager = $it(SERVICE_GRUPPE.grupper())
             .GroupInner((gruppe) =>
                 $it(gruppe.medlemmer)
@@ -181,10 +188,19 @@ export class StateMinus {
             // .filter((deltager) => deltager.er_voksen)
             .filter((deltager) => LIVGRUPPE_LEDERE.indexOf(deltager.fdfid) != -1)
             .map((deltager) =>
-                new ModelDeltagerMinus(deltager, arbejdsbyrder_by_deltager.get(deltager.fdfid) ?? [])) // this.stateArbejdsbyrdeBesvarelser, this.stateCustomScores, ))
+                new ModelDeltagerMinus(
+                    deltager,
+                    arbejdsbyrder_by_deltager.get(deltager.fdfid) ?? [],
+                    deltager_livgruppe_count.get(deltager.fdfid) ?? {
+                        fdfid: deltager.fdfid,
+                        antal_uge1: 0,
+                        antal_uge2: 0,
+                        locked: false}))
             .sort((m) => m.arbejdsbyrde_sum, true)
             .List();
 
+        this.errors_uge1 = algorithmMinus(this.deltagere, WEEK_1);
+        this.errors_uge2 = algorithmMinus(this.deltagere, WEEK_2);
 
     }
 }

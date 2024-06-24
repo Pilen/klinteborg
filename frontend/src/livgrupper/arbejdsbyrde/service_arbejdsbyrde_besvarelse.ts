@@ -11,7 +11,7 @@ class ServiceArbejdsbyrdeBesvarelse {
     apiStreamBesvarelser = new ApiStream<Array<ModelArbejdsbyrdeBesvarelse>>().get("/api/minus/arbejdsbyrde/besvarelse/all");
     apiSave = new Api()
         .post("/api/minus/arbejdsbyrde/besvarelse/save")
-        .then(() => this.apiStreamBesvarelser.newRequest());
+        .then(this.apiStreamBesvarelser);
     public besvarelser(): Stream<Array<ModelArbejdsbyrdeBesvarelse>>{
         return this.apiStreamBesvarelser.stream();
     }

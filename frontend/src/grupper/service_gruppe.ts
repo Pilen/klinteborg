@@ -68,6 +68,39 @@ class ServiceGruppe {
     }
 
 }
-
-
 export const SERVICE_GRUPPE = new ServiceGruppe();
+
+
+class ServiceGruppe2 {
+    apiStreamGrupper = new ApiStream<Aray<Gruppe>>()
+        .get("/api/grupper/all");
+
+    apiAddPerson = new Api()
+        .post("/api/grupper/add-person")
+        .then(this.apiStreamGrupper);
+
+    apiRemovePerson = new Api()
+        .post("/api/grupper/remove-person")
+        .then(this.apiStreamGrupper);
+
+    apiSetTovholder = new Api()
+        .post("/api/grupper/set-tovholder")
+        .then(this.apiStreamGrupper);
+
+    public grupper() {
+        return this.apiStreamGrupper.stream();
+    }
+
+    public addPerson(gruppe: string, fdfid: number) {
+        return this.apiAddPerson.request({gruppe: gruppe, fdfid: fdfid})
+    }
+
+    public removePerson(gruppe: string, fdfid: number) {
+        return this.apiRemovePerson.request({gruppe: gruppe, fdfid: fdfid})
+    }
+
+    public setTovholder(gruppe: string, fdfid: number, isTovholder: boolean) {
+        this.setTovholder.request({gruppe: gruppe, fdfid: fdfid, is_tovholder: isTovholder});
+    }
+
+}

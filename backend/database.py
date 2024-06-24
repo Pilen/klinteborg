@@ -159,6 +159,14 @@ class Tx:
         args = [arg.text if isinstance(arg, RawSQL) else arg for arg in args]
         self.cursor.execute(query, args)
 
+    def execute_many(self, query: LiteralString, rows: list[tuple[any]]) -> None:
+        if not rows:
+            return # No rows
+        query = query.replace("?", "%s")
+        self.cursor.executemany(query, rows)
+
+
+
     def affected(self) -> int:
         return self.cursor.rowcount
 

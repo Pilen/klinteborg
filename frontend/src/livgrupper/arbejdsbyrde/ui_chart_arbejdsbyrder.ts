@@ -94,6 +94,7 @@ export class UiChartArbejdsbyrder {
     public oninit(vnode: m.Vnode<{state: StateArbejdsbyrdeBesvarelser}>) {
         this.state = new StateChart(vnode.attrs.state);
     }
+
     public view(vnode: m.Vnode<{state: StateArbejdsbyrdeBesvarelser}>) {
         let content = $it(this.state.besvarelser.arbejdsbyrder)
             .sort((arbejdsbyrde) => [arbejdsbyrde.gruppe.type, isNaN(arbejdsbyrde.score) ? 0 : arbejdsbyrde.score], true)
