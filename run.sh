@@ -82,6 +82,12 @@ function ENTER_DOCKER() {
 # set -a makes all variable definitions be exported by default
 # Remember to put ./ in source, else it will try to source command if it is found in $PATH
 
+if [[ "${#ENV[@]}" == 0 ]]; then
+    if [ -f ./env ]; then
+        ENV+=("env")
+    fi
+fi
+
 for env in ${ENV[@]}; do
     if [ -f "$env" ]; then
         set -a
@@ -156,17 +162,17 @@ case $COMMAND in
         docker stack rm klinteborg
         ;;
     psql)
-        echo docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} -e PSQL_HISTORY="/runtime/psql_history" -e HISTSIZE="-1" --volume "${HISTORY_MOUNT}:/runtime" postgres:15.0 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} --dbname ${POSTGRES_DATABASE}
+        docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} -e PSQL_HISTORY="/runtime/psql_history" -e HISTSIZE="-1" --volume "${HISTORY_MOUNT}:/runtime" postgres:16 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} --dbname ${POSTGRES_DATABASE}
         ;;
 
     reset-database)
         set -x
         # https://stackoverflow.com/questions/17449420/postgresql-unable-to-drop-database-because-of-some-auto-connections-to-db
-        docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} postgres:15.0 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '${POSTGRES_DATABASE}' AND pid <> pg_backend_pid();"
-        docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} postgres:15.0 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} -c "DROP DATABASE IF EXISTS ${POSTGRES_DATABASE}"
+        docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} postgres:16 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '${POSTGRES_DATABASE}' AND pid <> pg_backend_pid();"
+        docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} postgres:16 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} -c "DROP DATABASE IF EXISTS ${POSTGRES_DATABASE}"
 
-        docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} postgres:15.0 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} -c "CREATE DATABASE ${POSTGRES_DATABASE}"
-        docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} --volume "${PWD}:/mount" postgres:15.0 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} --dbname ${POSTGRES_DATABASE} --file /mount/schema.sql
+        docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} postgres:16 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} -c "CREATE DATABASE ${POSTGRES_DATABASE}"
+        docker run --rm -it --net host -e PGPASSWORD=${POSTGRES_PASSWORD} --volume "${PWD}:/mount" postgres:16 psql --host ${POSTGRES_HOST} --port ${POSTGRES_PORT} --username ${POSTGRES_USER} --dbname ${POSTGRES_DATABASE} --file /mount/schema.sql
 
         curl localhost:8000/api/database/pool/check
         ;;
@@ -217,7 +223,7 @@ case $COMMAND in
         npm install --save-dev esbuild
         npm install --save-dev typescript
         npm install --save-dev @types/mithril
-        npm install apexchart
+        npm install apexcharts
         ;;
     "")
         echo "ERROR: No command given";
